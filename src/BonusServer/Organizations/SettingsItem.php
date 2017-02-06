@@ -1,8 +1,6 @@
 <?php
 namespace Rarus\BonusServer\Organizations;
 
-use Rarus\BonusServer\ApiClientInterface;
-
 /**
  * Class SettingsItem
  *

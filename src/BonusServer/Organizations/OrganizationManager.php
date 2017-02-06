@@ -2,11 +2,9 @@
 namespace Rarus\BonusServer\Organizations;
 
 use Rarus\BonusServer\ApiClientInterface;
-use Rarus\BonusServer\Organizations\SettingsItemInterface;
-use Rarus\BonusServer\Organizations\SettingsItem;
-use Rarus\BonusServer\User\User;
 use Rarus\BonusServer\Card\Card;
 use Rarus\BonusServer\Exceptions\BonusServerException;
+use Rarus\BonusServer\User\User;
 
 /**
  * Class OrganizationManager
@@ -120,7 +118,7 @@ class OrganizationManager
         }
 
         $arApiResponse = $this->apiClient->executeApiRequest(sprintf('/organization/card'.$paramsStr), 'GET');
-        
+
         $obResult = new \SplObjectStorage();
         /**
          * @var array $arApiResponse
