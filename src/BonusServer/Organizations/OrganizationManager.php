@@ -120,7 +120,7 @@ class OrganizationManager
         }
 
         $arApiResponse = $this->apiClient->executeApiRequest(sprintf('/organization/card'.$paramsStr), 'GET');
-        var_dump($arApiResponse);
+        
         $obResult = new \SplObjectStorage();
         /**
          * @var array $arApiResponse
