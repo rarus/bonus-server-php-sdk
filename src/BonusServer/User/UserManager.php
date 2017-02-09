@@ -42,15 +42,19 @@ class UserManager
         return $arApiResponse;
     }
 
-    public function SendConfirmationCode($login)
+    public function SendConfirmationCode($login, $companyId)
     {
         if(strlen($login) <= 0)
         {
             throw new BonusServerException('user login is empty');
         }
+        if((int)$companyId <= 0)
+        {
+            throw new BonusServerException('user companyId is empty');
+        }
         $arApiResponse = $this->apiClient->executeApiRequest('/user/sign_in/send_confirmation_code', 'POST', ['body' => json_encode([
             'login' => $login,
-            'company_id' => 3
+            'company_id' => (int)$companyId
         ])]);
         return $arApiResponse;
 
@@ -63,24 +67,13 @@ class UserManager
      */
     public function Update($arUser)
     {
-        /*$arUser = array(
-            "name" => "Сергей",
-            "phone" => "1111111",
-            "email" => "mors@rarus.ru",
-            "gender" => "male",
-            "birthday" => 12312312,
-            "receive_notifications" => true
-        );*/
         if(!is_array($arUser))
         {
             throw new BonusServerException('user fields empty');
         }
-        //$arApiResponse = $this->apiClient->executeApiRequest(sprintf('/user/update'), 'PUT', $arUser);
         $arApiResponse = $this->apiClient->executeApiRequest('/user/update', 'PUT', ['body' => json_encode($arUser)]);
         return $arApiResponse;
 
 
     }
-}
-
-?>
+}?>

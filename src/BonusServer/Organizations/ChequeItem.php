@@ -76,7 +76,7 @@ class ChequeItem
     /**
      * @return int
      */
-    protected function getLineNumber()
+    public function getLineNumber()
     {
         return $this->lineNumber;
     }
@@ -92,7 +92,7 @@ class ChequeItem
     /**
      * @param string
      */
-    protected function getArticle()
+    public function getArticle()
     {
         return $this->article;
     }
@@ -109,7 +109,7 @@ class ChequeItem
     /**
      * @return float
      */
-    protected function getQuantity()
+    public function getQuantity()
     {
         return $this->quantity;
     }
@@ -125,7 +125,7 @@ class ChequeItem
     /**
      * @return float
      */
-    protected function getPrice()
+    public function getPrice()
     {
         return $this->price;
     }
@@ -141,7 +141,7 @@ class ChequeItem
     /**
      * @return float
      */
-    protected function getDiscSum()
+    public function getDiscSum()
     {
         return $this->discSum;
     }
@@ -157,7 +157,7 @@ class ChequeItem
     /**
      * @return float
      */
-    protected function getSum()
+    public function getSum()
     {
         return $this->sum;
     }
@@ -172,7 +172,7 @@ class ChequeItem
     /**
      * @return int
      */
-    protected function getBonusPercent()
+    public function getBonusPercent()
     {
         return $this->bonusPercent;
     }
@@ -188,7 +188,7 @@ class ChequeItem
     /**
      * @return int
      */
-    protected function getBonusSum()
+    public function getBonusSum()
     {
         return $this->bonusSum;
     }

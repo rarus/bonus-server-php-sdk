@@ -40,14 +40,10 @@ class PromotionManager
         foreach($arApiResponse['promotions'] as $cnt => $arPromotionItem)
         {
             $obResult->attach(new Promotions\Promotion($arPromotionItem));
-            //var_dump($arPromotionItem);
         }
         $obResult->rewind();
 
         return $obResult;
-        //return $arApiResponse;
-
-
     }
 }
 ?>

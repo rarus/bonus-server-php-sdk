@@ -2,9 +2,11 @@
 namespace Rarus\BonusServer\Organizations;
 
 use Rarus\BonusServer\ApiClientInterface;
+use Rarus\BonusServer\Organizations\SettingsItemInterface;
+use Rarus\BonusServer\Organizations\SettingsItem;
+use Rarus\BonusServer\User\User;
 use Rarus\BonusServer\Card\Card;
 use Rarus\BonusServer\Exceptions\BonusServerException;
-use Rarus\BonusServer\User\User;
 
 /**
  * Class OrganizationManager
@@ -64,74 +66,6 @@ class OrganizationManager
         $arApiResponse = $this->apiClient->executeApiRequest(sprintf('/organization/card/'.htmlspecialchars($cardId)), 'GET');
         return new Card($arApiResponse['card']);
     }
-
-    /**
-     *
-     * @return \SplObjectStorage
-     */
-    public function getUserList($page = 1,$perPage = 50)
-    {
-        if((int)$page <= 0)
-        {
-            $page = 1;
-        }
-        if((int)$perPage <= 0)
-        {
-            $perPage = 50;
-        }
-        $arApiResponse = $this->apiClient->executeApiRequest(sprintf('/organization/user'), 'GET');
-        $obResult = new \SplObjectStorage();
-        /**
-         * @var array $arApiResponse
-         */
-        foreach ($arApiResponse['users'] as $cnt => $arUser)
-        {
-            $obResult->attach(new User($arUser));
-        }
-        $obResult->rewind();
-        return $obResult;
-    }
-
-    /**
-     * @param $arCardParams
-     * @return \SplObjectStorage
-     */
-    public function getCardList($arCardParams)
-    {
-        $paramsStr = "";
-        if(!isset($arCardParams['page']))
-        {
-            $arCardParams['page'] = 1;
-        }
-        if(!isset($arCardParams['per_page']))
-        {
-            $arCardParams['per_page'] = 100;
-        }
-        if(is_array($arCardParams) && count($arCardParams) > 0)
-        {
-            $i = 0;
-            foreach($arCardParams as $paramCode => $paramVal)
-            {
-                ($i==0) ? ($paramsStr = '?'.$paramCode.'='.$paramVal) : $paramsStr .= '&'.$paramCode.'='.$paramVal;
-                $i++;
-            }
-        }
-
-        $arApiResponse = $this->apiClient->executeApiRequest(sprintf('/organization/card'.$paramsStr), 'GET');
-
-        $obResult = new \SplObjectStorage();
-        /**
-         * @var array $arApiResponse
-         */
-        foreach ($arApiResponse['cards'] as $cnt => $arCard)
-        {
-            $obResult->attach(new Card($arCard));
-        }
-        $obResult->rewind();
-        return $obResult;
-
-    }
-
     /**
      *
      * @return \SplObjectStorage
@@ -143,31 +77,31 @@ class OrganizationManager
             throw new BonusServerException('empty cheque items');
         }
 //        $arChequeItems = [
-//            "card_id" => "1cd20b45-cff8-4c58-82fc-4341a3a7bcf3",
-//            "card_code" => "test_card",
-//            "card_barcode" => "1429816",
+//            "card_id" => "12345678",
+//            "card_code" => "AAAAA",
+//            "card_barcode" => "1111111",
 //            "shop_id" => "",
 //            "cheque_items" => [
 //                [
 //                    "line_number" => 1,
-//                    "article" => "12456",
+//                    "article" => "123",
 //                    "quantity" => 1.000,
 //                    "price" => 1.99,
 //                    "discount_summ" => 1.90,
 //                   "summ"         => 100,99,
-//                   "bonus_percet" => 40,
-//                   "bonus_summ"   => 12
+//                   "bonus_percet" => 10,
+//                   "bonus_summ"   => 10
 //
 //                ],
 //                [
 //                    "line_number" => 2,
-//                    "article" => "35892",
+//                    "article" => "124",
 //                    "quantity" => 1.000,
 //                    "price" => 1.99,
 //                    "discount_summ" => 1.90,
 //                   "summ"         => 100,99,
-//                   "bonus_percet" => 40,
-//                   "bonus_summ"   => 12
+//                   "bonus_percet" => 10,
+//                   "bonus_summ"   => 10
 //
 //                ]
 //            ]
@@ -188,8 +122,6 @@ class OrganizationManager
         $obResult->rewind();
 
         return $obResult;
-
-        //return $arApiResponse;
     }
 
     /**
