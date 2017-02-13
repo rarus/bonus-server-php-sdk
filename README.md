@@ -1,6 +1,6 @@
 # rarus-bonus-server-php-sdk
 
-Библиотека для работы с REST API продукта Бонусный сервер
+Библиотека для работы с REST API продукта Бонусный сервер. По вопросам поддержки и приобретения продукта Бонусный сервер обращайтесть на [bonus@rarus.ru](mailto:bonus@rarus.ru)
 
 ## Установка
 
@@ -23,7 +23,7 @@ $ composer require rarus/bonus-server-php-sd
 
 ### Ошибки и вопросы
 
-Задавать впросы, а также отправлять информацию об ошибках можно на [GitHub](https://github.com/rarus/bonus-server-php-sdk/issues) или на [почту](mailto:eran@rarus.ru)
+Задавать впросы, а также отправлять информацию об ошибках можно на [GitHub](https://github.com/rarus/bonus-server-php-sdk/issues) или на [почту](mailto:bonus@rarus.ru)
 
 
 ### Лицензия
