@@ -7,7 +7,7 @@
 Установка последней версии через composer
 
 ```
-$ composer require rarus/bonus-server-php-sd
+$ composer require rarus/bonus-server-php-sdk
 ```
 
 ## О продукте
