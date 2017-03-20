@@ -251,6 +251,33 @@ class ApiClient implements ApiClientInterface
     }
 
     /**
+     * @param $login
+     * @param $password
+     * @param $serverUrl
+     * @return int
+     */
+    public function getServerRequestStatus($login, $password, $serverUrl)
+    {
+        $arHttpRequestOptions = ['body' => json_encode([
+            'login' => $login,
+            'password' => sha1($password),
+            'role' => self::AUTH_ROLE_ORGANIZATION,
+            'session_id' => ''])
+        ];
+
+        $defaultHttpRequestOptions = array_merge($arHttpRequestOptions, $this->getDefaultHttpRequestOptions());
+
+        $obResponse = $this->httpClient->request(
+            'POST',
+            $serverUrl.'/sign_in',
+            $defaultHttpRequestOptions
+        );
+
+        return $obResponse->getStatusCode();
+
+    }
+
+    /**
      * @param ClientException $clientException
      *
      * @throws ApiBonusServerException
