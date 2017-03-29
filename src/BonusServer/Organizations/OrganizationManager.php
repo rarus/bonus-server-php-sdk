@@ -76,52 +76,34 @@ class OrganizationManager
         {
             throw new BonusServerException('empty cheque items');
         }
-//        $arChequeItems = [
-//            "card_id" => "12345678",
-//            "card_code" => "AAAAA",
-//            "card_barcode" => "1111111",
-//            "shop_id" => "",
-//            "cheque_items" => [
-//                [
-//                    "line_number" => 1,
-//                    "article" => "123",
-//                    "quantity" => 1.000,
-//                    "price" => 1.99,
-//                    "discount_summ" => 1.90,
-//                   "summ"         => 100,99,
-//                   "bonus_percet" => 10,
-//                   "bonus_summ"   => 10
-//
-//                ],
-//                [
-//                    "line_number" => 2,
-//                    "article" => "124",
-//                    "quantity" => 1.000,
-//                    "price" => 1.99,
-//                    "discount_summ" => 1.90,
-//                   "summ"         => 100,99,
-//                   "bonus_percet" => 10,
-//                   "bonus_summ"   => 10
-//
-//                ]
-//            ]
-//        ];
+
         $arApiResponse = $this->apiClient->executeApiRequest('/organization/calculate', 'POST', [
             'body' => json_encode($arChequeItems)
         ]);
 
-        $obResult = new \SplObjectStorage();
+        $obItems = new \SplObjectStorage();
         /**
          * @var array $arApiResponse
          */
         foreach ($arApiResponse['cheque_items'] as $cnt => $arChequeItem)
         {
-            $obResult->attach(new ChequeItem($arChequeItem));
+            $obItems->attach(new ChequeItem($arChequeItem));
         }
 
-        $obResult->rewind();
+        $obItems->rewind();
 
-        return $obResult;
+        $obDiscounts = new \SplObjectStorage();
+        /**
+         * @var array $arApiResponse
+         */
+        foreach ($arApiResponse['cheque_discounts'] as $cnt => $arDiscount)
+        {
+            $obDiscounts->attach(new ChequeDiscount($arDiscount));
+        }
+
+        $obDiscounts->rewind();
+
+        return new DicountCalculateDocument($obItems, $obDiscounts);
     }
 
     /**
