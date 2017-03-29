@@ -48,12 +48,12 @@ class ChequeItem
      * @var int
      */
     protected $bonusSum;
-    /**
-     * SettingsItem constructor.
-     *
-     * @param $arSettingsItem
-     */
-    public function __construct($arChequeItem)
+
+	/**
+	 * ChequeItem constructor.
+	 * @param array $arChequeItem
+	 */
+    public function __construct(array $arChequeItem)
     {
         $this->setLineNumber($arChequeItem['line_number']);
         $this->setArticle($arChequeItem['article']);
