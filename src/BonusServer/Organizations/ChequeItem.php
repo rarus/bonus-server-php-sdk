@@ -192,4 +192,21 @@ class ChequeItem
     {
         return $this->bonusSum;
     }
+
+    /**
+     * @return array
+     */
+    public function get()
+    {
+        return array(
+            'line_number' => $this->getLineNumber(),
+            'article' => $this->getArticle(),
+            'quantity' => $this->getQuantity(),
+            'price' => $this->getPrice(),
+            'discount_summ' => $this->getDiscSum(),
+            'summ' => $this->getSum(),
+            'bonus_percet' => $this->getBonusPercent(),
+            'bonus_summ' => $this->getBonusSum()
+        );
+    }
 }
