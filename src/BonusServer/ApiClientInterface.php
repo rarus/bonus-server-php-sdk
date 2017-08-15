@@ -1,4 +1,5 @@
 <?php
+
 namespace Rarus\BonusServer;
 
 use GuzzleHttp\Exception\GuzzleException;
@@ -18,10 +19,9 @@ interface ApiClientInterface
      * @param $arHttpRequestOptions
      *
      * @throws \RuntimeException on failure.
-     * @throws GuzzleException
      * @throws BonusServerException
      *
-     * @return null|string
+     * @return null|array
      */
     public function executeApiRequest($apiMethod, $requestType, array $arHttpRequestOptions = array());
 }

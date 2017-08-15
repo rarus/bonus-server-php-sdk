@@ -18,12 +18,12 @@
     }
   ],
   "require": {
-    "php": ">=5.5",
+    "php": ">=5.4",
     "ext-json": "*",
     "ext-curl": "*",
     "psr/log": "^1.0",
     "monolog/monolog": "1.*",
-    "guzzlehttp/guzzle": "6.x"
+    "guzzlehttp/guzzle": "5.x"
   },
   "require-dev": {
     "jakub-onderka/php-parallel-lint": "0.9",
