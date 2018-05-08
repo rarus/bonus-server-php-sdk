@@ -15,7 +15,7 @@ final class Shop
     /**
      * Идентификатор магазина
      *
-     * @var string
+     * @var string|null
      */
     private $id;
 
@@ -55,13 +55,6 @@ final class Shop
     private $phone;
 
     /**
-     * Временная зона
-     *
-     * @var \DateTimeZone
-     */
-    private $timeZone;
-
-    /**
      * @var bool
      */
     private $isDeleted;
@@ -76,11 +69,35 @@ final class Shop
      * @var ScheduleCollection
      */
     private $schedule;
+    /**
+     * @var int
+     */
+    private $timezoneOffset;
 
     /**
-     * @return string
+     * @return int
      */
-    public function getId(): string
+    public function getTimezoneOffset(): int
+    {
+        return $this->timezoneOffset;
+    }
+
+    /**
+     * @param int $timezoneOffset
+     *
+     * @return Shop
+     */
+    public function setTimezoneOffset(int $timezoneOffset): Shop
+    {
+        $this->timezoneOffset = $timezoneOffset;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getId(): ?string
     {
         return $this->id;
     }
@@ -118,9 +135,9 @@ final class Shop
     }
 
     /**
-     * @return float
+     * @return float|null
      */
-    public function getLatitude(): float
+    public function getLatitude(): ?float
     {
         return $this->latitude;
     }
@@ -138,9 +155,9 @@ final class Shop
     }
 
     /**
-     * @return float
+     * @return float|null
      */
-    public function getLongitude(): float
+    public function getLongitude(): ?float
     {
         return $this->longitude;
     }
@@ -158,9 +175,9 @@ final class Shop
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getAddress(): string
+    public function getAddress(): ?string
     {
         return $this->address;
     }
@@ -178,9 +195,9 @@ final class Shop
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPhone(): string
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
@@ -193,26 +210,6 @@ final class Shop
     public function setPhone(string $phone): Shop
     {
         $this->phone = $phone;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTimeZone
-     */
-    public function getTimeZone(): \DateTimeZone
-    {
-        return $this->timeZone;
-    }
-
-    /**
-     * @param \DateTimeZone $timeZone
-     *
-     * @return Shop
-     */
-    public function setTimeZone(\DateTimeZone $timeZone): Shop
-    {
-        $this->timeZone = $timeZone;
 
         return $this;
     }
@@ -238,9 +235,9 @@ final class Shop
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getExcludeArticles(): string
+    public function getExcludeArticles(): ?string
     {
         return $this->excludeArticles;
     }

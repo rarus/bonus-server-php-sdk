@@ -31,9 +31,52 @@ class Shop
             'longitude' => $shop->getLongitude(),
             'address' => $shop->getAddress(),
             'phone' => $shop->getPhone(),
-            'time_zone' => $shop->getTimeZone()->getName(),
+            'time_zone' => $shop->getTimezoneOffset(),
             'is_deleted' => $shop->isDeleted(),
+            'exclude_articles' => $shop->getExcludeArticles(),
             'schedule' => $arSchedule,
+
+        ];
+    }
+
+    /**
+     * сокращённый набор полей для добавленя нового магазина
+     *
+     * @param Shops\DTO\Shop $shop
+     *
+     * @return array
+     */
+    public static function toArrayForCreateNewShop(Shops\DTO\Shop $shop): array
+    {
+        return [
+            'id' => $shop->getId() ?? '',
+            'name' => $shop->getName(),
+            'latitude' => $shop->getLatitude() ?? 0,
+            'longitude' => $shop->getLongitude() ?? 0,
+            'address' => $shop->getAddress() ?? '',
+            'phone' => $shop->getPhone() ?? '',
+            'time_zone' => $shop->getTimezoneOffset() ?? 0,
+            'exclude_articles' => $shop->getExcludeArticles() ?? '',
+        ];
+    }
+
+    /**
+     * сокращённый набор полей для добавленя нового магазина
+     *
+     * @param Shops\DTO\Shop $shop
+     *
+     * @return array
+     */
+    public static function toArrayForUpdateShop(Shops\DTO\Shop $shop): array
+    {
+        return [
+            'name' => $shop->getName(),
+            'address' => $shop->getAddress() ?? '',
+            'latitude' => $shop->getLatitude() ?? 0,
+            'longitude' => $shop->getLongitude() ?? 0,
+            'phone' => $shop->getPhone() ?? '',
+            'time_zone' => $shop->getTimezoneOffset() ?? 0,
+            'exclude_articles' => $shop->getExcludeArticles() ?? '',
         ];
     }
 }
