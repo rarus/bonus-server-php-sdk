@@ -7,12 +7,10 @@ use Rarus\BonusServer\Shops;
 // инициализируем транспорт для работы с сущностью Магазины
 $shopTransport = Shops\Transport\Fabric::getInstance($apiClient, $log);
 
-// получаем список магазинов
-$shops = $shopTransport->list();
-// показываем список магазинов
-foreach ($shops as $shop) {
-    print(sprintf('%s | %s ' . PHP_EOL,
-        $shop->getId(),
-        $shop->getName())
-    );
-}
+$newShop = Rarus\BonusServer\Shops\DTO\Fabric::createNewInstance('Новый магазин');
+
+var_dump(Shops\Formatters\Shop::toArrayForCreateNewShop($newShop));
+
+$shop = $shopTransport->add($newShop);
+
+var_dump(Shops\Formatters\Shop::toArray($shop));
