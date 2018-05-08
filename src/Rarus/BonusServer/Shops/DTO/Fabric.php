@@ -13,6 +13,19 @@ use Rarus\BonusServer\Exceptions\ApiClientException;
 class Fabric
 {
     /**
+     * @param string $shopName
+     *
+     * @return Shop
+     */
+    public static function createNewInstance(string $shopName): Shop
+    {
+        return (new Shop())
+            ->setName($shopName)
+            ->setTimezoneOffset(0)
+            ->setIsDeleted(false);
+    }
+
+    /**
      * @param array $arShop
      *
      * @return \Rarus\BonusServer\Shops\DTO\Shop
@@ -35,12 +48,8 @@ class Fabric
             ->setPhone($arShop['phone'])
             ->setIsDeleted($arShop['deleted'])
             ->setExcludeArticles($arShop['exclude_articles'])
+            ->setTimezoneOffset((int)$arShop['time_zone'])
             ->setSchedule($scheduleCollection);
-        if ($arShop['time_zone'] !== 0) {
-            $shop->setTimeZone(new \DateTimeZone((string)$arShop['time_zone']));
-        } else {
-            $shop->setTimeZone(new \DateTimeZone(\date_default_timezone_get()));
-        }
 
         return $shop;
     }
