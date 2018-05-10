@@ -20,3 +20,4 @@ script:
 
 after_script:
  - cat rarus-bonus-service-integration-tests.log
+ - curl -i -H "Accept: application/json" -H "Content-Type: application/json; charset=utf-8" -H "token: 725B4F58989543EA92A261B2C8C877A8" https://demo.bonus.rarus-online.com:88/organization/shop
