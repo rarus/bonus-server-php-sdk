@@ -81,6 +81,7 @@ class TestEnvironmentManager
             $log->pushProcessor(new UidProcessor());
 
             $log->pushHandler(new \Monolog\Handler\StreamHandler(self::LOG_FILE, Logger::DEBUG));
+            $log->pushHandler(new \Monolog\Handler\StreamHandler('php://stdout', Logger::WARNING));
         }
 
         return $log;
