@@ -19,4 +19,4 @@ script:
   composer test
 
 after_script:
- - ls -lah
+ - cat rarus-bonus-service-integration-tests.log
