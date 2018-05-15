@@ -30,6 +30,16 @@ class TransportTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers \Rarus\BonusServer\Cards\Transport\Transport::addNewCard()
+     * @covers \Rarus\BonusServer\Cards\Transport\Transport::getByCardId()
+     */
+    public function testAddNewCardMethod(): void
+    {
+        $newCard = Cards\DTO\Fabric::createNewInstance('php-unit-test-card', (string)random_int(1000000, 100000000));
+        $card = $this->cardTransport->addNewCard($newCard);
+    }
+
+    /**
      * @throws \Exception
      */
     protected function setUp(): void

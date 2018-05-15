@@ -157,6 +157,8 @@ class ApiClient
 
         $result = $this->executeRequest($requestType, $this->apiEndpoint . $apiMethod, $defaultHttpRequestOptions);
 
+        $this->handleApiLevelErrors($result);
+
         $this->log->debug('rarus.bonus.server.apiClient.executeApiRequest.finish', [
             'result' => $result,
         ]);
@@ -314,6 +316,30 @@ class ApiClient
         }
 
         return $jsonResult;
+    }
+
+    /**
+     * обработка ошибок уровня бизнес-логики бонусного сервера
+     *
+     * @param array $arBonusServerOperationResponse
+     *
+     * @throws Exceptions\ApiClientException
+     */
+    protected function handleApiLevelErrors(array $arBonusServerOperationResponse): void
+    {
+        $this->log->debug('rarus.bonus.server.apiClient.handleApiLevelErrors.start', [
+            'code' => $arBonusServerOperationResponse['code'],
+            'message' => $arBonusServerOperationResponse['message'],
+        ]);
+
+        if (0 !== (int)$arBonusServerOperationResponse['code']) {
+            throw new BonusServer\Exceptions\ApiClientException(
+                (string)$arBonusServerOperationResponse['message'],
+                (int)$arBonusServerOperationResponse['code']
+            );
+        }
+
+        $this->log->debug('rarus.bonus.server.apiClient.handleApiLevelErrors.finish');
     }
 
     /**

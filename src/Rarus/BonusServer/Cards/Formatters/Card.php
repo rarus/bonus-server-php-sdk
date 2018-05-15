@@ -40,4 +40,17 @@ class Card
             ],
         ];
     }
+
+    /**
+     * @param BonusServer\Cards\DTO\Card $newCard
+     *
+     * @return array
+     */
+    public static function toArrayForCreateNewCard(BonusServer\Cards\DTO\Card $newCard): array
+    {
+        return [
+            'code' => $newCard->getCode(),
+            'barcode' => $newCard->getBarcode(),
+        ];
+    }
 }

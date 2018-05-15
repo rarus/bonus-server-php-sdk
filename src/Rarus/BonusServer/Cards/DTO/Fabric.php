@@ -32,4 +32,20 @@ class Fabric
 
         return $card;
     }
+
+    /**
+     * @param string $code
+     * @param string $barcode
+     *
+     * @return Card
+     */
+    public static function createNewInstance(string $code, string $barcode): Card
+    {
+        $card = (new Card())
+            ->setCode($code)
+            ->setBarcode($barcode)
+            ->setCardStatus(\Rarus\BonusServer\Cards\DTO\Status\Fabric::initDefaultStatusForNewCard());
+
+        return $card;
+    }
 }

@@ -28,4 +28,16 @@ class Fabric
 
         return $cardStatus;
     }
+
+    /**
+     * @return CardStatus
+     */
+    public static function initDefaultStatusForNewCard(): CardStatus
+    {
+        $cardStatus = (new CardStatus())
+            ->setIsActive(false)
+            ->setIsBlocked(false);
+
+        return $cardStatus;
+    }
 }
