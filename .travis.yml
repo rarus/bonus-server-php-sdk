@@ -17,6 +17,3 @@ before_script:
 
 script:
   composer test
-
-after_script:
- - cat rarus-bonus-service-integration-tests.log
