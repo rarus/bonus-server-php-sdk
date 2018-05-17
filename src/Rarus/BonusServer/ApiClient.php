@@ -7,7 +7,7 @@ use Psr\Log\NullLogger;
 use Psr\Log\LoggerInterface;
 
 use Fig\Http\Message\RequestMethodInterface;
-
+use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp;
 
 use Rarus\BonusServer;
@@ -146,7 +146,11 @@ class ApiClient
      */
     public function executeApiRequest($apiMethod, $requestType, array $arHttpRequestOptions = []): array
     {
-        $defaultHttpRequestOptions = \array_merge(['json' => $arHttpRequestOptions], $this->getHttpRequestOptions());
+        if (\count($arHttpRequestOptions) !== 0) {
+            $defaultHttpRequestOptions = \array_merge(['json' => $arHttpRequestOptions], $this->getHttpRequestOptions());
+        } else {
+            $defaultHttpRequestOptions = $this->getHttpRequestOptions();
+        }
 
         $this->log->debug('rarus.bonus.server.apiClient.executeApiRequest.start', [
             'url' => $this->apiEndpoint . $apiMethod,
@@ -155,9 +159,16 @@ class ApiClient
             'options' => $defaultHttpRequestOptions,
         ]);
 
-        $result = $this->executeRequest($requestType, $this->apiEndpoint . $apiMethod, $defaultHttpRequestOptions);
+        // выполняем http-запрос
+        $obResponse = $this->executeRequest($requestType, $this->apiEndpoint . $apiMethod, $defaultHttpRequestOptions);
+        // получаем тело ответа от сервера
+        $obResponseBody = $obResponse->getBody();
+        $obResponseBody->rewind();
 
-        $this->handleApiLevelErrors($result);
+        // декодируем строку c JSON в массив
+        $result = $this->decodeApiJsonResponse($obResponseBody->getContents());
+
+        $this->handleApiLevelErrors($result, $obResponse->getStatusCode());
 
         $this->log->debug('rarus.bonus.server.apiClient.executeApiRequest.finish', [
             'result' => $result,
@@ -215,12 +226,12 @@ class ApiClient
      * @param string $url
      * @param array  $requestOptions
      *
-     * @return array
+     * @return \Psr\Http\Message\ResponseInterface
      * @throws Exceptions\ApiClientException
      * @throws Exceptions\NetworkException
      * @throws Exceptions\UnknownException
      */
-    protected function executeRequest(string $requestType, string $url, array $requestOptions): array
+    protected function executeRequest(string $requestType, string $url, array $requestOptions): \Psr\Http\Message\ResponseInterface
     {
         $this->log->debug('rarus.bonus.server.apiClient.executeRequest.start', [
             'request_type' => $requestType,
@@ -247,9 +258,10 @@ class ApiClient
                     'code' => $exception->getCode(),
                     'message' => $exception->getMessage(),
                     'server_response' => $responseBodyAsString,
+                    'decodedResponse' => $result,
                 ]
             );
-            throw new BonusServer\Exceptions\ApiClientException($result['message'], (int)$result['code'], $exception);
+            throw new BonusServer\Exceptions\ApiClientException($result['message'], (int)$result['code']);
         } catch (GuzzleHttp\Exception\GuzzleException $exception) {
             // произошла ошибка на уровне сетевой подсистемы
             $this->log->error(
@@ -259,7 +271,7 @@ class ApiClient
                     'message' => $exception->getMessage(),
                 ]
             );
-            throw new BonusServer\Exceptions\NetworkException($exception->getMessage(), $exception->getCode(), $exception);
+            throw new BonusServer\Exceptions\NetworkException($exception->getMessage(), $exception->getCode());
         } catch (\Throwable $unhandledException) {
             // произошла неизвестная ошибка
             $this->log->error(
@@ -274,18 +286,18 @@ class ApiClient
 
             throw new BonusServer\Exceptions\UnknownException(
                 'неизвестная ошибка: ' . $unhandledException->getMessage(),
-                $unhandledException->getCode(),
-                $unhandledException);
+                $unhandledException->getCode());
         }
 
         $this->log->debug('rarus.bonus.server.apiClient.executeRequest.finish', [
             'request_type' => $requestType,
             'url' => $url,
             'request_options' => $requestOptions,
+            'http_status' => $obResponse->getStatusCode(),
             'result' => $result,
         ]);
 
-        return $result;
+        return $obResponse;
     }
 
     /**
@@ -322,23 +334,31 @@ class ApiClient
      * обработка ошибок уровня бизнес-логики бонусного сервера
      *
      * @param array $arBonusServerOperationResponse
+     * @param int   $serverStatusCode
      *
      * @throws Exceptions\ApiClientException
      */
-    protected function handleApiLevelErrors(array $arBonusServerOperationResponse): void
+    protected function handleApiLevelErrors(array $arBonusServerOperationResponse, int $serverStatusCode): void
     {
         $this->log->debug('rarus.bonus.server.apiClient.handleApiLevelErrors.start', [
             'code' => $arBonusServerOperationResponse['code'],
             'message' => $arBonusServerOperationResponse['message'],
+            'serverStatus' => $serverStatusCode,
         ]);
 
-        if (0 !== (int)$arBonusServerOperationResponse['code']) {
-            throw new BonusServer\Exceptions\ApiClientException(
-                (string)$arBonusServerOperationResponse['message'],
-                (int)$arBonusServerOperationResponse['code']
-            );
+        switch ($serverStatusCode) {
+            case StatusCodeInterface::STATUS_OK:
+            case StatusCodeInterface::STATUS_ACCEPTED:
+                // ошибок на уровне cтатуса сервера нет, анализировать ошибки бизнес-логики не требуется
+                break;
+            default:
+                //  есть ошибки на уровне статуса сервера
+                throw new BonusServer\Exceptions\ApiClientException(
+                    (string)$arBonusServerOperationResponse['message'],
+                    (int)$arBonusServerOperationResponse['code']
+                );
+                break;
         }
-
         $this->log->debug('rarus.bonus.server.apiClient.handleApiLevelErrors.finish');
     }
 

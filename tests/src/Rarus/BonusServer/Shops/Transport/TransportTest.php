@@ -68,6 +68,7 @@ class TransportTest extends \PHPUnit_Framework_TestCase
     {
         $this->shopTransport = Fabric::getInstance(
             \TestEnvironmentManager::getInstanceForRoleOrganization(),
+            \TestEnvironmentManager::getDefaultCurrency(),
             \TestEnvironmentManager::getMonologInstance()
         );
     }

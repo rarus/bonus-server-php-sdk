@@ -251,106 +251,6 @@ final class Card
     }
 
     /**
-     * @return Money
-     */
-    public function getActualBalance(): Money
-    {
-        return $this->actualBalance;
-    }
-
-    /**
-     * @param Money $actualBalance
-     *
-     * @return Card
-     */
-    public function setActualBalance(Money $actualBalance): Card
-    {
-        $this->actualBalance = $actualBalance;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getActualBalanceDate(): \DateTime
-    {
-        return $this->actualBalanceDate;
-    }
-
-    /**
-     * @param \DateTime $actualBalanceDate
-     *
-     * @return Card
-     */
-    public function setActualBalanceDate(\DateTime $actualBalanceDate): Card
-    {
-        $this->actualBalanceDate = $actualBalanceDate;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isActive(): bool
-    {
-        return $this->isActive;
-    }
-
-    /**
-     * @param bool $isActive
-     *
-     * @return Card
-     */
-    public function setIsActive(bool $isActive): Card
-    {
-        $this->isActive = $isActive;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getDateActive(): \DateTime
-    {
-        return $this->dateActive;
-    }
-
-    /**
-     * @param \DateTime $dateActive
-     *
-     * @return Card
-     */
-    public function setDateActive(\DateTime $dateActive): Card
-    {
-        $this->dateActive = $dateActive;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getDateDeactivate(): \DateTime
-    {
-        return $this->dateDeactivate;
-    }
-
-    /**
-     * @param \DateTime $dateDeactivate
-     *
-     * @return Card
-     */
-    public function setDateDeactivate(\DateTime $dateDeactivate): Card
-    {
-        $this->dateDeactivate = $dateDeactivate;
-
-        return $this;
-    }
-
-    /**
      * @return \DateTime|null
      */
     public function getDateLastTransaction(): ?\DateTime
@@ -391,9 +291,9 @@ final class Card
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getMastercardId(): string
+    public function getMastercardId(): ?string
     {
         return $this->mastercardId;
     }
@@ -511,9 +411,9 @@ final class Card
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getCardLevelId(): string
+    public function getCardLevelId(): ?string
     {
         return $this->cardLevelId;
     }
@@ -551,9 +451,9 @@ final class Card
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPhone(): string
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
@@ -571,9 +471,9 @@ final class Card
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -591,9 +491,9 @@ final class Card
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getExternalCardId(): string
+    public function getExternalCardId(): ?string
     {
         return $this->externalCardId;
     }

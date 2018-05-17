@@ -27,6 +27,8 @@ class Card
             'barcode' => $card->getBarcode(),
             'description' => $card->getDescription(),
             'last_transaction' => $card->getLastTransaction(),
+            'accum_sale_amount' => $card->getAccumSaleAmount() !== null ?
+                $card->getAccumSaleAmount()->getAmount() : null,
             'date_last_transaction' => $card->getDateLastTransaction() !== null ?
                 $card->getDateLastTransaction()->format(\DATE_ATOM) : null,
             'status' => [
@@ -51,6 +53,30 @@ class Card
         return [
             'code' => $newCard->getCode(),
             'barcode' => $newCard->getBarcode(),
+            'accum_sale_amount' => (int)$newCard->getAccumSaleAmount()->getAmount(),
+        ];
+    }
+
+    /**
+     * @param BonusServer\Cards\DTO\Card $card
+     *
+     * @return array
+     */
+    public static function toArrayForUpdateCard(BonusServer\Cards\DTO\Card $card): array
+    {
+        return [
+            'parent_id' => $card->getParentId() === null ? '' : $card->getParentId()->getId(),
+            'code' => $card->getCode(),
+            'barcode' => $card->getBarcode(),
+            'name' => $card->getName() ?? '',
+            'description' => $card->getDescription() ?? '',
+            'mastercard_id' => $card->getMastercardId() ?? '',
+            'phone' => $card->getPhone() ?? '',
+            'email' => $card->getEmail() ?? '',
+            'external_card' => $card->getExternalCardId() ?? 0,
+            'accum_sale_amount' => $card->getAccumSaleAmount() !== null ?
+                (int)$card->getAccumSaleAmount()->getAmount() : 0,
+            'card_level_id' => $card->getCardLevelId() ?? '',
         ];
     }
 }
