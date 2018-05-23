@@ -299,8 +299,6 @@ class Transport extends BonusServer\Transport\AbstractTransport
         return $unblockedCard;
     }
 
-
-
     /**
      * @param BonusServer\Cards\DTO\Card $card
      * @param \Money\Money               $sum
@@ -326,12 +324,67 @@ class Transport extends BonusServer\Transport\AbstractTransport
                 'sum' => (int)$sum->getAmount(),
             ]
         );
-
-        // todo опциональным параметром левелап выводить
-        var_dump($requestResult);
-
         $this->log->debug('rarus.bonus.server.cards.transport.setAccumulationAmount.finish');
     }
 
+    /**
+     * может ли карта сделать апгрейд уровня
+     *
+     * @param BonusServer\Cards\DTO\Card $card
+     *
+     * @return bool
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function isCardCanLevelUp(BonusServer\Cards\DTO\Card $card): bool
+    {
+        $this->log->debug('rarus.bonus.server.cards.transport.isCardCanLevelUp.start', [
+            'cardId' => $card->getCardId()->getId(),
+        ]);
 
+        $requestResult = $this->apiClient->executeApiRequest(
+            sprintf('/organization/card/%s/levelup', $card->getCardId()->getId()),
+            RequestMethodInterface::METHOD_POST,
+            [
+                'check' => true,
+            ]
+        );
+
+        $isCardCanLevelUp = false;
+        if (array_key_exists('next_level_up', $requestResult)) {
+            $nextLevel = \Rarus\BonusServer\Cards\DTO\Level\Fabric::initFromServerResponse($requestResult['next_level_up'], $this->getDefaultCurrency());
+            $isCardCanLevelUp = true;
+        }
+
+        $this->log->debug('rarus.bonus.server.cards.transport.isCardCanLevelUp.finish', [
+            'cardId' => $card->getCardId()->getId(),
+            'isCardCanLevelUp' => $isCardCanLevelUp,
+        ]);
+
+        return $isCardCanLevelUp;
+    }
+
+    /**
+     * @param BonusServer\Cards\DTO\Card $card
+     *
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function levelUp(BonusServer\Cards\DTO\Card $card): void
+    {
+        $this->log->debug('rarus.bonus.server.cards.transport.levelUp.start', [
+            'cardId' => $card->getCardId()->getId(),
+        ]);
+
+        $requestResult = $this->apiClient->executeApiRequest(
+            sprintf('/organization/card/%s/levelup', $card->getCardId()->getId()),
+            RequestMethodInterface::METHOD_POST
+        );
+
+        $this->log->debug('rarus.bonus.server.cards.transport.levelUp.finish', [
+            'cardId' => $card->getCardId()->getId(),
+        ]);
+    }
 }

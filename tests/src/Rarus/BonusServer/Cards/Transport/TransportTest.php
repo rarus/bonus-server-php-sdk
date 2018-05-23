@@ -171,6 +171,36 @@ class TransportTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers \Rarus\BonusServer\Cards\Transport\Transport::addNewCard()
+     * @covers \Rarus\BonusServer\Cards\Transport\Transport::getByCardId()
+     * @covers \Rarus\BonusServer\Cards\Transport\Transport::isCardCanLevelUp()
+     */
+    public function testiIsCardCanLevelUpMethod(): void
+    {
+        $newCard = Cards\DTO\Fabric::createNewInstance('12345987654321', (string)random_int(1000000, 100000000), new \Money\Currency('RUB'));
+
+        $card = $this->cardTransport->addNewCard($newCard);
+        $activatedCard = $this->cardTransport->activate($card);
+
+        $this->cardTransport->isCardCanLevelUp($activatedCard);
+    }
+
+    /**
+     * @covers \Rarus\BonusServer\Cards\Transport\Transport::addNewCard()
+     * @covers \Rarus\BonusServer\Cards\Transport\Transport::getByCardId()
+     * @covers \Rarus\BonusServer\Cards\Transport\Transport::levelUp()
+     */
+    public function testCanLevelUpMethod(): void
+    {
+        $newCard = Cards\DTO\Fabric::createNewInstance('12345987654321', (string)random_int(1000000, 100000000), new \Money\Currency('RUB'));
+
+        $card = $this->cardTransport->addNewCard($newCard);
+        $activatedCard = $this->cardTransport->activate($card);
+
+        $this->cardTransport->levelUp($activatedCard);
+    }
+
+    /**
      * @throws \Exception
      */
     protected function setUp(): void
