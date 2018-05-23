@@ -1,0 +1,17 @@
+<?php
+declare(strict_types=1);
+
+require_once __DIR__ . '/init.php';
+
+use \Rarus\BonusServer\Cards;
+
+
+// инициализируем транспорт для работы с сущностью Магазины
+$cardsTransport = Cards\Transport\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
+
+$newCard = Cards\DTO\Fabric::createNewInstance('12345987654321', (string)random_int(1000000, 100000000), new \Money\Currency('RUB'));
+
+$card = $cardsTransport->addNewCard($newCard);
+$activatedCard = $cardsTransport->activate($card);
+
+var_dump($cardsTransport->isCardCanLevelUp($activatedCard));

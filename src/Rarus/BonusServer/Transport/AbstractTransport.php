@@ -10,6 +10,8 @@ namespace Rarus\BonusServer\Transport;
 use Psr\Log\LoggerInterface;
 use Rarus\BonusServer;
 
+use Money\Currency;
+
 /**
  * Class AbstractTransport
  *
@@ -25,16 +27,30 @@ abstract class AbstractTransport
      * @var LoggerInterface
      */
     protected $log;
+    /**
+     * @var Currency
+     */
+    private $defaultCurrency;
 
     /**
      * AbstractTransport constructor.
      *
-     * @param \Rarus\BonusServer\ApiClient $apiClient
-     * @param \Psr\Log\LoggerInterface     $log
+     * @param BonusServer\ApiClient $apiClient
+     * @param Currency              $defaultCurrency
+     * @param LoggerInterface       $log
      */
-    public function __construct(BonusServer\ApiClient $apiClient, LoggerInterface $log)
+    public function __construct(BonusServer\ApiClient $apiClient, Currency $defaultCurrency, LoggerInterface $log)
     {
         $this->apiClient = $apiClient;
         $this->log = $log;
+        $this->defaultCurrency = $defaultCurrency;
+    }
+
+    /**
+     * @return Currency
+     */
+    protected function getDefaultCurrency(): Currency
+    {
+        return $this->defaultCurrency;
     }
 }

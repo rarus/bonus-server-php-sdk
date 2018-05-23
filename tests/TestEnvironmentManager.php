@@ -86,4 +86,12 @@ class TestEnvironmentManager
 
         return $log;
     }
+
+    /**
+     * @return \Money\Currency
+     */
+    public static function getDefaultCurrency(): \Money\Currency
+    {
+        return new \Money\Currency('RUB');
+    }
 }

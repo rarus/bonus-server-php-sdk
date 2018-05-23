@@ -24,7 +24,8 @@
     "psr/log": "^1.0",
     "fig/http-message-util": "1.*",
     "monolog/monolog": "1.*",
-    "guzzlehttp/guzzle": "6.x"
+    "guzzlehttp/guzzle": "6.x",
+    "moneyphp/money": "^3.0"
   },
   "require-dev": {
     "jakub-onderka/php-parallel-lint": "0.9",
@@ -41,6 +42,9 @@
     "test": [
       "parallel-lint . --exclude vendor --no-colors",
       "phpunit --colors=always --verbose"
+    ],
+    "test-stop-on-failure": [
+      "phpunit --colors=always --verbose --stop-on-failure"
     ]
   }
 }
