@@ -387,4 +387,36 @@ class Transport extends BonusServer\Transport\AbstractTransport
             'cardId' => $card->getCardId()->getId(),
         ]);
     }
+
+    /**
+     * @param BonusServer\Cards\DTO\CardFilter $cardFilter
+     *
+     * @return BonusServer\Cards\DTO\CardCollection
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function getByFilter(BonusServer\Cards\DTO\CardFilter $cardFilter): BonusServer\Cards\DTO\CardCollection
+    {
+        $this->log->debug('rarus.bonus.server.cards.transport.getByFilter.start', [
+            'cardFilterQuery' => BonusServer\Cards\Formatters\CardFilter::toUrlArguments($cardFilter),
+        ]);
+
+        $requestResult = $this->apiClient->executeApiRequest(
+            sprintf('/organization/card/?%s', BonusServer\Cards\Formatters\CardFilter::toUrlArguments($cardFilter)),
+            RequestMethodInterface::METHOD_GET
+        );
+
+        $cardCollection = new BonusServer\Cards\DTO\CardCollection();
+        foreach ((array)$requestResult['cards'] as $card) {
+            $cardCollection->attach(BonusServer\Cards\DTO\Fabric::initCardFromServerResponse($card, $this->getDefaultCurrency()));
+        }
+
+        $this->log->debug('rarus.bonus.server.cards.transport.getByFilter.finish', [
+            'itemsCount' => $cardCollection->count(),
+        ]);
+        $cardCollection->rewind();
+
+        return $cardCollection;
+    }
 }

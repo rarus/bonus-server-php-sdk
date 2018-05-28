@@ -201,6 +201,26 @@ class TransportTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers \Rarus\BonusServer\Cards\Transport\Transport::getByFilter()
+     */
+    public function testGetByFilter(): void
+    {
+        $newCard = Cards\DTO\Fabric::createNewInstance(
+            'php-unit-test-card',
+            (string)random_int(1000000, 100000000),
+            \TestEnvironmentManager::getDefaultCurrency());
+        $card = $this->cardTransport->addNewCard($newCard);
+
+        $cardFilter = new Cards\DTO\CardFilter();
+        $cardFilter->setBarcode($card->getBarcode());
+
+        $cardsCollection = $this->cardTransport->getByFilter($cardFilter);
+        $filteredCard = $cardsCollection->current();
+
+        $this->assertEquals($card->getBarcode(), $filteredCard->getBarcode());
+    }
+
+    /**
      * @throws \Exception
      */
     protected function setUp(): void
