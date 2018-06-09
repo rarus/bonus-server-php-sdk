@@ -36,7 +36,6 @@ class User
         ];
     }
 
-
     /**
      * @param BonusServer\Users\DTO\User $newUser
      *
@@ -51,6 +50,28 @@ class User
             'email' => $newUser->getEmail(),
             'gender' => $newUser->getGender() === null ? '' : $newUser->getGender()->getCode(),
             'birthdate' => $newUser->getBirthdate() === null ? 0 : $newUser->getBirthdate()->getTimestamp(),
+        ];
+    }
+
+    /**
+     * @param BonusServer\Users\DTO\User $user
+     *
+     * @return array
+     */
+    public static function toArrayForImportNewUser(BonusServer\Users\DTO\User $user): array
+    {
+        return [
+            'id' => $user->getUserId()->getId(),
+            'login' => $user->getLogin(),
+            'name' => $user->getName(),
+            'phone' => $user->getPhone(),
+            'email' => $user->getEmail(),
+            'gender' => $user->getGender() === null ? '' : $user->getGender()->getCode(),
+            'birthdate' => $user->getBirthdate() === null ? 0 : $user->getBirthdate()->getTimestamp(),
+            'isConfirmed' => $user->getStatus()->isConfirmed(),
+            'isBlocked' => $user->getStatus()->isBlocked(),
+            'blockedDescription' => $user->getStatus()->getBlockedDescription(),
+            'password' => $user->getPasswordHash() ?? '',
         ];
     }
 }

@@ -41,16 +41,19 @@ class Fabric
     /**
      * создание объекта нового пользователя
      *
-     * @param string             $login
-     * @param string             $name
-     * @param string             $phone
-     * @param string             $email
-     * @param Gender\Gender|null $gender
-     * @param \DateTime|null     $bithday
+     * @param string                 $login
+     * @param string                 $name
+     * @param string                 $phone
+     * @param string                 $email
+     * @param Gender\Gender|null     $gender
+     * @param \DateTime|null         $birthday
+     * @param string|null            $passwordHash
+     * @param UserId|null            $userId
+     * @param Status\UserStatus|null $status
      *
      * @return User
      */
-    public static function createNewInstance(string $login, string $name, string $phone, string $email, Users\DTO\Gender\Gender $gender = null, \DateTime $bithday = null): User
+    public static function createNewInstance(string $login, string $name, string $phone, string $email, Users\DTO\Gender\Gender $gender = null, \DateTime $birthday = null, string $passwordHash = null, ?UserId $userId = null, ?Status\UserStatus $status = null): User
     {
         $user = (new User())
             ->setLogin($login)
@@ -60,8 +63,17 @@ class Fabric
         if ($gender !== null) {
             $user->setGender($gender);
         }
-        if ($bithday !== null) {
-            $user->setBirthdate($bithday);
+        if ($birthday !== null) {
+            $user->setBirthdate($birthday);
+        }
+        if ($passwordHash !== null) {
+            $user->setPasswordHash($passwordHash);
+        }
+        if ($userId !== null) {
+            $user->setUserId($userId);
+        }
+        if ($status !== null) {
+            $user->setStatus($status);
         }
 
         return $user;
