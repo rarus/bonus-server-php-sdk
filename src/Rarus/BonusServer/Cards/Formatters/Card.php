@@ -31,6 +31,8 @@ class Card
                 $card->getAccumSaleAmount()->getAmount() : null,
             'date_last_transaction' => $card->getDateLastTransaction() !== null ?
                 $card->getDateLastTransaction()->format(\DATE_ATOM) : null,
+            'userId' => $card->getUserId() !== null ?
+                $card->getUserId()->getId() : null,
             'status' => [
                 'is_active' => $card->getCardStatus()->isActive(),
                 'is_blocked' => $card->getCardStatus()->isBlocked(),

@@ -7,7 +7,7 @@ use \Rarus\BonusServer\Cards;
 
 
 // инициализируем транспорт для работы с сущностью Магазины
-$cardsTransport = Cards\Transport\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
+$cardsTransport = Cards\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
 
 // получаем список магазинов
 $cards = $cardsTransport->list();

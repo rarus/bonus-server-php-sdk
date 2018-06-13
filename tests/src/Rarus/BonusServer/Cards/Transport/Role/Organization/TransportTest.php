@@ -1,7 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace Rarus\BonusServer\Cards\Transport;
+namespace Rarus\BonusServer\Cards\Transport\Role\Organization;
+
 
 use \Rarus\BonusServer\Cards;
 
@@ -20,9 +21,13 @@ class TransportTest extends \PHPUnit_Framework_TestCase
      * @var Transport
      */
     private $cardTransport;
+    /**
+     * @var \Rarus\BonusServer\Users\Transport\Role\Organization\Transport
+     */
+    private $userTransport;
 
     /**
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::list()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::list()
      */
     public function testListMethod(): void
     {
@@ -30,8 +35,8 @@ class TransportTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::addNewCard()
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::getByCardId()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::addNewCard()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
      */
     public function testAddNewCardMethod(): void
     {
@@ -43,8 +48,8 @@ class TransportTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::addNewCard()
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::getByCardId()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::addNewCard()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
      */
     public function testGetByCardIdMethod(): void
     {
@@ -59,9 +64,9 @@ class TransportTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::addNewCard()
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::getByCardId()
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::activate()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::addNewCard()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::activate()
      */
     public function testActivateMethod(): void
     {
@@ -76,9 +81,9 @@ class TransportTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::addNewCard()
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::getByCardId()
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::deactivate()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::addNewCard()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::deactivate()
      */
     public function testDeactivateMethod(): void
     {
@@ -93,9 +98,9 @@ class TransportTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::addNewCard()
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::getByCardId()
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::update()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::addNewCard()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::update()
      *
      */
     public function testUpdateMethod(): void
@@ -113,9 +118,9 @@ class TransportTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::addNewCard()
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::getByCardId()
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::delete()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::addNewCard()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::delete()
      *
      */
     public function testDeleteMethod(): void
@@ -130,9 +135,9 @@ class TransportTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::addNewCard()
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::getByCardId()
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::block()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::addNewCard()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::block()
      *
      */
     public function testBlockMethod(): void
@@ -149,10 +154,10 @@ class TransportTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::addNewCard()
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::getByCardId()
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::block()
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::unblock()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::addNewCard()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::block()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::unblock()
      *
      */
     public function testUnblockMethod(): void
@@ -171,9 +176,9 @@ class TransportTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::addNewCard()
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::getByCardId()
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::isCardCanLevelUp()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::addNewCard()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::isCardCanLevelUp()
      */
     public function testiIsCardCanLevelUpMethod(): void
     {
@@ -186,9 +191,9 @@ class TransportTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::addNewCard()
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::getByCardId()
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::levelUp()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::addNewCard()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::levelUp()
      */
     public function testCanLevelUpMethod(): void
     {
@@ -201,7 +206,7 @@ class TransportTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Rarus\BonusServer\Cards\Transport\Transport::getByFilter()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByFilter()
      */
     public function testGetByFilter(): void
     {
@@ -221,11 +226,43 @@ class TransportTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::attachToUser()
+     */
+    public function testAttachToUser(): void
+    {
+        $newCard = Cards\DTO\Fabric::createNewInstance(
+            'php-unit-test-card',
+            (string)random_int(1000000, 100000000),
+            \TestEnvironmentManager::getDefaultCurrency());
+
+        $card = $this->cardTransport->addNewCard($newCard);
+
+        $newUser = \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
+            'grishi-' . random_int(0, PHP_INT_MAX),
+            'Михаил Гришин',
+            '+7978 888 22 22',
+            'grishi@rarus.ru'
+        );
+
+        $user = $this->userTransport->addNewUser($newUser);
+
+        $updatedCard = $this->cardTransport->attachToUser($card, $user);
+
+        $this->assertEquals($updatedCard->getUserId()->getId(), $user->getUserId()->getId());
+    }
+
+    /**
      * @throws \Exception
      */
     protected function setUp(): void
     {
         $this->cardTransport = Fabric::getInstance(
+            \TestEnvironmentManager::getInstanceForRoleOrganization(),
+            \TestEnvironmentManager::getDefaultCurrency(),
+            \TestEnvironmentManager::getMonologInstance()
+        );
+
+        $this->userTransport = \Rarus\BonusServer\Users\Transport\Role\Organization\Fabric::getInstance(
             \TestEnvironmentManager::getInstanceForRoleOrganization(),
             \TestEnvironmentManager::getDefaultCurrency(),
             \TestEnvironmentManager::getMonologInstance()

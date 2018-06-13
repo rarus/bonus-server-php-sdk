@@ -5,6 +5,7 @@ namespace Rarus\BonusServer\Cards\DTO;
 
 use Money\Money;
 use Rarus\BonusServer\Cards\DTO\Status\CardStatus;
+use Rarus\BonusServer\Users\DTO\UserId;
 
 /**
  * Class Card
@@ -65,7 +66,7 @@ final class Card
      */
     private $dateFirstCheck;
     /**
-     * @var string
+     * @var UserId|null
      */
     private $userId;
     /**
@@ -104,11 +105,30 @@ final class Card
      * @var string URI картинки карты. По-умолчанию берется из настроек организации.
      */
     private $imageUri;
-
     /**
      * @var CardStatus
      */
     private $cardStatus;
+
+    /**
+     * @return null|UserId
+     */
+    public function getUserId(): ?UserId
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param null|UserId $userId
+     *
+     * @return Card
+     */
+    public function setUserId(?UserId $userId): Card
+    {
+        $this->userId = $userId;
+
+        return $this;
+    }
 
     /**
      * @return CardStatus
@@ -346,26 +366,6 @@ final class Card
     public function setDateFirstCheck(\DateTime $dateFirstCheck): Card
     {
         $this->dateFirstCheck = $dateFirstCheck;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUserId(): string
-    {
-        return $this->userId;
-    }
-
-    /**
-     * @param string $userId
-     *
-     * @return Card
-     */
-    public function setUserId(string $userId): Card
-    {
-        $this->userId = $userId;
 
         return $this;
     }

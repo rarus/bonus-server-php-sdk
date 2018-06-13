@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Rarus\BonusServer\Cards\Transport;
+namespace Rarus\BonusServer\Cards\Transport\Role\Organization;
 
 use Rarus\BonusServer;
 use Fig\Http\Message\RequestMethodInterface;
@@ -418,5 +418,48 @@ class Transport extends BonusServer\Transport\AbstractTransport
         $cardCollection->rewind();
 
         return $cardCollection;
+    }
+
+    /**
+     * привязка карты к пользователю
+     *
+     * @param BonusServer\Cards\DTO\Card $card
+     * @param BonusServer\Users\DTO\User $user
+     *
+     * @return BonusServer\Cards\DTO\Card
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function attachToUser(BonusServer\Cards\DTO\Card $card, BonusServer\Users\DTO\User $user): BonusServer\Cards\DTO\Card
+    {
+        $this->log->debug('rarus.bonus.server.cards.transport.attachToUser.start', [
+            'cardId' => $card->getCardId()->getId(),
+            'cardCode' => $card->getCode(),
+            'userId' => $user->getUserId()->getId(),
+        ]);
+
+        $requestResult = $this->apiClient->executeApiRequest(
+            '/organization/card/attach',
+            RequestMethodInterface::METHOD_POST,
+            [
+                'user_id' => $user->getUserId()->getId(),
+                'card_id' => $card->getCardId()->getId(),
+            ]
+        );
+        $this->log->debug('rarus.bonus.server.cards.transport.attachToUser.attachResult', [
+            'attachResult' => $requestResult,
+        ]);
+
+        // перечитываем карту с обновлённой привзякой
+        $updatedCard = $this->getByCardId($card->getCardId());
+
+        $this->log->debug('rarus.bonus.server.cards.transport.attachToUser.finish', [
+            'cardId' => $card->getCardId()->getId(),
+            'cardCode' => $card->getCode(),
+            'cardUserId' => $updatedCard->getUserId() === null ? null : $updatedCard->getUserId()->getId(),
+        ]);
+
+        return $updatedCard;
     }
 }
