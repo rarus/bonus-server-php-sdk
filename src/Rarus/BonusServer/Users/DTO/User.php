@@ -50,6 +50,30 @@ final class User
      * @var Status\UserStatus
      */
     private $status;
+    /**
+     * @var string|null SHA1 хэш пароля пользователя
+     */
+    private $passwordHash;
+
+    /**
+     * @return null|string
+     */
+    public function getPasswordHash(): ?string
+    {
+        return $this->passwordHash;
+    }
+
+    /**
+     * @param null|string $passwordHash
+     *
+     * @return User
+     */
+    public function setPasswordHash(?string $passwordHash): User
+    {
+        $this->passwordHash = $passwordHash;
+
+        return $this;
+    }
 
     /**
      * @return Status\UserStatus

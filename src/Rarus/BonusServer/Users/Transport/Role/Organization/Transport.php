@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Rarus\BonusServer\Users\Transport;
+namespace Rarus\BonusServer\Users\Transport\Role\Organization;
 
 use Rarus\BonusServer;
 use Fig\Http\Message\RequestMethodInterface;
@@ -75,5 +75,40 @@ class Transport extends BonusServer\Transport\AbstractTransport
         ]);
 
         return $user;
+    }
+
+    /**
+     * пакетная загрузка пользователей, требование - уникальный логин, если найдены дубли, то они игнорируются
+     *
+     * @param BonusServer\Users\DTO\UserCollection $usersCollection - ограничение в 500 штук пользователей
+     *
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function importNewUsers(BonusServer\Users\DTO\UserCollection $usersCollection): void
+    {
+        $this->log->debug('rarus.bonus.server.users.transport.importNewUsers.start', [
+            'usersCount' => $usersCollection->count(),
+        ]);
+
+        $arNewUsers = [];
+        $usersCollection->rewind();
+
+        // собираем пакет из юзеров
+        foreach ($usersCollection as $user) {
+            $arNewUsers[] = BonusServer\Users\Formatters\User::toArrayForImportNewUser($user);
+        }
+
+        $this->apiClient->executeApiRequest(
+            '/organization/user/upload',
+            RequestMethodInterface::METHOD_POST,
+            [
+                'duplicates' => 'ignore',
+                'users' => $arNewUsers,
+            ]
+        );
+
+        $this->log->debug('rarus.bonus.server.users.transport.importNewUsers.finish');
     }
 }

@@ -7,6 +7,7 @@ use Money\Money;
 use Money\Currency;
 use Money\Parser\DecimalMoneyParser;
 use Money\Currencies\ISOCurrencies;
+use Rarus\BonusServer\Users\DTO\UserId;
 
 /**
  * Class Fabric
@@ -41,6 +42,9 @@ class Fabric
         }
         if ($arCard['last_transaction'] !== '') {
             $card->setLastTransaction((string)$arCard['last_transaction']);
+        }
+        if ($arCard['user_id'] !== '') {
+            $card->setUserId(new UserId($arCard['user_id']));
         }
 
         return $card;
