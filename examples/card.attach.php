@@ -5,15 +5,6 @@ require_once __DIR__ . '/init.php';
 
 use \Rarus\BonusServer\Cards;
 
-$userArray = [
-    'name' => 'Михаил',
-    'login' => 'grishi+1@rarus.ru',
-    'phone' => '+7978 888 22 22',
-    'email' => 'grishi@rarus.ru',
-    'gender' => 'male',
-    'birthdate' => '742262400',
-];
-
 $newUser = \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
     'grishi-' . random_int(0, PHP_INT_MAX),
     'Михаил Гришин',
