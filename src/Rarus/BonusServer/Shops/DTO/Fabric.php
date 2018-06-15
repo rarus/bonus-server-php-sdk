@@ -20,6 +20,7 @@ class Fabric
     public static function createNewInstance(string $shopName): Shop
     {
         return (new Shop())
+            ->setShopId(new ShopId())
             ->setName($shopName)
             ->setTimezoneOffset(0)
             ->setIsDeleted(false);
@@ -40,7 +41,7 @@ class Fabric
 
         $shop = new Shop();
         $shop
-            ->setId($arShop['id'])
+            ->setShopId(new ShopId($arShop['id']))
             ->setName($arShop['name'])
             ->setLatitude((float)$arShop['latitude'])
             ->setLongitude((float)$arShop['longitude'])

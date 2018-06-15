@@ -12,7 +12,7 @@ $shops = $shopTransport->list();
 // показываем список магазинов
 foreach ($shops as $shop) {
     print(sprintf('%s | %s ' . PHP_EOL,
-        $shop->getId(),
+        $shop->getShopId()->getId(),
         $shop->getName())
     );
 }

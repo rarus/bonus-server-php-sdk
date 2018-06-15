@@ -25,7 +25,7 @@ class Shop
         }
 
         return [
-            'id' => $shop->getId(),
+            'id' => $shop->getShopId()->getId(),
             'name' => $shop->getName(),
             'latitude' => $shop->getLatitude(),
             'longitude' => $shop->getLongitude(),
@@ -35,7 +35,6 @@ class Shop
             'is_deleted' => $shop->isDeleted(),
             'exclude_articles' => $shop->getExcludeArticles(),
             'schedule' => $arSchedule,
-
         ];
     }
 
@@ -49,7 +48,7 @@ class Shop
     public static function toArrayForCreateNewShop(Shops\DTO\Shop $shop): array
     {
         return [
-            'id' => $shop->getId() ?? '',
+            'id' => $shop->getShopId()->getId(),
             'name' => $shop->getName(),
             'latitude' => $shop->getLatitude() ?? 0,
             'longitude' => $shop->getLongitude() ?? 0,
@@ -61,7 +60,7 @@ class Shop
     }
 
     /**
-     * сокращённый набор полей для добавленя нового магазина
+     * сокращённый набор полей для обновления информации по магазину
      *
      * @param Shops\DTO\Shop $shop
      *
