@@ -30,11 +30,17 @@ class Credentials
      */
     public static function toArray(CredentialsItem $credentials): array
     {
-        return [
+        $arCredentials = [
             'login' => $credentials->getLogin(),
             'password' => $credentials->getPassword(),
             'role' => $credentials->getRole(),
             'session_id' => $credentials->getSession(),
         ];
+
+        if ($credentials->getCompanyId() !== null) {
+            $arCredentials['company_id'] = $credentials->getCompanyId();
+        }
+
+        return $arCredentials;
     }
 }
