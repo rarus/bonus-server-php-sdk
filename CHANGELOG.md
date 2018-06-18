@@ -1,5 +1,9 @@
 # bonus-server-php-sdk change log
 
+## 0.3.0 (18.06.2018)
+- для сущности `Transactions` добавлены роли `Organization` и `User`
+- для сущности `Transactions` в транспорт роли `User` добавлен метод `getSalesHistory`
+
 ## 0.2.0 (15.06.2018)
 - добавлена поддержка ролей для транспорта сущности `User`
 - добавлен метод `importNewUsers` для транспорта сущности `User`
