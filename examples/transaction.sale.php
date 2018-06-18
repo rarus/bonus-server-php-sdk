@@ -8,7 +8,7 @@ use Rarus\BonusServer\Shops;
 
 // транзакция котора отражает прожажу, происходит списание бонусов
 
-$transactionsTransport = Transactions\Transport\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
+$transactionsTransport = Transactions\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
 $cardsTransport = Cards\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
 $shopTransport = Shops\Transport\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
 

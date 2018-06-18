@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Rarus\BonusServer\Transactions\Transport;
+namespace Rarus\BonusServer\Transactions\Transport\Role\Organization\Transport;
 
 use \Rarus\BonusServer\Cards;
 use \Rarus\BonusServer\Shops;
@@ -29,12 +29,12 @@ class TransportTest extends \PHPUnit_Framework_TestCase
      */
     private $shopTransport;
     /**
-     * @var Transactions\Transport\Transport
+     * @var Transactions\Transport\Role\Organization\Transport
      */
     private $transactionTransport;
 
     /**
-     * @covers \Rarus\BonusServer\Transactions\Transport\Transport::addSaleTransaction()
+     * @covers \Rarus\BonusServer\Transactions\Transport\Role\Organization\Transport::addSaleTransaction()
      */
     public function testAddSaleTransactionMethod(): void
     {
@@ -93,7 +93,7 @@ class TransportTest extends \PHPUnit_Framework_TestCase
             \TestEnvironmentManager::getDefaultCurrency(),
             \TestEnvironmentManager::getMonologInstance()
         );
-        $this->transactionTransport = Transactions\Transport\Fabric::getInstance(
+        $this->transactionTransport = Transactions\Transport\Role\Organization\Fabric::getInstance(
             \TestEnvironmentManager::getInstanceForRoleOrganization(),
             \TestEnvironmentManager::getDefaultCurrency(),
             \TestEnvironmentManager::getMonologInstance()
