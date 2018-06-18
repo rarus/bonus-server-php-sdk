@@ -32,6 +32,10 @@ final class Credentials
      * @var string|null
      */
     private $session;
+    /**
+     * @var int|null
+     */
+    private $companyId;
 
     /**
      * Credentials constructor.
@@ -40,13 +44,23 @@ final class Credentials
      * @param string      $shaPassword
      * @param string      $role
      * @param string|null $session
+     * @param int|null    $companyId
      */
-    public function __construct(string $login, string $shaPassword, string $role, string $session = null)
+    public function __construct(string $login, string $shaPassword, string $role, string $session = null, ?int $companyId)
     {
         $this->login = $login;
         $this->password = $shaPassword;
         $this->role = $role;
         $this->session = $session;
+        $this->companyId = $companyId;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getCompanyId(): ?int
+    {
+        return $this->companyId;
     }
 
     /**

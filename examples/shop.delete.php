@@ -14,7 +14,7 @@ $newShop = Rarus\BonusServer\Shops\DTO\Fabric::createNewInstance('Новый м�
 $shop = $shopTransport->add($newShop);
 print(sprintf('добавлен магазин [%s] c id [%s]' . PHP_EOL,
     $shop->getName(),
-    $shop->getId()
+    $shop->getShopId()->getId()
 ));
 
 print_r(Shops\Formatters\Shop::toArray($shop));
@@ -22,5 +22,5 @@ print_r(Shops\Formatters\Shop::toArray($shop));
 $deletedShop = $shopTransport->delete($shop);
 
 print(sprintf('магазин с id [%s] удалён' . PHP_EOL,
-    $shop->getId())
+    $shop->getShopId()->getId())
 );

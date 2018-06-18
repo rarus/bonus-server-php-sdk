@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Rarus\BonusServer\Users\Transport\Role\Organization;
+namespace Rarus\BonusServer\Cards\Transport\Role\User;
 
 use Rarus\BonusServer;
 
@@ -12,7 +12,7 @@ use Money\Currency;
 /**
  * Class Fabric
  *
- * @package Rarus\BonusServer\Users\Transport\Role\Organization
+ * @package Rarus\BonusServer\Cards\Transport\Role\User
  */
 class Fabric
 {

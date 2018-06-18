@@ -60,10 +60,10 @@ class Transport extends BonusServer\Transport\AbstractTransport
             BonusServer\Shops\Formatters\Shop::toArrayForCreateNewShop($newShop)
         );
         // вычитываем магазин
-        $shop = $this->getById($requestResult['id']);
+        $shop = $this->getById(new BonusServer\Shops\DTO\ShopId($requestResult['id']));
 
         $this->log->debug('rarus.bonus.server.shop.transport.add.finish', [
-            'id' => $shop->getId(),
+            'id' => $shop->getShopId()->getId(),
             'name' => $shop->getName(),
         ]);
 
@@ -71,28 +71,28 @@ class Transport extends BonusServer\Transport\AbstractTransport
     }
 
     /**
-     * @param string $shopId
+     * @param BonusServer\Shops\DTO\ShopId $shopId
      *
      * @return BonusServer\Shops\DTO\Shop
      * @throws BonusServer\Exceptions\ApiClientException
      * @throws BonusServer\Exceptions\NetworkException
      * @throws BonusServer\Exceptions\UnknownException
      */
-    public function getById(string $shopId): BonusServer\Shops\DTO\Shop
+    public function getById(BonusServer\Shops\DTO\ShopId $shopId): BonusServer\Shops\DTO\Shop
     {
         $this->log->debug('rarus.bonus.server.shop.transport.getById.start', [
-            'id' => $shopId,
+            'id' => $shopId->getId(),
         ]);
 
         $requestResult = $this->apiClient->executeApiRequest(
-            sprintf('/organization/shop/%s', $shopId),
+            sprintf('/organization/shop/%s', $shopId->getId()),
             RequestMethodInterface::METHOD_GET
         );
 
         $shop = BonusServer\Shops\DTO\Fabric::initShopFromServerResponse($requestResult['shop']);
 
         $this->log->debug('rarus.bonus.server.shop.transport.getById.finish', [
-            'shopId' => $shop->getId(),
+            'shopId' => $shop->getShopId()->getId(),
         ]);
 
         return $shop;
@@ -111,11 +111,11 @@ class Transport extends BonusServer\Transport\AbstractTransport
     public function delete(BonusServer\Shops\DTO\Shop $shop): void
     {
         $this->log->debug('rarus.bonus.server.shop.transport.delete.start', [
-            'id' => $shop->getId(),
+            'id' => $shop->getShopId()->getId(),
         ]);
 
         $this->apiClient->executeApiRequest(
-            sprintf('/organization/shop/%s/delete', $shop->getId()),
+            sprintf('/organization/shop/%s/delete', $shop->getShopId()->getId()),
             RequestMethodInterface::METHOD_POST
         );
 
@@ -135,20 +135,20 @@ class Transport extends BonusServer\Transport\AbstractTransport
     public function update(BonusServer\Shops\DTO\Shop $shop): BonusServer\Shops\DTO\Shop
     {
         $this->log->debug('rarus.bonus.server.shop.transport.update.start', [
-            'id' => $shop->getId(),
+            'id' => $shop->getShopId()->getId(),
         ]);
 
         $this->apiClient->executeApiRequest(
-            sprintf('/organization/shop/%s', $shop->getId()),
+            sprintf('/organization/shop/%s', $shop->getShopId()->getId()),
             RequestMethodInterface::METHOD_POST,
             BonusServer\Shops\Formatters\Shop::toArrayForUpdateShop($shop)
         );
 
         // вычитываем магазин
-        $updatedShop = $this->getById($shop->getId());
+        $updatedShop = $this->getById($shop->getShopId());
 
         $this->log->debug('rarus.bonus.server.shop.transport.update.finish', [
-            'id' => $updatedShop->getId(),
+            'id' => $updatedShop->getShopId()->getId(),
             'name' => $updatedShop->getName(),
         ]);
 

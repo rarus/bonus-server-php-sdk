@@ -15,9 +15,9 @@ final class Shop
     /**
      * Идентификатор магазина
      *
-     * @var string|null
+     * @var ShopId
      */
-    private $id;
+    private $shopId;
 
     /**
      * Наименование магазина
@@ -95,21 +95,21 @@ final class Shop
     }
 
     /**
-     * @return string|null
+     * @return ShopId
      */
-    public function getId(): ?string
+    public function getShopId(): ShopId
     {
-        return $this->id;
+        return $this->shopId;
     }
 
     /**
-     * @param string $id
+     * @param ShopId $shopId
      *
      * @return Shop
      */
-    public function setId(string $id): Shop
+    public function setShopId(ShopId $shopId): Shop
     {
-        $this->id = $id;
+        $this->shopId = $shopId;
 
         return $this;
     }

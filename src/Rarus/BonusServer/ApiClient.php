@@ -216,7 +216,16 @@ class ApiClient
      */
     public function setAuthToken(Auth\DTO\AuthToken $authToken): ApiClient
     {
+        $this->log->debug('rarus.bonus.server.apiClient.setAuthToken.start', [
+            'token' => $authToken->getToken(),
+            'company_id' => $authToken->getCompanyId(),
+            'code' => $authToken->getCode(),
+            'expires' => $authToken->getExpires(),
+        ]);
+
         $this->authToken = $authToken;
+
+        $this->log->debug('rarus.bonus.server.apiClient.setAuthToken.finish');
 
         return $this;
     }

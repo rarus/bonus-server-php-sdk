@@ -14,15 +14,16 @@ use Rarus\BonusServer\Auth\DTO\AuthToken;
 class Fabric
 {
     /**
+     * @param int         $companyId
      * @param string      $login
      * @param string      $password
      * @param string|null $session
      *
      * @return Credentials
      */
-    public static function createCredentialsForRoleClient(string $login, string $password, string $session = null): Credentials
+    public static function createCredentialsForRoleClient(int $companyId, string $login, string $password, string $session = null): Credentials
     {
-        return new Credentials($login, $password, 'client', $session);
+        return new Credentials($login, $password, 'client', $session, $companyId);
     }
 
     /**
@@ -34,7 +35,7 @@ class Fabric
      */
     public static function createCredentialsForRoleOrganization(string $login, string $password, string $session = null): Credentials
     {
-        return new Credentials($login, $password, 'organization', $session);
+        return new Credentials($login, $password, 'organization', $session, null);
     }
 
     /**
