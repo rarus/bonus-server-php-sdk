@@ -43,4 +43,40 @@ class Transport extends BonusServer\Transport\AbstractTransport
 
         return $cardCollection;
     }
+
+    /**
+     * @param BonusServer\Cards\DTO\Card $card
+     * @param int                        $lastTransactionsCount
+     *
+     * @return BonusServer\Cards\DTO\Balance\Balance
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function getBalanceInfo(BonusServer\Cards\DTO\Card $card, int $lastTransactionsCount): BonusServer\Cards\DTO\Balance\Balance
+    {
+        $this->log->debug('rarus.bonus.server.cards.transport.getBalanceInfo.start', [
+            'role' => 'user',
+            'cardId' => $card->getCardId()->getId(),
+            'lastTransactionsCount' => $lastTransactionsCount,
+        ]);
+
+        $requestResult = $this->apiClient->executeApiRequest(
+            sprintf('/user/card/%s/balance_info?last_transactions=%s',
+                $card->getCardId()->getId(),
+                $lastTransactionsCount
+            ),
+            RequestMethodInterface::METHOD_GET
+        );
+
+        $balance = BonusServer\Cards\DTO\Balance\Fabric::initFromServerResponse($this->getDefaultCurrency(), $requestResult);
+
+        $this->log->debug('rarus.bonus.server.cards.transport.getBalanceInfo.finish', [
+            'cardId' => $card->getCardId()->getId(),
+            'availableBalance' => $balance->getAvailable()->getAmount(),
+            'totalBalance' => $balance->getTotal()->getAmount(),
+        ]);
+
+        return $balance;
+    }
 }
