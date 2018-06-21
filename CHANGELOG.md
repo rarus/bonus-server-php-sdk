@@ -1,5 +1,8 @@
 # bonus-server-php-sdk change log
 
+## 0.3.2 (20.06.2018)
+- для сущности `Users` под добавлен транспорт для роли `User` с методом `current`
+
 ## 0.3.1 (19.06.2018)
 - для сущности `Cards` под ролью `User` добавлен метод `getBalanceInfo`
 
