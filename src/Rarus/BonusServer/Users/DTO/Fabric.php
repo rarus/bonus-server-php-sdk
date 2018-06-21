@@ -31,7 +31,7 @@ class Fabric
         if ($arUser['gender'] !== '') {
             $user->setGender(Users\DTO\Gender\Fabric::initFromServerResponse($arUser['gender']));
         }
-        if ($arUser[''] !== 0) {
+        if ($arUser['birthdate'] !== 0) {
             $user->setBirthdate(\DateTime::createFromFormat('U', (string)$arUser['birthdate']));
         }
 

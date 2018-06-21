@@ -3,6 +3,11 @@ declare(strict_types=1);
 
 namespace Rarus\BonusServer\Users\DTO\Gender;
 
+/**
+ * Class Gender
+ *
+ * @package Rarus\BonusServer\Users\DTO\Gender
+ */
 abstract class Gender
 {
     protected $code;
