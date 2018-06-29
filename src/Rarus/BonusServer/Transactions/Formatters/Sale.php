@@ -22,15 +22,7 @@ class Sale
         $arChequeItems = [];
 
         foreach ($saleTrx->getChequeRows() as $chequeRow) {
-            $arChequeItems[] = [
-                'line_number' => $chequeRow->getLineNumber(),
-                'article' => $chequeRow->getArticleId()->getId(),
-                'name' => $chequeRow->getName(),
-                'quantity' => $chequeRow->getQuantity(),
-                'price' => (int)$chequeRow->getPrice()->getAmount(),
-                'summ' => (int)$chequeRow->getSum()->getAmount(),
-                'discount_summ' => (int)$chequeRow->getDiscount()->getAmount(),
-            ];
+            $arChequeItems[] = ChequeRow::toArray($chequeRow);
         }
 
         $arTrx = [

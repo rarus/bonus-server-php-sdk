@@ -76,7 +76,7 @@ class DemoDataGenerator
             $chequeRowCollection->attach((new Transactions\DTO\ChequeRows\ChequeRow())
                 ->setLineNumber($i + 1)
                 ->setArticleId(new \Rarus\BonusServer\Articles\DTO\ArticleId(sprintf('ART-[%s]-%s,', $i, md5((string)$i))))
-                ->setName(sprintf('товар №%s', $i + 1))
+                ->setName(sprintf('товар № %s', $i + 1))
                 ->setQuantity($productCnt)
                 ->setPrice(new \Money\Money($productPrice, $defaultCurrency))
                 ->setSum(new \Money\Money($productCnt * $productPrice, $defaultCurrency))
