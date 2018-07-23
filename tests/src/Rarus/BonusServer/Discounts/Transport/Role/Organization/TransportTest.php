@@ -31,9 +31,32 @@ class TransportTest extends \PHPUnit_Framework_TestCase
     private $discountTransport;
 
     /**
+     * @covers \Rarus\BonusServer\Discounts\Transport\Role\Organization\Transport::calculateDiscountsAndBonusDiscounts()
+     */
+    public function testCalculateDiscountsAndBonusDiscountsMethod(): void
+    {
+        $newCard = Cards\DTO\Fabric::createNewInstance((string)random_int(1000000, 100000000), (string)random_int(1000000, 100000000), new \Money\Currency('RUB'));
+        $card = $this->cardTransport->addNewCard($newCard);
+        $card = $this->cardTransport->activate($card);
+
+
+        $newShop = Shops\DTO\Fabric::createNewInstance('Новый магазин');
+        $shop = $this->shopTransport->add($newShop);
+
+        // табличная часть транзакции
+        $discountDocument = new Discounts\DTO\Document();
+        $discountDocument
+            ->setShopId($shop->getShopId())
+            ->setCard($card)
+            ->setChequeRows(\DemoDataGenerator::createChequeRows(random_int(1, 20), \TestEnvironmentManager::getDefaultCurrency()));
+
+        $estimate = $this->discountTransport->calculateDiscountsAndBonusDiscounts($discountDocument);
+    }
+
+    /**
      * @covers \Rarus\BonusServer\Discounts\Transport\Role\Organization\Transport::calculateDiscounts()
      */
-    public function testcalculateDiscountsMethod(): void
+    public function testCalculateDiscountsMethod(): void
     {
         $newCard = Cards\DTO\Fabric::createNewInstance((string)random_int(1000000, 100000000), (string)random_int(1000000, 100000000), new \Money\Currency('RUB'));
         $card = $this->cardTransport->addNewCard($newCard);
