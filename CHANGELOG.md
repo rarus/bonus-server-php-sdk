@@ -1,5 +1,8 @@
 # bonus-server-php-sdk change log
 
+## 0.3.4 (23.07.2018)
+- для сущности `Discounts` в транспорте для роли `Organization` добавлен метод `calculateDiscountsAndBonusDiscounts`
+
 ## 0.3.3 (28.06.2018)
 - для сущности `Discounts` добавлен транспорт для роли `Organization` с методом `calculateDiscounts`
 - добавлен форматер для сущности `ChequeRow`
