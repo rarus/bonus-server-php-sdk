@@ -37,18 +37,42 @@ $chequeRowCollection->attach((new Transactions\DTO\ChequeRows\ChequeRow())
     ->setSum(new Money\Money(4000, new \Money\Currency('RUB')))
     ->setDiscount(new Money\Money(40, new \Money\Currency('RUB'))));
 
+$authorName = 'Кассир Иванов Иван Иванович';
+$description = 'Продажа по документу Чек№100500';
+$document = Transactions\DTO\Document\Fabric::createNewInstance((string)random_int(1000000, 100000000), 0);
+$refundDocument = Transactions\DTO\Document\Fabric::createNewInstance((string)random_int(1000000, 100000000), 0);
+$cashRegister = \Rarus\BonusServer\Transactions\DTO\CashRegister\Fabric::createNewInstance((string)random_int(1000000, 100000000), 'касса 1');
+$chequeNumber = (string)random_int(1000000, 100000000);
+
 $saleTransaction = new Transactions\DTO\Sale();
 $saleTransaction
     ->setCardId($card->getCardId())
     ->setShopId($shop->getShopId())
-    ->setAuthorName('Кассир Иванов')
-    ->setDescription('Продажа по документу Чек№100500')
-    ->setDocument(Transactions\DTO\Document\Fabric::createNewInstance((string)random_int(1000000, 100000000), 0))
-    ->setCashRegister(\Rarus\BonusServer\Transactions\DTO\CashRegister\Fabric::createNewInstance((string)random_int(1000000, 100000000), 'касса 1'))
-    ->setChequeNumber((string)random_int(1000000, 100000000))
-    ->setBonusPayment(20)
+    ->setAuthorName($authorName)
+    ->setDescription($description)
+    ->setDocument($document)
+    ->setCashRegister($cashRegister)
+    ->setChequeNumber($chequeNumber)
+    ->setBonusPayment(0)
     ->setChequeRows($chequeRowCollection);
 
+// добавляем транзакцию
 $finalScore = $transactionsTransport->addSaleTransaction($saleTransaction);
+var_dump(Transactions\Formatters\FinalScore::toArray($finalScore));
 
+// откатываем транзакцию
+$refundTransaction = new Transactions\DTO\Refund();
+$refundTransaction
+    ->setCardId($card->getCardId())
+    ->setShopId($shop->getShopId())
+    ->setAuthorName($authorName)
+    ->setDescription('отмена: ' . $description)
+    ->setDocument($document)
+    ->setRefundDocument($refundDocument)
+    ->setRefundBonus(10)
+    ->setCashRegister($cashRegister)
+    ->setChequeNumber($chequeNumber)
+    ->setChequeRows($chequeRowCollection);
+
+$finalScore = $transactionsTransport->addRefundTransaction($refundTransaction);
 var_dump(Transactions\Formatters\FinalScore::toArray($finalScore));

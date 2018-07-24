@@ -47,4 +47,38 @@ class Transport extends BonusServer\Transport\AbstractTransport
 
         return $finalScore;
     }
+
+    /**
+     * @param BonusServer\Transactions\DTO\Refund $refundTransaction
+     *
+     * @return BonusServer\Transactions\DTO\FinalScore\FinalScore
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function addRefundTransaction(BonusServer\Transactions\DTO\Refund $refundTransaction): BonusServer\Transactions\DTO\FinalScore\FinalScore
+    {
+        $this->log->debug('rarus.bonus.server.transactions.transport.addRefundTransaction.start', [
+            'cardId' => $refundTransaction->getCardId()->getId(),
+            'shopId' => $refundTransaction->getShopId()->getId(),
+            'doc_id' => $refundTransaction->getDocument()->getId(),
+            'kkm_id' => $refundTransaction->getCashRegister()->getId(),
+        ]);
+
+        $requestResult = $this->apiClient->executeApiRequest(
+            '/organization/process_bonus',
+            RequestMethodInterface::METHOD_POST,
+            BonusServer\Transactions\Formatters\Refund::toArray($refundTransaction)
+        );
+
+        $finalScore = BonusServer\Transactions\DTO\FinalScore\Fabric::initFinalScoreFromServerResponse($this->getDefaultCurrency(), $requestResult);
+
+        $this->log->debug('rarus.bonus.server.transactions.transport.addRefundTransaction.start', [
+            'bonus_earned' => $finalScore->getBonusEarned()->getAmount(),
+            'bonus_spent' => $finalScore->getBonusSpent()->getAmount(),
+            'card_accum' => $finalScore->getCardAccumulationAmount()->getAmount(),
+        ]);
+
+        return $finalScore;
+    }
 }
