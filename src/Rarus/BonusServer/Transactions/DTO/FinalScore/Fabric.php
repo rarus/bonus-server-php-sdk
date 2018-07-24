@@ -5,6 +5,8 @@ namespace Rarus\BonusServer\Transactions\DTO\FinalScore;
 
 use Money\Currency;
 use Money\Money;
+use Money\Currencies\ISOCurrencies;
+use Money\Parser\DecimalMoneyParser;
 
 /**
  * Class Fabric
@@ -23,10 +25,13 @@ class Fabric
     {
         $score = new FinalScore();
 
+        $currencies = new ISOCurrencies();
+        $moneyParser = new DecimalMoneyParser($currencies);
+
         $score
-            ->setBonusEarned(new Money($arResponse['bonus_earned'], $currency))
-            ->setBonusSpent(new Money($arResponse['bonus_spent'], $currency))
-            ->setCardAccumulationAmount(new Money($arResponse['card_accum'], $currency));
+            ->setBonusEarned($moneyParser->parse((string)$arResponse['bonus_earned'], $currency->getCode()))
+            ->setBonusSpent($moneyParser->parse((string)$arResponse['bonus_spent'], $currency->getCode()))
+            ->setCardAccumulationAmount($moneyParser->parse((string)$arResponse['card_accum'], $currency->getCode()));
 
         return $score;
     }
