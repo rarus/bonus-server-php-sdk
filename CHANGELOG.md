@@ -1,5 +1,8 @@
 # bonus-server-php-sdk change log
 
+## 0.3.5 (24.07.2018)
+- для сущности `Transactions` в транспорте для роли `Organization` добавлен метод `addRefundTransaction`
+
 ## 0.3.4 (23.07.2018)
 - для сущности `Discounts` в транспорте для роли `Organization` добавлен метод `calculateDiscountsAndBonusDiscounts`
 

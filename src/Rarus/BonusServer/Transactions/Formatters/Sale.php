@@ -13,7 +13,7 @@ use Rarus\BonusServer\Transactions;
 class Sale
 {
     /**
-     * @param Sale $saleTrx
+     * @param Transactions\DTO\Sale $saleTrx
      *
      * @return array
      */
