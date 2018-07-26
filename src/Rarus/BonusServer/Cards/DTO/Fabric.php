@@ -31,8 +31,8 @@ class Fabric
             ->setCardId(new CardId($arCard['id']))
             ->setParentId(new CardId($arCard['parent_id']))
             ->setName((string)$arCard['name'])
-            ->setBarcode((string)$arCard['barcode'])
-            ->setCode((string)$arCard['barcode'])
+            ->setBarcode(new Barcode\Barcode((string)$arCard['barcode']))
+            ->setCode((string)$arCard['code'])
             ->setDescription((string)$arCard['description'])
             ->setAccumSaleAmount($moneyParser->parse((string)$arCard['accum_sale_amount'], $currency->getCode()))
             ->setCardStatus(Status\Fabric::initFromServerResponse($arCard));
@@ -61,9 +61,9 @@ class Fabric
     {
         $card = (new Card())
             ->setCode($code)
-            ->setBarcode($barcode)
+            ->setBarcode(new Barcode\Barcode($barcode))
             ->setAccumSaleAmount(new Money('0', $currency))
-            ->setCardStatus(\Rarus\BonusServer\Cards\DTO\Status\Fabric::initDefaultStatusForNewCard());
+            ->setCardStatus(Status\Fabric::initDefaultStatusForNewCard());
 
         return $card;
     }

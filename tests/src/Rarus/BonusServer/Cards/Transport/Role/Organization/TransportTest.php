@@ -222,7 +222,23 @@ class TransportTest extends \PHPUnit_Framework_TestCase
         $cardsCollection = $this->cardTransport->getByFilter($cardFilter);
         $filteredCard = $cardsCollection->current();
 
-        $this->assertEquals($card->getBarcode(), $filteredCard->getBarcode());
+        $this->assertEquals($card->getBarcode()->getCode(), $filteredCard->getBarcode()->getCode());
+    }
+
+    /**
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByBarcode()
+     */
+    public function testGetByBarcode(): void
+    {
+        $newCard = Cards\DTO\Fabric::createNewInstance(
+            'php-unit-test-card',
+            (string)random_int(1000000, 100000000),
+            \TestEnvironmentManager::getDefaultCurrency());
+        $card = $this->cardTransport->addNewCard($newCard);
+
+        $filteredCard = $this->cardTransport->getByBarcode($card->getBarcode());
+
+        $this->assertEquals($card->getBarcode()->getCode(), $filteredCard->getBarcode()->getCode());
     }
 
     /**

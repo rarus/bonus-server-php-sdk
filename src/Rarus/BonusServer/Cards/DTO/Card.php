@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Rarus\BonusServer\Cards\DTO;
 
 use Money\Money;
+use Rarus\BonusServer\Cards\DTO\Barcode\Barcode;
 use Rarus\BonusServer\Cards\DTO\Status\CardStatus;
 use Rarus\BonusServer\Users\DTO\UserId;
 
@@ -27,7 +28,7 @@ final class Card
      */
     private $code;
     /**
-     * @var string Штриховой код карты
+     * @var Barcode
      */
     private $barcode;
     /**
@@ -211,19 +212,19 @@ final class Card
     }
 
     /**
-     * @return string
+     * @return Barcode
      */
-    public function getBarcode(): string
+    public function getBarcode(): Barcode
     {
         return $this->barcode;
     }
 
     /**
-     * @param string $barcode
+     * @param Barcode $barcode
      *
      * @return Card
      */
-    public function setBarcode(string $barcode): Card
+    public function setBarcode(Barcode $barcode): Card
     {
         $this->barcode = $barcode;
 

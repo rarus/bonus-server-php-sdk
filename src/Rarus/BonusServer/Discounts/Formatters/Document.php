@@ -34,7 +34,7 @@ class Document
         if ($discountDocument->getCard() !== null) {
             $arResult['card_id'] = $discountDocument->getCard()->getCardId()->getId();
             $arResult['card_code'] = $discountDocument->getCard()->getCode();
-            $arResult['card_barcode'] = $discountDocument->getCard()->getBarcode();
+            $arResult['card_barcode'] = $discountDocument->getCard()->getBarcode()->getCode();
         }
 
         return $arResult;

@@ -23,7 +23,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
      */
     public function list(): BonusServer\Cards\DTO\CardCollection
     {
-        $this->log->debug('rarus.bonus.server.cards.transport.list.start');
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.list.start');
 
         $requestResult = $this->apiClient->executeApiRequest(
             '/organization/card',
@@ -35,7 +35,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
             $cardCollection->attach(BonusServer\Cards\DTO\Fabric::initCardFromServerResponse($card, $this->getDefaultCurrency()));
         }
 
-        $this->log->debug('rarus.bonus.server.cards.transport.list.finish', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.list.finish', [
             'itemsCount' => $cardCollection->count(),
         ]);
 
@@ -52,7 +52,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
      */
     public function addNewCard(BonusServer\Cards\DTO\Card $newCard): BonusServer\Cards\DTO\Card
     {
-        $this->log->debug('rarus.bonus.server.cards.transport.addNewCard.start');
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.addNewCard.start');
 
         // добавили карту
         $requestResult = $this->apiClient->executeApiRequest(
@@ -63,7 +63,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
         // вычитываем карту с сервера
         $card = $this->getByCardId(new BonusServer\Cards\DTO\CardId($requestResult['id']));
 
-        $this->log->debug('rarus.bonus.server.cards.transport.addNewCard.finish', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.addNewCard.finish', [
             'cardId' => $card->getCardId()->getId(),
             'code' => $card->getCode(),
             'barcode' => $card->getBarcode(),
@@ -82,7 +82,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
      */
     public function getByCardId(BonusServer\Cards\DTO\CardId $cardId): BonusServer\Cards\DTO\Card
     {
-        $this->log->debug('rarus.bonus.server.cards.transport.getByCardId.start', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.getByCardId.start', [
             'cardId' => $cardId->getId(),
         ]);
 
@@ -93,7 +93,37 @@ class Transport extends BonusServer\Transport\AbstractTransport
 
         $card = BonusServer\Cards\DTO\Fabric::initCardFromServerResponse($requestResult['card'], $this->getDefaultCurrency());
 
-        $this->log->debug('rarus.bonus.server.cards.transport.getByCardId.start', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.getByCardId.finish', [
+            'cardId' => $card->getCardId()->getId(),
+            'code' => $card->getCode(),
+            'barcode' => $card->getBarcode(),
+        ]);
+
+        return $card;
+    }
+
+    /**
+     * @param BonusServer\Cards\DTO\Barcode\Barcode $cardBarcode
+     *
+     * @return BonusServer\Cards\DTO\Card
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function getByBarcode(BonusServer\Cards\DTO\Barcode\Barcode $cardBarcode): BonusServer\Cards\DTO\Card
+    {
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.getByBarcode.start', [
+            'cardBarcode' => $cardBarcode->getCode(),
+        ]);
+
+        $requestResult = $this->apiClient->executeApiRequest(
+            sprintf('/organization/card?page=1&per_page=1&calculate_count=false&barcode=%s', $cardBarcode->getCode()),
+            RequestMethodInterface::METHOD_GET
+        );
+
+        $card = BonusServer\Cards\DTO\Fabric::initCardFromServerResponse($requestResult['cards'][0], $this->getDefaultCurrency());
+
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.getByBarcode.finish', [
             'cardId' => $card->getCardId()->getId(),
             'code' => $card->getCode(),
             'barcode' => $card->getBarcode(),
@@ -112,7 +142,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
      */
     public function activate(BonusServer\Cards\DTO\Card $card): BonusServer\Cards\DTO\Card
     {
-        $this->log->debug('rarus.bonus.server.cards.transport.activate.start', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.activate.start', [
             'cardId' => $card->getCardId()->getId(),
         ]);
 
@@ -123,7 +153,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
 
         $activatedCard = $this->getByCardId($card->getCardId());
 
-        $this->log->debug('rarus.bonus.server.cards.transport.activate.finish', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.activate.finish', [
             'cardId' => $card->getCardId()->getId(),
             'isActive' => $card->getCardStatus()->isActive(),
         ]);
@@ -141,7 +171,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
      */
     public function deactivate(BonusServer\Cards\DTO\Card $card): BonusServer\Cards\DTO\Card
     {
-        $this->log->debug('rarus.bonus.server.cards.transport.deactivate.start', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.deactivate.start', [
             'cardId' => $card->getCardId()->getId(),
         ]);
 
@@ -152,7 +182,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
 
         $deactivatedCard = $this->getByCardId($card->getCardId());
 
-        $this->log->debug('rarus.bonus.server.cards.transport.deactivate.finish', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.deactivate.finish', [
             'cardId' => $card->getCardId()->getId(),
             'isActive' => $card->getCardStatus()->isActive(),
         ]);
@@ -170,7 +200,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
      */
     public function update(BonusServer\Cards\DTO\Card $card): BonusServer\Cards\DTO\Card
     {
-        $this->log->debug('rarus.bonus.server.cards.transport.update.start', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.update.start', [
             'cardId' => $card->getCardId()->getId(),
             'code' => $card->getCode(),
             'barcode' => $card->getBarcode(),
@@ -184,7 +214,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
 
         $updatedCard = $this->getByCardId($card->getCardId());
 
-        $this->log->debug('rarus.bonus.server.cards.transport.update.finish', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.update.finish', [
             'cardId' => $updatedCard->getCardId()->getId(),
             'code' => $updatedCard->getCode(),
             'barcode' => $updatedCard->getBarcode(),
@@ -204,7 +234,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
      */
     public function delete(BonusServer\Cards\DTO\Card $card, bool $isIgnorePositiveBalance = false): void
     {
-        $this->log->debug('rarus.bonus.server.cards.transport.delete.start', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.delete.start', [
             'cardId' => $card->getCardId()->getId(),
             'isIgnorePositiveBalance' => $isIgnorePositiveBalance,
         ]);
@@ -214,7 +244,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
             RequestMethodInterface::METHOD_POST
         );
 
-        $this->log->debug('rarus.bonus.server.cards.transport.delete.finish', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.delete.finish', [
             'cardId' => $card->getCardId()->getId(),
             'isIgnorePositiveBalance' => $isIgnorePositiveBalance,
         ]);
@@ -235,7 +265,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
      */
     public function block(BonusServer\Cards\DTO\Card $card, string $description, \DateTime $autoUnblockDate = null): BonusServer\Cards\DTO\Card
     {
-        $this->log->debug('rarus.bonus.server.cards.transport.block.start', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.block.start', [
             'cardId' => $card->getCardId()->getId(),
             'isBlocked' => $card->getCardStatus()->isBlocked(),
             'description' => $description,
@@ -253,7 +283,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
 
         $blockedCard = $this->getByCardId($card->getCardId());
 
-        $this->log->debug('rarus.bonus.server.cards.transport.block.finish', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.block.finish', [
             'cardId' => $blockedCard->getCardId()->getId(),
             'isBlocked' => $card->getCardStatus()->isBlocked(),
             'blockedDescription' => $card->getCardStatus()->getBlockedDescription(),
@@ -276,7 +306,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
      */
     public function unblock(BonusServer\Cards\DTO\Card $card): BonusServer\Cards\DTO\Card
     {
-        $this->log->debug('rarus.bonus.server.cards.transport.unblock.start', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.unblock.start', [
             'cardId' => $card->getCardId()->getId(),
             'isBlocked' => $card->getCardStatus()->isBlocked(),
         ]);
@@ -288,7 +318,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
 
         $unblockedCard = $this->getByCardId($card->getCardId());
 
-        $this->log->debug('rarus.bonus.server.cards.transport.unblock.finish', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.unblock.finish', [
             'cardId' => $unblockedCard->getCardId()->getId(),
             'isBlocked' => $card->getCardStatus()->isBlocked(),
             'blockedDescription' => $card->getCardStatus()->getBlockedDescription(),
@@ -309,7 +339,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
      */
     public function setAccumulationAmount(BonusServer\Cards\DTO\Card $card, \Money\Money $sum): void
     {
-        $this->log->debug('rarus.bonus.server.cards.transport.setAccumulationAmount.start', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.setAccumulationAmount.start', [
             'cardId' => $card->getCardId()->getId(),
             'accumSaleAmount' => $card->getAccumSaleAmount()->getAmount(),
             'sumValue' => $sum->getAmount(),
@@ -324,7 +354,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
                 'sum' => (int)$sum->getAmount(),
             ]
         );
-        $this->log->debug('rarus.bonus.server.cards.transport.setAccumulationAmount.finish');
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.setAccumulationAmount.finish');
     }
 
     /**
@@ -339,7 +369,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
      */
     public function isCardCanLevelUp(BonusServer\Cards\DTO\Card $card): bool
     {
-        $this->log->debug('rarus.bonus.server.cards.transport.isCardCanLevelUp.start', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.isCardCanLevelUp.start', [
             'cardId' => $card->getCardId()->getId(),
         ]);
 
@@ -357,7 +387,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
             $isCardCanLevelUp = true;
         }
 
-        $this->log->debug('rarus.bonus.server.cards.transport.isCardCanLevelUp.finish', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.isCardCanLevelUp.finish', [
             'cardId' => $card->getCardId()->getId(),
             'isCardCanLevelUp' => $isCardCanLevelUp,
         ]);
@@ -374,7 +404,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
      */
     public function levelUp(BonusServer\Cards\DTO\Card $card): void
     {
-        $this->log->debug('rarus.bonus.server.cards.transport.levelUp.start', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.levelUp.start', [
             'cardId' => $card->getCardId()->getId(),
         ]);
 
@@ -383,7 +413,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
             RequestMethodInterface::METHOD_POST
         );
 
-        $this->log->debug('rarus.bonus.server.cards.transport.levelUp.finish', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.levelUp.finish', [
             'cardId' => $card->getCardId()->getId(),
         ]);
     }
@@ -398,7 +428,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
      */
     public function getByFilter(BonusServer\Cards\DTO\CardFilter $cardFilter): BonusServer\Cards\DTO\CardCollection
     {
-        $this->log->debug('rarus.bonus.server.cards.transport.getByFilter.start', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.getByFilter.start', [
             'cardFilterQuery' => BonusServer\Cards\Formatters\CardFilter::toUrlArguments($cardFilter),
         ]);
 
@@ -412,7 +442,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
             $cardCollection->attach(BonusServer\Cards\DTO\Fabric::initCardFromServerResponse($card, $this->getDefaultCurrency()));
         }
 
-        $this->log->debug('rarus.bonus.server.cards.transport.getByFilter.finish', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.getByFilter.finish', [
             'itemsCount' => $cardCollection->count(),
         ]);
         $cardCollection->rewind();
@@ -433,7 +463,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
      */
     public function attachToUser(BonusServer\Cards\DTO\Card $card, BonusServer\Users\DTO\User $user): BonusServer\Cards\DTO\Card
     {
-        $this->log->debug('rarus.bonus.server.cards.transport.attachToUser.start', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.attachToUser.start', [
             'cardId' => $card->getCardId()->getId(),
             'cardCode' => $card->getCode(),
             'userId' => $user->getUserId()->getId(),
@@ -447,14 +477,14 @@ class Transport extends BonusServer\Transport\AbstractTransport
                 'card_id' => $card->getCardId()->getId(),
             ]
         );
-        $this->log->debug('rarus.bonus.server.cards.transport.attachToUser.attachResult', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.attachToUser.attachResult', [
             'attachResult' => $requestResult,
         ]);
 
         // перечитываем карту с обновлённой привзякой
         $updatedCard = $this->getByCardId($card->getCardId());
 
-        $this->log->debug('rarus.bonus.server.cards.transport.attachToUser.finish', [
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.attachToUser.finish', [
             'cardId' => $card->getCardId()->getId(),
             'cardCode' => $card->getCode(),
             'cardUserId' => $updatedCard->getUserId() === null ? null : $updatedCard->getUserId()->getId(),

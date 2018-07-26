@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Rarus\BonusServer\Cards\DTO;
 
+use Rarus\BonusServer\Cards\DTO\Barcode\Barcode;
+
 /**
  * Class CardFilter для фильтрации карт
  *
@@ -11,7 +13,8 @@ namespace Rarus\BonusServer\Cards\DTO;
 class CardFilter
 {
     /**
-     * @var string|null
+     * @var Barcode|null
+     *
      */
     protected $barcode;
     /**
@@ -32,25 +35,25 @@ class CardFilter
     protected $phone;
 
     /**
-     * @return null|string
+     * @return null|Barcode
      */
-    public function getBarcode(): ?string
+    public function getBarcode(): ?Barcode
     {
         return $this->barcode;
     }
 
     /**
-     * @param null|string $barcode
+     * @param null|Barcode $barcode
      *
      * @return CardFilter
      */
-    public function setBarcode(?string $barcode): CardFilter
+    public function setBarcode(?Barcode $barcode): CardFilter
     {
         $this->barcode = $barcode;
 
         return $this;
     }
-
+    
     /**
      * @return string|null
      */
