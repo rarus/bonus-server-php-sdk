@@ -32,8 +32,12 @@ $discountDocument
     ->setCard($card)
     ->setChequeRows(DemoDataGenerator::createChequeRows(random_int(1, 20), new \Money\Currency('RUB')));
 
-print('документ для предрасчёта скидок:' . PHP_EOL);
+print('документ для предрасчёта скидок и скидочных бонусов:' . PHP_EOL);
 $estimate = $discountsTransport->calculateDiscountsAndBonusDiscounts($discountDocument);
+if (null === $estimate) {
+    print ('скидок и бонусов нет' . PHP_EOL);
+    exit();
+}
 
 print('результаты предрасчёта:' . PHP_EOL);
 print('Строки документа:' . PHP_EOL);
