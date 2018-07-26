@@ -43,6 +43,44 @@ class Transport extends BonusServer\Transport\AbstractTransport
     }
 
     /**
+     * получение списка карт по конкретному пользователю
+     *
+     * @param BonusServer\Users\DTO\User                $user
+     * @param null|BonusServer\Transport\DTO\Pagination $pagination
+     *
+     * @return BonusServer\Cards\DTO\CardCollection
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function getByUser(BonusServer\Users\DTO\User $user, ?BonusServer\Transport\DTO\Pagination $pagination = null): BonusServer\Cards\DTO\CardCollection
+    {
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.getByUser.start', [
+            'userId' => $user->getUserId()->getId(),
+            'phone' => $user->getPhone(),
+        ]);
+
+        $requestResult = $this->apiClient->executeApiRequest(
+            sprintf('/organization/card?%s&calculate_count=true&user_id=%s',
+                BonusServer\Transport\Formatters\Pagination::toRequestUri($pagination),
+                $user->getUserId()->getId()
+            ),
+            RequestMethodInterface::METHOD_GET
+        );
+
+        $cardCollection = new BonusServer\Cards\DTO\CardCollection();
+        foreach ((array)$requestResult['cards'] as $card) {
+            $cardCollection->attach(BonusServer\Cards\DTO\Fabric::initCardFromServerResponse($card, $this->getDefaultCurrency()));
+        }
+
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.getByUser.finish', [
+            'itemsCount' => $cardCollection->count(),
+        ]);
+
+        return $cardCollection;
+    }
+
+    /**
      * @param BonusServer\Cards\DTO\Card $newCard
      *
      * @return BonusServer\Cards\DTO\Card

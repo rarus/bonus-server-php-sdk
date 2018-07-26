@@ -13,6 +13,27 @@ use \Rarus\BonusServer\Transactions;
 class DemoDataGenerator
 {
     /**
+     * @param int $cardsCount
+     *
+     * @return Cards\DTO\CardCollection
+     * @throws Exception
+     */
+    public static function createNewCardCollection(int $cardsCount): Cards\DTO\CardCollection
+    {
+        $cards = new Cards\DTO\CardCollection();
+        for ($i = 1; $i <= $cardsCount; $i++) {
+            $cards->attach(
+                Cards\DTO\Fabric::createNewInstance(
+                    'php-unit-test-card #' . $i,
+                    (string)random_int(1000000, 100000000),
+                    \TestEnvironmentManager::getDefaultCurrency())
+            );
+        }
+
+        return $cards;
+    }
+
+    /**
      * @param string $userUid
      * @param string $userPasswordHash
      *

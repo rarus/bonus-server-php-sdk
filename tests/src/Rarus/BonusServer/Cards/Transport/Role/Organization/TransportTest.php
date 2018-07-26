@@ -14,10 +14,6 @@ use \Rarus\BonusServer\Cards;
 class TransportTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Rarus\BonusServer\ApiClient
-     */
-    private $apiClient;
-    /**
      * @var Transport
      */
     private $cardTransport;
@@ -45,6 +41,35 @@ class TransportTest extends \PHPUnit_Framework_TestCase
             (string)random_int(1000000, 100000000),
             \TestEnvironmentManager::getDefaultCurrency());
         $card = $this->cardTransport->addNewCard($newCard);
+    }
+
+    /**
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByUser()
+     */
+    public function testGetByUserMethod(): void
+    {
+        $newUser = \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
+            'grishi-' . random_int(0, PHP_INT_MAX),
+            'Михаил Гришин',
+            '+7978 888 22 21',
+            'grishi@rarus.ru'
+        );
+        $user = $this->userTransport->addNewUser($newUser);
+        $attachedCards = $this->cardTransport->getByUser($user);
+        $attachedCardsCount = $attachedCards->count();
+        $newCardsCount = 2;
+
+        // добавляем ещё карт
+        $newCards = \DemoDataGenerator::createNewCardCollection($newCardsCount);
+
+        foreach ($newCards as $newCard) {
+            $card = $this->cardTransport->addNewCard($newCard);
+            $this->cardTransport->attachToUser($card, $user);
+        }
+        $attachedCards = $this->cardTransport->getByUser($user);
+        $totalCardsCount = $attachedCards->count();
+
+        $this->assertEquals($totalCardsCount, $attachedCardsCount + $newCardsCount);
     }
 
     /**
@@ -180,7 +205,7 @@ class TransportTest extends \PHPUnit_Framework_TestCase
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::isCardCanLevelUp()
      */
-    public function testiIsCardCanLevelUpMethod(): void
+    public function testIsCardCanLevelUpMethod(): void
     {
         $newCard = Cards\DTO\Fabric::createNewInstance('12345987654321', (string)random_int(1000000, 100000000), new \Money\Currency('RUB'));
 
