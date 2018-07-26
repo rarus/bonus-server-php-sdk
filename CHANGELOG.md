@@ -2,6 +2,7 @@
 
 ## 0.5.0 (24.07.2018)
 - [issue#36](https://github.com/rarus/bonus-server-php-sdk/issues/36) подавить ошибочный 404 статус если нет скидок, результаты рассчёта скидок стали опциональными
+- [issue#31](https://github.com/rarus/bonus-server-php-sdk/issues/31) добавлен метод `getByBarcode` реализующий получение карты по штрихкоду для роли `Organization` 
 
 ## 0.3.5 (24.07.2018)
 - для сущности `Transactions` в транспорте для роли `Organization` добавлен метод `addRefundTransaction`
