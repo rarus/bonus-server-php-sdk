@@ -5,6 +5,7 @@ require_once __DIR__ . '/init.php';
 
 use \Rarus\BonusServer\Cards;
 use \Rarus\BonusServer\Users;
+use \Rarus\BonusServer\Transactions;
 
 print('вывод истории операций в ЛК клиента' . PHP_EOL);
 
@@ -16,6 +17,7 @@ print('вывод истории операций в ЛК клиента' . PHP_
 
 $orgCardsTransport = Cards\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
 $orgUsersTransport = Users\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
+$orgTransactionsTransport = Transactions\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
 
 // готовим тестовые данные
 
@@ -27,5 +29,19 @@ var_dump($user->getEmail());
 
 // получили список карт по пользователю
 $cards = $orgCardsTransport->getByUser($user);
+print(sprintf('количество карт: %s' . PHP_EOL, $cards->count()));
 
-var_dump($cards->count());
+foreach ($cards as $card) {
+    print('---------------' . PHP_EOL);
+    print(sprintf('получаем транзакции по карте с id %s' . PHP_EOL, $card->getCardId()->getId()));
+    // получение транзакций по карте
+    $transactionCollection = $orgTransactionsTransport->getTransactionsByCard($card);
+    foreach ($transactionCollection as $trx) {
+        print(sprintf('-- %s | %s %s | %s' . PHP_EOL,
+            $trx->getPointId()->getId(),
+            $trx->getSum()->getAmount(),
+            $trx->getSum()->getCurrency()->getCode(),
+            $trx->getType()->getCode())
+        );
+    }
+}

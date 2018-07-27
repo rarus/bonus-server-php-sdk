@@ -3,6 +3,11 @@ declare(strict_types=1);
 
 namespace Rarus\BonusServer\Transactions\DTO\Type;
 
+/**
+ * Class Type
+ *
+ * @package Rarus\BonusServer\Transactions\DTO\Type
+ */
 final class Type
 {
     /**

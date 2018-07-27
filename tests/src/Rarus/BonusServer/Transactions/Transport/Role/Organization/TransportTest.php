@@ -36,7 +36,7 @@ class TransportTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \Rarus\BonusServer\Transactions\Transport\Role\Organization\Transport::addSaleTransaction()
      */
-    public function testAddSaleTransactionMethod(): void
+    public function testGetTransactionsByCard(): void
     {
         $newCard = Cards\DTO\Fabric::createNewInstance((string)random_int(1000000, 100000000), (string)random_int(1000000, 100000000), new \Money\Currency('RUB'));
         $card = $this->cardTransport->addNewCard($newCard);
@@ -46,31 +46,29 @@ class TransportTest extends \PHPUnit_Framework_TestCase
         $shop = $this->shopTransport->add($newShop);
 
         // конструируем транзакцию
-        // табличная часть транзакции
-        $chequeRowCollection = new Transactions\DTO\ChequeRows\ChequeRowCollection();;
-        $chequeRowCollection->attach((new Transactions\DTO\ChequeRows\ChequeRow())
-            ->setLineNumber(1)
-            ->setArticleId(new \Rarus\BonusServer\Articles\DTO\ArticleId('ART-11111'))
-            ->setName('товар 1')
-            ->setQuantity(2)
-            ->setPrice(new \Money\Money(400, new \Money\Currency('RUB')))
-            ->setSum(new \Money\Money(4000, new \Money\Currency('RUB')))
-            ->setDiscount(new \Money\Money(40, new \Money\Currency('RUB'))));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
 
-        $saleTransaction = new Transactions\DTO\Sale();
-        $saleTransaction
-            ->setCardId($card->getCardId())
-            ->setShopId($shop->getShopId())
-            ->setAuthorName('Кассир Иванов')
-            ->setDescription('Продажа по документу Чек№100500')
-            ->setDocument(Transactions\DTO\Document\Fabric::createNewInstance((string)random_int(1000000, 100000000), 0))
-            ->setCashRegister(\Rarus\BonusServer\Transactions\DTO\CashRegister\Fabric::createNewInstance((string)random_int(1000000, 100000000), 'касса 1'))
-            ->setChequeNumber((string)random_int(1000000, 100000000))
-            ->setBonusPayment(0)
-            ->setChequeRows($chequeRowCollection);
+        $transactionCollection = $this->transactionTransport->getTransactionsByCard($card);
+    }
 
-        $finalScore = $this->transactionTransport->addSaleTransaction($saleTransaction);
+    /**
+     * @covers \Rarus\BonusServer\Transactions\Transport\Role\Organization\Transport::addSaleTransaction()
+     */
+    public function testAddSaleTransactionMethod(): void
+    {
+        $newCard = Cards\DTO\Fabric::createNewInstance((string)random_int(1000000, 100000000), (string)random_int(1000000, 100000000), new \Money\Currency('RUB'));
+        $card = $this->cardTransport->addNewCard($newCard);
+        $card = $this->cardTransport->activate($card);
 
+        $newShop = Shops\DTO\Fabric::createNewInstance('Новый магазин');
+        $shop = $this->shopTransport->add($newShop);
+
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
     }
 
     /**
