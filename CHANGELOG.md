@@ -5,9 +5,11 @@
 - для сущности `Cards` для роли `Organization` добавлен метод `getByBarcode` [issue#31](https://github.com/rarus/bonus-server-php-sdk/issues/31) 
 - для сущности `Cards` для роли `Organization` добавлен метод `getByUser` [issue#37](https://github.com/rarus/bonus-server-php-sdk/issues/37)
 - для сущности `Transactions` для роли `Organization` добавлен метод `getTransactionsByCard` [issue#37](https://github.com/rarus/bonus-server-php-sdk/issues/37)
+- для сущности `Transactions` для роли `Organization` добавлен метод `getSalesHistoryByCard` [issue#37](https://github.com/rarus/bonus-server-php-sdk/issues/37)
 - добавлен объект постраничной навигации `Pagination`
 - добавлен объект идентификатор ККМ `CashRegisterId`
 - добавлен объект идентификатор документа `DocumentId`
+- добавлен объект идентификатор чека `ChequeId`
 
 ## 0.3.5 (24.07.2018)
 - для сущности `Transactions` в транспорте для роли `Organization` добавлен метод `addRefundTransaction`

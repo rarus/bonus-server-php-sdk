@@ -34,6 +34,29 @@ class TransportTest extends \PHPUnit_Framework_TestCase
     private $transactionTransport;
 
     /**
+     * @covers \Rarus\BonusServer\Transactions\Transport\Role\Organization\Transport::getSalesHistoryByCard()
+     */
+    public function testGetSalesHistoryByCard(): void
+    {
+        $newCard = Cards\DTO\Fabric::createNewInstance((string)random_int(1000000, 100000000), (string)random_int(1000000, 100000000), new \Money\Currency('RUB'));
+        $card = $this->cardTransport->addNewCard($newCard);
+        $card = $this->cardTransport->activate($card);
+
+        $newShop = Shops\DTO\Fabric::createNewInstance('Новый магазин');
+        $shop = $this->shopTransport->add($newShop);
+
+        // конструируем транзакцию
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+
+        $this->transactionTransport->getSalesHistoryByCard($card);
+    }
+
+    /**
      * @covers \Rarus\BonusServer\Transactions\Transport\Role\Organization\Transport::addSaleTransaction()
      */
     public function testGetTransactionsByCard(): void
