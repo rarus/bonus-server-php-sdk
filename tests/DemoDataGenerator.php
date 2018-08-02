@@ -55,6 +55,20 @@ class DemoDataGenerator
     }
 
     /**
+     * @return Users\DTO\User
+     * @throws Exception
+     */
+    public static function createNewUser(): \Rarus\BonusServer\Users\DTO\User
+    {
+        return \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
+            'grishi-' . random_int(0, PHP_INT_MAX),
+            'Михаил Гришин',
+            '+7978 888 22 22',
+            'grishi@rarus.ru'
+        );
+    }
+
+    /**
      * @param Cards\DTO\Card  $card
      * @param Shops\DTO\Shop  $shop
      * @param \Money\Currency $defaultCurrency

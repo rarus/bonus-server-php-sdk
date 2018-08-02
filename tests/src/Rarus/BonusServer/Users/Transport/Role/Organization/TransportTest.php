@@ -20,6 +20,10 @@ class TransportTest extends \PHPUnit_Framework_TestCase
      * @var Transport
      */
     private $userTransport;
+    /**
+     * @var Cards\Transport\Role\Organization\Transport
+     */
+    private $cardTransport;
 
     /**
      * @covers \Rarus\BonusServer\Users\Transport\Role\Organization\Transport::getByUserId()
@@ -27,14 +31,7 @@ class TransportTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetByUserIdMethod(): void
     {
-        $newUser = \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
-            'grishi-' . random_int(0, PHP_INT_MAX),
-            'Михаил Гришин',
-            '+7978 888 22 22',
-            'grishi@rarus.ru'
-        );
-
-        $user = $this->userTransport->addNewUser($newUser);
+        $user = $this->userTransport->addNewUser(\DemoDataGenerator::createNewUser());
 
         $user2 = $this->userTransport->getByUserId($user->getUserId());
 
@@ -47,17 +44,23 @@ class TransportTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddNewUserMethod(): void
     {
-
-        $newUser = \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
-            'grishi-' . random_int(0, PHP_INT_MAX),
-            'Михаил Гришин',
-            '+7978 888 22 22',
-            'grishi@rarus.ru'
-        );
-
-        $user = $this->userTransport->addNewUser($newUser);
+        $user = $this->userTransport->addNewUser(\DemoDataGenerator::createNewUser());
 
         $this->assertEquals('grishi@rarus.ru', $user->getEmail());
+    }
+
+    /**
+     * @covers \Rarus\BonusServer\Users\Transport\Role\Organization\Transport::addNewUserAndAttachFreeCard()
+     */
+    public function testAddNewUserAndAttachFreeCardMethod(): void
+    {
+        $user = $this->userTransport->addNewUserAndAttachFreeCard(\DemoDataGenerator::createNewUser());
+        // юзера вычитали корректного
+        $this->assertEquals('grishi@rarus.ru', $user->getEmail());
+        $cards = $this->cardTransport->getByUser($user);
+        // у него одна привязанная карта
+        $attachedCard = $cards->current();
+        $this->assertEquals($user->getUserId()->getId(), $attachedCard->getUserId()->getId());
     }
 
     /**
@@ -114,6 +117,12 @@ class TransportTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp(): void
     {
+        $this->cardTransport = Cards\Transport\Role\Organization\Fabric::getInstance(
+            \TestEnvironmentManager::getInstanceForRoleOrganization(),
+            \TestEnvironmentManager::getDefaultCurrency(),
+            \TestEnvironmentManager::getMonologInstance()
+        );
+
         $this->userTransport = Fabric::getInstance(
             \TestEnvironmentManager::getInstanceForRoleOrganization(),
             \TestEnvironmentManager::getDefaultCurrency(),

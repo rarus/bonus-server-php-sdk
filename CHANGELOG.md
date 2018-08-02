@@ -1,11 +1,12 @@
 # bonus-server-php-sdk change log
 
-## 0.5.0 (27.07.2018)
+## 0.5.0 (2.08.2018)
 - исправлен ошибочный 404 статус если нет скидок, результаты рассчёта скидок стали опциональными [issue#36](https://github.com/rarus/bonus-server-php-sdk/issues/36)
 - для сущности `Cards` для роли `Organization` добавлен метод `getByBarcode` [issue#31](https://github.com/rarus/bonus-server-php-sdk/issues/31) 
 - для сущности `Cards` для роли `Organization` добавлен метод `getByUser` [issue#37](https://github.com/rarus/bonus-server-php-sdk/issues/37)
 - для сущности `Transactions` для роли `Organization` добавлен метод `getTransactionsByCard` [issue#37](https://github.com/rarus/bonus-server-php-sdk/issues/37)
 - для сущности `Transactions` для роли `Organization` добавлен метод `getSalesHistoryByCard` [issue#37](https://github.com/rarus/bonus-server-php-sdk/issues/37)
+- для сущности `User` для роли `Organization` добавлен метод `addNewUserAndAttachFreeCard` [issue#32](https://github.com/rarus/bonus-server-php-sdk/issues/32)
 - добавлен объект постраничной навигации `Pagination`
 - добавлен объект идентификатор ККМ `CashRegisterId`
 - добавлен объект идентификатор документа `DocumentId`

@@ -72,6 +72,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
         foreach ((array)$requestResult['cards'] as $card) {
             $cardCollection->attach(BonusServer\Cards\DTO\Fabric::initCardFromServerResponse($card, $this->getDefaultCurrency()));
         }
+        $cardCollection->rewind();
 
         $this->log->debug('rarus.bonus.server.cards.transport.organization.getByUser.finish', [
             'itemsCount' => $cardCollection->count(),
