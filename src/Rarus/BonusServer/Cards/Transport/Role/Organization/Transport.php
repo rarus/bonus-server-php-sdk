@@ -14,6 +14,36 @@ use Fig\Http\Message\RequestMethodInterface;
 class Transport extends BonusServer\Transport\AbstractTransport
 {
     /**
+     * @param BonusServer\Cards\DTO\Card $card
+     * @param int                        $lastTransactions
+     *
+     * @return BonusServer\Cards\DTO\AccountStatement\AccountStatement
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function getAccountStatement(BonusServer\Cards\DTO\Card $card, int $lastTransactions = 0): BonusServer\Cards\DTO\AccountStatement\AccountStatement
+    {
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.getAccountStatement.start', [
+            'cardId' => $card->getCardId()->getId(),
+            'lastTransactions' => $lastTransactions,
+        ]);
+
+        $requestResult = $this->apiClient->executeApiRequest(
+            sprintf('/organization/card/%s/balance_info?last_transactions=%s', $card->getCardId()->getId(), $lastTransactions),
+            RequestMethodInterface::METHOD_GET
+        );
+
+        $accountStatement = BonusServer\Cards\DTO\AccountStatement\Fabric::initFromServerResponse($this->getDefaultCurrency(), $requestResult);
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.getAccountStatement.finish', [
+            'availableBalance' => $accountStatement->getBalance()->getAvailable()->getAmount(),
+            'totalBalance' => $accountStatement->getBalance()->getTotal()->getAmount(),
+        ]);
+
+        return $accountStatement;
+    }
+
+    /**
      * получение списка карт
      *
      * @return BonusServer\Cards\DTO\CardCollection

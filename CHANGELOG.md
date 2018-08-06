@@ -1,6 +1,6 @@
 # bonus-server-php-sdk change log
 
-## 0.5.0 (2.08.2018)
+## 0.5.0 (6.08.2018)
 - исправлен ошибочный 404 статус если нет скидок, результаты рассчёта скидок стали опциональными [issue#36](https://github.com/rarus/bonus-server-php-sdk/issues/36)
 - для сущности `Cards` для роли `Organization` добавлен метод `getByBarcode` [issue#31](https://github.com/rarus/bonus-server-php-sdk/issues/31) 
 - для сущности `Cards` для роли `Organization` добавлен метод `getByUser` [issue#37](https://github.com/rarus/bonus-server-php-sdk/issues/37)
@@ -11,6 +11,9 @@
 - добавлен объект идентификатор ККМ `CashRegisterId`
 - добавлен объект идентификатор документа `DocumentId`
 - добавлен объект идентификатор чека `ChequeId`
+- добавлен парсер timestamp `Rarus\BonusServer\Util\DateTimeParser` [issue#40](https://github.com/rarus/bonus-server-php-sdk/issues/40)
+- для сущности `Cards` для роли `Organization` добавлен метод `getAccountStatement` [issue#40](https://github.com/rarus/bonus-server-php-sdk/issues/40)
+- добавлен объект выписка по карточному счёту `AccountStatement`
 
 ## 0.3.5 (24.07.2018)
 - для сущности `Transactions` в транспорте для роли `Organization` добавлен метод `addRefundTransaction`
