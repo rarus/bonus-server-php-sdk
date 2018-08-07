@@ -13,14 +13,7 @@ print('запрос баланса и оборота' . PHP_EOL);
 
 // получение выписки с карты
 $orgCardsTransport = Cards\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
-
-
-
 $card = $orgCardsTransport->getByCardId(new Cards\DTO\CardId('d894efc8-664c-41c5-9290-24a92c3756ba'));
-
-
-
-
 print('запрос баланса без истории транзакций' . PHP_EOL);
 $accountStatement = $orgCardsTransport->getAccountStatement($card, 5);
 

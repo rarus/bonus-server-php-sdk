@@ -172,36 +172,6 @@ class Transport extends BonusServer\Transport\AbstractTransport
     }
 
     /**
-     * @param BonusServer\Cards\DTO\Barcode\Barcode $cardBarcode
-     *
-     * @return BonusServer\Cards\DTO\Card
-     * @throws BonusServer\Exceptions\ApiClientException
-     * @throws BonusServer\Exceptions\NetworkException
-     * @throws BonusServer\Exceptions\UnknownException
-     */
-    public function getByBarcode(BonusServer\Cards\DTO\Barcode\Barcode $cardBarcode): BonusServer\Cards\DTO\Card
-    {
-        $this->log->debug('rarus.bonus.server.cards.transport.organization.getByBarcode.start', [
-            'cardBarcode' => $cardBarcode->getCode(),
-        ]);
-
-        $requestResult = $this->apiClient->executeApiRequest(
-            sprintf('/organization/card?page=1&per_page=1&calculate_count=false&barcode=%s', $cardBarcode->getCode()),
-            RequestMethodInterface::METHOD_GET
-        );
-
-        $card = BonusServer\Cards\DTO\Fabric::initCardFromServerResponse($requestResult['cards'][0], $this->getDefaultCurrency());
-
-        $this->log->debug('rarus.bonus.server.cards.transport.organization.getByBarcode.finish', [
-            'cardId' => $card->getCardId()->getId(),
-            'code' => $card->getCode(),
-            'barcode' => $card->getBarcode(),
-        ]);
-
-        return $card;
-    }
-
-    /**
      * @param BonusServer\Cards\DTO\Card $card
      *
      * @return BonusServer\Cards\DTO\Card
@@ -465,16 +435,20 @@ class Transport extends BonusServer\Transport\AbstractTransport
     }
 
     /**
+     * повышение уровня карты
+     *
      * @param BonusServer\Cards\DTO\Card $card
      *
+     * @return BonusServer\Cards\DTO\Card
      * @throws BonusServer\Exceptions\ApiClientException
      * @throws BonusServer\Exceptions\NetworkException
      * @throws BonusServer\Exceptions\UnknownException
      */
-    public function levelUp(BonusServer\Cards\DTO\Card $card): void
+    public function levelUp(BonusServer\Cards\DTO\Card $card): BonusServer\Cards\DTO\Card
     {
         $this->log->debug('rarus.bonus.server.cards.transport.organization.levelUp.start', [
             'cardId' => $card->getCardId()->getId(),
+            'cardLevelId' => $card->getCardLevelId()->getId(),
         ]);
 
         $requestResult = $this->apiClient->executeApiRequest(
@@ -482,9 +456,49 @@ class Transport extends BonusServer\Transport\AbstractTransport
             RequestMethodInterface::METHOD_POST
         );
 
-        $this->log->debug('rarus.bonus.server.cards.transport.organization.levelUp.finish', [
-            'cardId' => $card->getCardId()->getId(),
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.levelUp.result', [
+            'result' => $requestResult,
         ]);
+
+        // вычитываем карту
+        $updatedCard = $this->getByBarcode($card->getBarcode());
+
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.levelUp.finish', [
+            'cardId' => $updatedCard->getCardId()->getId(),
+            'cardLevelId' => $updatedCard->getCardLevelId()->getId(),
+        ]);
+
+        return $updatedCard;
+    }
+
+    /**
+     * @param BonusServer\Cards\DTO\Barcode\Barcode $cardBarcode
+     *
+     * @return BonusServer\Cards\DTO\Card
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function getByBarcode(BonusServer\Cards\DTO\Barcode\Barcode $cardBarcode): BonusServer\Cards\DTO\Card
+    {
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.getByBarcode.start', [
+            'cardBarcode' => $cardBarcode->getCode(),
+        ]);
+
+        $requestResult = $this->apiClient->executeApiRequest(
+            sprintf('/organization/card?page=1&per_page=1&calculate_count=false&barcode=%s', $cardBarcode->getCode()),
+            RequestMethodInterface::METHOD_GET
+        );
+
+        $card = BonusServer\Cards\DTO\Fabric::initCardFromServerResponse($requestResult['cards'][0], $this->getDefaultCurrency());
+
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.getByBarcode.finish', [
+            'cardId' => $card->getCardId()->getId(),
+            'code' => $card->getCode(),
+            'barcode' => $card->getBarcode(),
+        ]);
+
+        return $card;
     }
 
     /**
@@ -501,20 +515,27 @@ class Transport extends BonusServer\Transport\AbstractTransport
             'cardFilterQuery' => BonusServer\Cards\Formatters\CardFilter::toUrlArguments($cardFilter),
         ]);
 
-        $requestResult = $this->apiClient->executeApiRequest(
-            sprintf('/organization/card/?%s', BonusServer\Cards\Formatters\CardFilter::toUrlArguments($cardFilter)),
-            RequestMethodInterface::METHOD_GET
-        );
-
         $cardCollection = new BonusServer\Cards\DTO\CardCollection();
-        foreach ((array)$requestResult['cards'] as $card) {
-            $cardCollection->attach(BonusServer\Cards\DTO\Fabric::initCardFromServerResponse($card, $this->getDefaultCurrency()));
-        }
+        try {
+            $requestResult = $this->apiClient->executeApiRequest(
+                sprintf('/organization/card/?%s', BonusServer\Cards\Formatters\CardFilter::toUrlArguments($cardFilter)),
+                RequestMethodInterface::METHOD_GET
+            );
 
-        $this->log->debug('rarus.bonus.server.cards.transport.organization.getByFilter.finish', [
-            'itemsCount' => $cardCollection->count(),
-        ]);
-        $cardCollection->rewind();
+            foreach ((array)$requestResult['cards'] as $card) {
+                $cardCollection->attach(BonusServer\Cards\DTO\Fabric::initCardFromServerResponse($card, $this->getDefaultCurrency()));
+            }
+
+            $this->log->debug('rarus.bonus.server.cards.transport.organization.getByFilter.finish', [
+                'itemsCount' => $cardCollection->count(),
+            ]);
+            $cardCollection->rewind();
+        } catch (BonusServer\Exceptions\ApiClientException $exception) {
+            // если карты по фильтру не найдены, то сервер возврашает 404 статус выставив 114 код в данном случае мы его подавляем
+            if ($exception->getCode() !== 114) {
+                throw $exception;
+            }
+        }
 
         return $cardCollection;
     }

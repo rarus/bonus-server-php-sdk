@@ -14,6 +14,8 @@
 - добавлен парсер timestamp `Rarus\BonusServer\Util\DateTimeParser` [issue#40](https://github.com/rarus/bonus-server-php-sdk/issues/40)
 - для сущности `Cards` для роли `Organization` добавлен метод `getAccountStatement` [issue#40](https://github.com/rarus/bonus-server-php-sdk/issues/40)
 - добавлен объект выписка по карточному счёту `AccountStatement`
+- добавлен объект идентификатор уровня карты `LevelId`
+- для сущности `Cards` для роли `Organization` в методе `levelUp` теперь возвращается обновлённый объект карты
 
 ## 0.3.5 (24.07.2018)
 - для сущности `Transactions` в транспорте для роли `Organization` добавлен метод `addRefundTransaction`

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Rarus\BonusServer\Cards\Transport\Role\User;
 
+use PHPUnit\Framework\TestCase;
 use \Rarus\BonusServer\Cards;
 use \Rarus\BonusServer\Shops;
 use \Rarus\BonusServer\Users;
@@ -14,7 +15,7 @@ use \Rarus\BonusServer\Auth;
  *
  * @package Rarus\BonusServer\Users\Transport
  */
-class TransportTest extends \PHPUnit_Framework_TestCase
+class TransportTest extends TestCase
 {
     /**
      * @var Cards\Transport\Role\Organization\Transport

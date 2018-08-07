@@ -7,13 +7,14 @@ use \Rarus\BonusServer\Cards;
 use \Rarus\BonusServer\Shops;
 use \Rarus\BonusServer\Users;
 use \Rarus\BonusServer\Transactions;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class TransportTest
  *
  * @package Rarus\BonusServer\Cards\Transport
  */
-class TransportTest extends \PHPUnit_Framework_TestCase
+class TransportTest extends TestCase
 {
     /**
      * @var Cards\Transport\Role\Organization\Transport

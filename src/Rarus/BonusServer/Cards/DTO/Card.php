@@ -5,6 +5,7 @@ namespace Rarus\BonusServer\Cards\DTO;
 
 use Money\Money;
 use Rarus\BonusServer\Cards\DTO\Barcode\Barcode;
+use Rarus\BonusServer\Cards\DTO\Level\LevelId;
 use Rarus\BonusServer\Cards\DTO\Status\CardStatus;
 use Rarus\BonusServer\Users\DTO\UserId;
 
@@ -82,7 +83,7 @@ final class Card
      */
     private $accumSaleAmount;
     /**
-     * @var string Уровень карты. Используется при расчете скидок.
+     * @var LevelId Уровень карты. Используется при расчете скидок.
      */
     private $cardLevelId;
 
@@ -110,6 +111,26 @@ final class Card
      * @var CardStatus
      */
     private $cardStatus;
+
+    /**
+     * @return LevelId
+     */
+    public function getCardLevelId(): LevelId
+    {
+        return $this->cardLevelId;
+    }
+
+    /**
+     * @param LevelId $cardLevelId
+     *
+     * @return Card
+     */
+    public function setCardLevelId(LevelId $cardLevelId): Card
+    {
+        $this->cardLevelId = $cardLevelId;
+
+        return $this;
+    }
 
     /**
      * @return null|UserId
@@ -407,26 +428,6 @@ final class Card
     public function setAccumSaleAmount(Money $accumSaleAmount): Card
     {
         $this->accumSaleAmount = $accumSaleAmount;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getCardLevelId(): ?string
-    {
-        return $this->cardLevelId;
-    }
-
-    /**
-     * @param string $cardLevelId
-     *
-     * @return Card
-     */
-    public function setCardLevelId(string $cardLevelId): Card
-    {
-        $this->cardLevelId = $cardLevelId;
 
         return $this;
     }

@@ -3,15 +3,16 @@ declare(strict_types=1);
 
 namespace Rarus\BonusServer\Cards\Transport\Role\Organization;
 
-
+use PHPUnit\Framework\TestCase;
 use \Rarus\BonusServer\Cards;
+use Rarus\BonusServer\Exceptions\ApiClientException;
 
 /**
  * Class TransportTest
  *
  * @package Rarus\BonusServer\Cards\Transport
  */
-class TransportTest extends \PHPUnit_Framework_TestCase
+class TransportTest extends TestCase
 {
     /**
      * @var Transport
@@ -27,20 +28,33 @@ class TransportTest extends \PHPUnit_Framework_TestCase
      */
     public function testListMethod(): void
     {
-        $shopCollection = $this->cardTransport->list();
+        $newCardCount = 10;
+        $newCardCollection = \DemoDataGenerator::createNewCardCollection($newCardCount);
+        foreach ($newCardCollection as $newCard) {
+            $this->cardTransport->addNewCard($newCard);
+        }
+        $cardCollection = $this->cardTransport->list();
+
+        $this->assertGreaterThan($newCardCount, $cardCollection->count());
     }
 
     /**
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::addNewCard()
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByBarcode()
      */
     public function testAddNewCardMethod(): void
     {
+        $barcode = (string)random_int(1000000, 100000000);
+
         $newCard = Cards\DTO\Fabric::createNewInstance(
             'php-unit-test-card',
-            (string)random_int(1000000, 100000000),
+            $barcode,
             \TestEnvironmentManager::getDefaultCurrency());
         $card = $this->cardTransport->addNewCard($newCard);
+        $cardFromServer = $this->cardTransport->getByBarcode(new Cards\DTO\Barcode\Barcode($barcode));
+
+        $this->assertEquals($newCard->getCode(), $cardFromServer->getCode());
     }
 
     /**
@@ -146,17 +160,22 @@ class TransportTest extends \PHPUnit_Framework_TestCase
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::addNewCard()
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::delete()
-     *
      */
     public function testDeleteMethod(): void
     {
+        $barcode = (string)random_int(1000000, 100000000);
         $newCard = Cards\DTO\Fabric::createNewInstance(
             'php-unit-test-card',
-            (string)random_int(1000000, 100000000),
+            $barcode,
             \TestEnvironmentManager::getDefaultCurrency());
         $card = $this->cardTransport->addNewCard($newCard);
-
         $this->cardTransport->delete($card);
+
+        $cardFilter = new Cards\DTO\CardFilter();
+        $cardFilter
+            ->setBarcode(new Cards\DTO\Barcode\Barcode($barcode));
+        $emptyResult = $this->cardTransport->getByFilter($cardFilter);
+        $this->assertEquals(0, $emptyResult->count());
     }
 
     /**
@@ -212,7 +231,9 @@ class TransportTest extends \PHPUnit_Framework_TestCase
         $card = $this->cardTransport->addNewCard($newCard);
         $activatedCard = $this->cardTransport->activate($card);
 
-        $this->cardTransport->isCardCanLevelUp($activatedCard);
+        $result = $this->cardTransport->isCardCanLevelUp($activatedCard);
+
+        $this->assertEquals(\is_bool($result), true);
     }
 
     /**
@@ -226,8 +247,9 @@ class TransportTest extends \PHPUnit_Framework_TestCase
 
         $card = $this->cardTransport->addNewCard($newCard);
         $activatedCard = $this->cardTransport->activate($card);
+        $updatedCard = $this->cardTransport->levelUp($activatedCard);
 
-        $this->cardTransport->levelUp($activatedCard);
+        $this->assertNotEquals($activatedCard->getCardLevelId()->getId(), $updatedCard->getCardLevelId()->getId());
     }
 
     /**

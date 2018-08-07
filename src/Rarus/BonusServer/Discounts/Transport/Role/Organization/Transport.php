@@ -15,6 +15,7 @@ use Fig\Http\Message\RequestMethodInterface;
  */
 class Transport extends BonusServer\Transport\AbstractTransport
 {
+
     /**
      * @param Discounts\DTO\Document $discountDocument
      *

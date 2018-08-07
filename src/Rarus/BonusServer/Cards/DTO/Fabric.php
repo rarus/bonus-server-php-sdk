@@ -7,6 +7,7 @@ use Money\Money;
 use Money\Currency;
 use Money\Parser\DecimalMoneyParser;
 use Money\Currencies\ISOCurrencies;
+use Rarus\BonusServer\Cards\DTO\Level\LevelId;
 use Rarus\BonusServer\Users\DTO\UserId;
 
 /**
@@ -34,6 +35,7 @@ class Fabric
             ->setBarcode(new Barcode\Barcode((string)$arCard['barcode']))
             ->setCode((string)$arCard['code'])
             ->setDescription((string)$arCard['description'])
+            ->setCardLevelId(new LevelId((string)$arCard['card_level_id']))
             ->setAccumSaleAmount($moneyParser->parse((string)$arCard['accum_sale_amount'], $currency->getCode()))
             ->setCardStatus(Status\Fabric::initFromServerResponse($arCard));
 

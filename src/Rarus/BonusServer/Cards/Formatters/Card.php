@@ -78,7 +78,6 @@ class Card
             'external_card' => $card->getExternalCardId() ?? 0,
             'accum_sale_amount' => $card->getAccumSaleAmount() !== null ?
                 (int)$card->getAccumSaleAmount()->getAmount() : 0,
-            'card_level_id' => $card->getCardLevelId() ?? '',
         ];
     }
 }

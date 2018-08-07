@@ -4,13 +4,14 @@ declare(strict_types=1);
 namespace Rarus\BonusServer\Users\Transport\Role\Organization;
 
 use \Rarus\BonusServer\Cards;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class TransportTest
  *
  * @package Rarus\BonusServer\Users\Transport
  */
-class TransportTest extends \PHPUnit_Framework_TestCase
+class TransportTest extends TestCase
 {
     /**
      * @var \Rarus\BonusServer\ApiClient
