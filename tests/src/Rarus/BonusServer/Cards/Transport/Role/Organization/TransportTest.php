@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace Rarus\BonusServer\Cards\Transport\Role\Organization;
 
+use Money\Money;
 use PHPUnit\Framework\TestCase;
 use \Rarus\BonusServer\Cards;
+use \Rarus\BonusServer\Shops;
 use Rarus\BonusServer\Exceptions\ApiClientException;
 
 /**
@@ -22,6 +24,64 @@ class TransportTest extends TestCase
      * @var \Rarus\BonusServer\Users\Transport\Role\Organization\Transport
      */
     private $userTransport;
+    /**
+     * @var \Rarus\BonusServer\Shops\Transport\Transport
+     */
+    private $shopTransport;
+    /**
+     * @var \Rarus\BonusServer\Transactions\Transport\Role\Organization\Transport
+     */
+    private $transactionTransport;
+
+    /**
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getPaymentBalance
+     * @tim
+     */
+    public function testGetPaymentBalanceMethod(): void
+    {
+        $newShop = Shops\DTO\Fabric::createNewInstance('integration test shop');
+        $shop = $this->shopTransport->add($newShop);
+
+        $card = $this->cardTransport->addNewCard(\DemoDataGenerator::createNewCard());
+        $card = $this->cardTransport->activate($card);
+
+        // накидываем транзакций на счёт
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+
+        $paymentBalance = $this->cardTransport->getPaymentBalance($shop->getShopId(), $card);
+        $this->assertEquals($paymentBalance->getPaymentBalance()->getAmount(), $paymentBalance->getAvailableBalance()->getAmount());
+    }
+
+    /**
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getPaymentBalance
+     * @tim
+     */
+    public function testGetPaymentBalanceWithProductsMethod(): void
+    {
+        $newShop = Shops\DTO\Fabric::createNewInstance('integration test shop');
+        $shop = $this->shopTransport->add($newShop);
+
+        $card = $this->cardTransport->addNewCard(\DemoDataGenerator::createNewCard());
+        $card = $this->cardTransport->activate($card);
+
+        // накидываем транзакций на счёт
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+
+        $chequeRowCollection = \DemoDataGenerator::createChequeRows(rand(2, 10), \TestEnvironmentManager::getDefaultCurrency());
+
+        $paymentBalance = $this->cardTransport->getPaymentBalance($shop->getShopId(), $card, $chequeRowCollection);
+        $this->assertEquals($paymentBalance->getPaymentBalance()->getAmount(), $paymentBalance->getAvailableBalance()->getAmount());
+    }
 
     /**
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::list()
@@ -324,11 +384,21 @@ class TransportTest extends TestCase
             \TestEnvironmentManager::getDefaultCurrency(),
             \TestEnvironmentManager::getMonologInstance()
         );
-
         $this->userTransport = \Rarus\BonusServer\Users\Transport\Role\Organization\Fabric::getInstance(
             \TestEnvironmentManager::getInstanceForRoleOrganization(),
             \TestEnvironmentManager::getDefaultCurrency(),
             \TestEnvironmentManager::getMonologInstance()
         );
+        $this->shopTransport = \Rarus\BonusServer\Shops\Transport\Fabric::getInstance(
+            \TestEnvironmentManager::getInstanceForRoleOrganization(),
+            \TestEnvironmentManager::getDefaultCurrency(),
+            \TestEnvironmentManager::getMonologInstance()
+        );
+        $this->transactionTransport = \Rarus\BonusServer\Transactions\Transport\Role\Organization\Fabric::getInstance(
+            \TestEnvironmentManager::getInstanceForRoleOrganization(),
+            \TestEnvironmentManager::getDefaultCurrency(),
+            \TestEnvironmentManager::getMonologInstance()
+        );
+
     }
 }

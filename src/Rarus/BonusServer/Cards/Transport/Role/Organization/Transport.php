@@ -14,6 +14,54 @@ use Fig\Http\Message\RequestMethodInterface;
 class Transport extends BonusServer\Transport\AbstractTransport
 {
     /**
+     * @param BonusServer\Shops\DTO\ShopId                                     $shopId
+     * @param BonusServer\Cards\DTO\Card                                       $card
+     * @param null|BonusServer\Transactions\DTO\ChequeRows\ChequeRowCollection $chequeRowCollection
+     *
+     * @return BonusServer\Cards\DTO\Balance\PaymentBalance
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function getPaymentBalance(BonusServer\Shops\DTO\ShopId $shopId, BonusServer\Cards\DTO\Card $card, ?BonusServer\Transactions\DTO\ChequeRows\ChequeRowCollection $chequeRowCollection = null): BonusServer\Cards\DTO\Balance\PaymentBalance
+    {
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.getPaymentBalance.start', [
+            'shopId' => $shopId->getId(),
+            'cardId' => $card->getCardId()->getId(),
+            'cardBarcode' => $card->getBarcode()->getCode(),
+        ]);
+
+        // есть ли табличная часть чека?
+        if ($chequeRowCollection === null) {
+            $chequeRowCollection = new BonusServer\Transactions\DTO\ChequeRows\ChequeRowCollection();
+        }
+        $arChequeRows = [];
+        foreach ($chequeRowCollection as $chequeRow) {
+            $arChequeRows[] = BonusServer\Transactions\Formatters\ChequeRow::toArray($chequeRow);
+        }
+
+        $requestResult = $this->apiClient->executeApiRequest(
+            sprintf('/organization/card/%s/balance', $card->getCardId()->getId()),
+            RequestMethodInterface::METHOD_POST, [
+                'card_barcode' => $card->getBarcode()->getCode(),
+                'shop_id' => $shopId->getId(),
+                'cheque_items' => $arChequeRows,
+            ]
+        );
+
+        $paymentBalance = BonusServer\Cards\DTO\Balance\Fabric::initPaymentBalanceFromServerResponse($this->getDefaultCurrency(), $requestResult);
+
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.getPaymentBalance.finish', [
+            'shopId' => $shopId->getId(),
+            'cardId' => $card->getCardId()->getId(),
+            'paymentBalance' => $paymentBalance->getPaymentBalance()->getAmount(),
+            'availableBalance' => $paymentBalance->getAvailableBalance()->getAmount(),
+        ]);
+
+        return $paymentBalance;
+    }
+
+    /**
      * @param BonusServer\Cards\DTO\Card $card
      * @param int                        $lastTransactions
      *

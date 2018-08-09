@@ -34,6 +34,18 @@ class DemoDataGenerator
     }
 
     /**
+     * @return Cards\DTO\Card
+     * @throws Exception
+     */
+    public static function createNewCard(): Cards\DTO\Card
+    {
+        return Cards\DTO\Fabric::createNewInstance(
+            'php-unit-test-card',
+            (string)random_int(1000000, 100000000),
+            \TestEnvironmentManager::getDefaultCurrency());
+    }
+
+    /**
      * @param string $userUid
      * @param string $userPasswordHash
      *
