@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Rarus\BonusServer\Users\DTO;
 
 use \Rarus\BonusServer\Users;
+use Rarus\BonusServer\Util\DateTimeParser;
 
 /**
  * Class Fabric
@@ -32,7 +33,7 @@ class Fabric
             $user->setGender(Users\DTO\Gender\Fabric::initFromServerResponse($arUser['gender']));
         }
         if ($arUser['birthdate'] !== 0) {
-            $user->setBirthdate(\DateTime::createFromFormat('U', (string)$arUser['birthdate']));
+            $user->setBirthdate(DateTimeParser::parseTimestampFromServerResponse((string)$arUser['birthdate']));
         }
 
         return $user;

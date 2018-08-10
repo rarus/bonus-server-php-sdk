@@ -46,6 +46,22 @@ class DemoDataGenerator
     }
 
     /**
+     * @param int $usersCount
+     *
+     * @return Users\DTO\UserCollection
+     */
+    public static function createNewUserWithUserUidAndPasswordCollection(int $usersCount): Users\DTO\UserCollection
+    {
+        $newUsers = new Users\DTO\UserCollection();
+
+        for ($i = 0; $i < $usersCount; $i++) {
+            $newUsers->attach(self::createNewUserWithUserUidAndPassword('userID' . (string)rand(0, PHP_INT_MAX), 'userPass' . (string)rand(0, PHP_INT_MAX)));
+        }
+
+        return $newUsers;
+    }
+
+    /**
      * @param string $userUid
      * @param string $userPasswordHash
      *
@@ -56,7 +72,7 @@ class DemoDataGenerator
         return Users\DTO\Fabric::createNewInstance(
             $userUid,
             'Михаил Гришин',
-            '+7978 888 22 22',
+            '+79788882222',
             'grishi@rarus.ru',
             null,
             null,
@@ -76,7 +92,10 @@ class DemoDataGenerator
             'grishi-' . random_int(0, PHP_INT_MAX),
             'Михаил Гришин',
             '+7978 888 22 22',
-            'grishi@rarus.ru'
+            'grishi@rarus.ru',
+            Users\DTO\Gender\Fabric::getMale(),
+            new DateTime('06.08.1995 00:00:00')
+
         );
     }
 

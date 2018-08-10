@@ -17,7 +17,8 @@
 - добавлен объект идентификатор уровня карты `LevelId`
 - для сущности `Cards` для роли `Organization` в методе `levelUp` теперь возвращается обновлённый объект карты
 - для сущности `Cards` для роли `Organization` добавлен метод `getPaymentBalance` [issue#45](https://github.com/rarus/bonus-server-php-sdk/issues/45)
-- добавлен объект доступный для платежа баланс по карточному счёту `PaymentBalance` 
+- добавлен объект доступный для платежа баланс по карточному счёту `PaymentBalance`
+- исправлены ошибки при конвертации дат и времени, добавлен служебный класс `Rarus\BonusServer\Util\DateTimeParser` [issue#47](https://github.com/rarus/bonus-server-php-sdk/issues/47) 
 
 ## 0.3.5 (24.07.2018)
 - для сущности `Transactions` в транспорте для роли `Organization` добавлен метод `addRefundTransaction`

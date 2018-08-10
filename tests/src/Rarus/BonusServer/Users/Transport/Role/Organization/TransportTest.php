@@ -45,9 +45,11 @@ class TransportTest extends TestCase
      */
     public function testAddNewUserMethod(): void
     {
-        $user = $this->userTransport->addNewUser(\DemoDataGenerator::createNewUser());
+        $newUser = \DemoDataGenerator::createNewUser();
+        $user = $this->userTransport->addNewUser($newUser);
 
         $this->assertEquals('grishi@rarus.ru', $user->getEmail());
+        $this->assertEquals($newUser->getBirthdate()->getTimestamp(), $user->getBirthdate()->getTimestamp());
     }
 
     /**
@@ -69,48 +71,12 @@ class TransportTest extends TestCase
      */
     public function testImportNewUsers(): void
     {
-        $userCollection = new \Rarus\BonusServer\Users\DTO\UserCollection();
-        $userCollection->attach(
-            \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
-                'grishi-' . random_int(0, PHP_INT_MAX),
-                'Михаил Гришин 1',
-                '+7978 888 22 22',
-                'grishi@rarus.ru',
-                null,
-                null,
-                'passs-hash-1',
-                new \Rarus\BonusServer\Users\DTO\UserId('grishi-uid-' . random_int(0, PHP_INT_MAX)),
-                \Rarus\BonusServer\Users\DTO\Status\Fabric::initDefaultStatusForNewUser()
-            )
-        );
-        $userCollection->attach(
-            \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
-                'grishi-' . random_int(0, PHP_INT_MAX),
-                'Михаил Гришин 2',
-                '+7978 888 22 22',
-                'grishi@rarus.ru',
-                null,
-                null,
-                'passs-hash-1',
-                new \Rarus\BonusServer\Users\DTO\UserId('grishi-uid-' . random_int(0, PHP_INT_MAX)),
-                \Rarus\BonusServer\Users\DTO\Status\Fabric::initDefaultStatusForNewUser()
-            )
-        );
-        $userCollection->attach(
-            \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
-                'grishi-' . random_int(0, PHP_INT_MAX),
-                'Михаил Гришин 3',
-                '+7978 888 22 22',
-                'grishi@rarus.ru',
-                null,
-                null,
-                'passs-hash-1',
-                new \Rarus\BonusServer\Users\DTO\UserId('grishi-uid-' . random_int(0, PHP_INT_MAX)),
-                \Rarus\BonusServer\Users\DTO\Status\Fabric::initDefaultStatusForNewUser()
-            )
-        );
-
-        $this->userTransport->importNewUsers($userCollection);
+        $newUserCollection = \DemoDataGenerator::createNewUserWithUserUidAndPasswordCollection(5);
+        $this->userTransport->importNewUsers($newUserCollection);
+        foreach ($newUserCollection as $newUser) {
+            $addedUser = $this->userTransport->getByUserId($newUser->getUserId());
+            $this->assertEquals($addedUser->getPhone(), $newUser->getPhone());
+        }
     }
 
     /**

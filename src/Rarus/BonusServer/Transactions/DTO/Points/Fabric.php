@@ -28,6 +28,7 @@ class Fabric
      * @param array    $arPointTransaction
      *
      * @return PointTransaction
+     * @throws \Rarus\BonusServer\Exceptions\ApiClientException
      */
     public static function initPointTransactionFromServerResponse(Currency $currency, array $arPointTransaction): PointTransaction
     {
@@ -40,7 +41,7 @@ class Fabric
             ->setPointId(new PointId((string)$arPointTransaction['id']))
             ->setCardId(new CardId((string)$arPointTransaction['card_id']))
             ->setMastercardId(new CardId((string)$arPointTransaction['mastercard_id']))
-            ->setTime(\DateTime::createFromFormat('U', (string)$arPointTransaction['time']))
+            ->setTime(DateTimeParser::parseTimestampFromServerResponse((string)$arPointTransaction['time']))
             ->setSum($moneyParser->parse((string)$arPointTransaction['sum'], $currency->getCode()))
             ->setType($arPointTransaction['type'] === 0 ? Type\Fabric::getRefund() : Type\Fabric::getSale())
             ->setAuthor((string)$arPointTransaction['author'])
@@ -49,8 +50,8 @@ class Fabric
             ->setCashRegisterId(new CashRegisterId((string)$arPointTransaction['kkm_id']))
             ->setShopId(new ShopId((string)$arPointTransaction['shop_id']))
             ->setDocumentTypeId((string)$arPointTransaction['doc_type'])
-            ->setInvalidatePeriod(\DateTime::createFromFormat('U', (string)$arPointTransaction['invalidate_period']))
-            ->setActivationPeriod(\DateTime::createFromFormat('U', (string)$arPointTransaction['activation_period']))
+            ->setInvalidatePeriod(DateTimeParser::parseTimestampFromServerResponse((string)$arPointTransaction['invalidate_period']))
+            ->setActivationPeriod(DateTimeParser::parseTimestampFromServerResponse((string)$arPointTransaction['activation_period']))
             ->setDiscountId(new DiscountId((string)$arPointTransaction['discount_id']));
 
         return $pointTrx;

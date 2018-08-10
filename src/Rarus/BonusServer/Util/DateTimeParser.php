@@ -23,7 +23,10 @@ class DateTimeParser
     public static function parseTimestampFromServerResponse(string $timestampStr): \DateTime
     {
         if (\strlen($timestampStr) !== 13) {
-            throw new ApiClientException(sprintf('неизвестный формат времени в ответе сервера [%s]', $timestampStr));
+            throw new ApiClientException(sprintf('неизвестный формат времени в ответе сервера [%s], ожидали 13 символов, получили %s',
+                $timestampStr,
+                \strlen($timestampStr)
+            ));
         }
         // отделяем миллисекунды - 4 последних цифры
         $timestampStr = substr($timestampStr, 0, 9) . '.' . substr($timestampStr, 9);
@@ -33,5 +36,17 @@ class DateTimeParser
         }
 
         return $timestamp;
+    }
+
+    /**
+     * сервер принимает значения таймстемпа с учётом микросекунд
+     *
+     * @param \DateTime $dateTime
+     *
+     * @return int
+     */
+    public static function convertToServerFormatTimestamp(\DateTime $dateTime): int
+    {
+        return $dateTime->getTimestamp() * 10000;
     }
 }
