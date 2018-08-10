@@ -19,6 +19,7 @@
 - для сущности `Cards` для роли `Organization` добавлен метод `getPaymentBalance` [issue#45](https://github.com/rarus/bonus-server-php-sdk/issues/45)
 - добавлен объект доступный для платежа баланс по карточному счёту `PaymentBalance`
 - исправлены ошибки при конвертации дат и времени, добавлен служебный класс `Rarus\BonusServer\Util\DateTimeParser` [issue#47](https://github.com/rarus/bonus-server-php-sdk/issues/47) 
+- для сущности `Cards` для роли `Organization`для метода `list` добавлена обязательная постраничная навигация [issue#50](https://github.com/rarus/bonus-server-php-sdk/issues/50)  
 
 ## 0.3.5 (24.07.2018)
 - для сущности `Transactions` в транспорте для роли `Organization` добавлен метод `addRefundTransaction`

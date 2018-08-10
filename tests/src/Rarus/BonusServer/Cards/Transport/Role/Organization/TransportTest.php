@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use \Rarus\BonusServer\Cards;
 use \Rarus\BonusServer\Shops;
 use Rarus\BonusServer\Exceptions\ApiClientException;
+use Rarus\BonusServer\Transport\DTO\Pagination;
 
 /**
  * Class TransportTest
@@ -89,13 +90,15 @@ class TransportTest extends TestCase
     public function testListMethod(): void
     {
         $newCardCount = 10;
+        $paginationResponse = $this->cardTransport->list(new Pagination());
+        $totalCardCount = $paginationResponse->getPagination()->getResultItemsCount();
+
         $newCardCollection = \DemoDataGenerator::createNewCardCollection($newCardCount);
         foreach ($newCardCollection as $newCard) {
             $this->cardTransport->addNewCard($newCard);
         }
-        $cardCollection = $this->cardTransport->list();
-
-        $this->assertGreaterThan($newCardCount, $cardCollection->count());
+        $paginationResponse = $this->cardTransport->list(new Pagination());
+        $this->assertEquals($totalCardCount + $newCardCount, $paginationResponse->getPagination()->getResultItemsCount());
     }
 
     /**

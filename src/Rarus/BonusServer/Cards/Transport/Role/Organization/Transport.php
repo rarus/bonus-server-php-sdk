@@ -92,19 +92,22 @@ class Transport extends BonusServer\Transport\AbstractTransport
     }
 
     /**
-     * получение списка карт
+     * @param BonusServer\Transport\DTO\Pagination $pagination
      *
-     * @return BonusServer\Cards\DTO\CardCollection
+     * @return BonusServer\Cards\Transport\DTO\PaginationResponse
      * @throws BonusServer\Exceptions\ApiClientException
      * @throws BonusServer\Exceptions\NetworkException
      * @throws BonusServer\Exceptions\UnknownException
      */
-    public function list(): BonusServer\Cards\DTO\CardCollection
+    public function list(BonusServer\Transport\DTO\Pagination $pagination): BonusServer\Cards\Transport\DTO\PaginationResponse
     {
-        $this->log->debug('rarus.bonus.server.cards.transport.organization.list.start');
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.list.start', [
+            'pageSize' => $pagination->getPageSize(),
+            'pageNumber' => $pagination->getPageNumber(),
+        ]);
 
         $requestResult = $this->apiClient->executeApiRequest(
-            '/organization/card',
+            sprintf('/organization/card?%s', BonusServer\Transport\Formatters\Pagination::toRequestUri($pagination)),
             RequestMethodInterface::METHOD_GET
         );
 
@@ -113,11 +116,16 @@ class Transport extends BonusServer\Transport\AbstractTransport
             $cardCollection->attach(BonusServer\Cards\DTO\Fabric::initCardFromServerResponse($card, $this->getDefaultCurrency()));
         }
 
+        $paginationResponse = new BonusServer\Cards\Transport\DTO\PaginationResponse(
+            $cardCollection,
+            BonusServer\Transport\DTO\Fabric::initPaginationFromServerResponse((array)$requestResult['pagination'])
+        );
+
         $this->log->debug('rarus.bonus.server.cards.transport.organization.list.finish', [
             'itemsCount' => $cardCollection->count(),
         ]);
 
-        return $cardCollection;
+        return $paginationResponse;
     }
 
     /**
