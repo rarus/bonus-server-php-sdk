@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Rarus\BonusServer\Users\DTO\PersonalInfo;
 
 use Rarus\BonusServer\Users;
+use Rarus\BonusServer\Util\DateTimeParser;
 
 /**
  * Class Fabric
@@ -29,7 +30,7 @@ class Fabric
             ->setGender(Users\DTO\Gender\Fabric::initFromServerResponse($arUserPersonalInfo['gender']))
             ->setReceiveNotifications($arUserPersonalInfo['recieve_notifications']);
         if ($arUserPersonalInfo['birthdate'] !== 0) {
-            $personalInfo->setBirthday(\DateTime::createFromFormat('U', (string)$arUserPersonalInfo['birthdate']));
+            $personalInfo->setBirthday(DateTimeParser::parseTimestampFromServerResponse((string)$arUserPersonalInfo['birthdate']));
         }
         if ($arUserPersonalInfo['image'] !== '') {
             $personalInfo->setImage($arUserPersonalInfo['image']);

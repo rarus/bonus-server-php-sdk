@@ -4,7 +4,8 @@ declare(strict_types=1);
 namespace Rarus\BonusServer\Transactions\Transport\Role\Organization;
 
 use Rarus\BonusServer;
-
+use Rarus\BonusServer\Transport\DTO\Pagination;
+use Rarus\BonusServer\Transactions\DTO\SalesHistory\HistoryItemCollection;
 use Fig\Http\Message\RequestMethodInterface;
 
 /**
@@ -14,6 +15,98 @@ use Fig\Http\Message\RequestMethodInterface;
  */
 class Transport extends BonusServer\Transport\AbstractTransport
 {
+    /**
+     * @param BonusServer\Cards\DTO\Card $card
+     * @param \DateTime|null             $dateFrom
+     * @param \DateTime|null             $dateTo
+     * @param null|Pagination            $pagination
+     *
+     * @return BonusServer\Transactions\DTO\SalesHistory\HistoryItemCollection
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function getSalesHistoryByCard(BonusServer\Cards\DTO\Card $card, ?\DateTime $dateFrom = null, ?\DateTime $dateTo = null, ?Pagination $pagination = null): BonusServer\Transactions\DTO\SalesHistory\HistoryItemCollection
+    {
+        $this->log->debug('rarus.bonus.server.transactions.transport.organization.getSalesHistoryByCard.start', [
+            'cardId' => $card->getCardId()->getId(),
+        ]);
+
+        $queryString = '';
+        if (null !== $pagination) {
+            $queryString .= sprintf('&%s', BonusServer\Transport\Formatters\Pagination::toRequestUri($pagination));
+        } elseif (null !== $dateFrom) {
+            $queryString .= sprintf('&date_from=%s', $dateFrom->getTimestamp());
+        } elseif (null !== $dateTo) {
+            $queryString .= sprintf('&date_to=%s', $dateTo->getTimestamp());
+        }
+        $requestResult = $this->apiClient->executeApiRequest(
+            sprintf('/organization/sale_info?card_id=%s%s', $card->getCardId()->getId(), $queryString),
+            RequestMethodInterface::METHOD_GET
+        );
+
+        $historySalesCollection = new HistoryItemCollection();
+        foreach ($requestResult['sales'] as $arSaleItem) {
+            $historySalesCollection->attach(BonusServer\Transactions\DTO\SalesHistory\Fabric::initHistoryItemFromServerResponse(
+                $this->getDefaultCurrency(),
+                $arSaleItem
+            ));
+        }
+        $historySalesCollection->rewind();
+
+        $this->log->debug('rarus.bonus.server.transactions.transport.organization.getSalesHistoryByCard.finish', [
+            'operationItemsCount' => $historySalesCollection->count(),
+        ]);
+
+        return $historySalesCollection;
+    }
+
+    /**
+     * @param BonusServer\Cards\DTO\Card $card
+     * @param \DateTime|null             $dateFrom
+     * @param \DateTime|null             $dateTo
+     * @param null|Pagination            $pagination
+     *
+     * @return BonusServer\Transactions\DTO\Points\PointTransactionCollection
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function getTransactionsByCard(BonusServer\Cards\DTO\Card $card, ?\DateTime $dateFrom = null, ?\DateTime $dateTo = null, ?Pagination $pagination = null): BonusServer\Transactions\DTO\Points\PointTransactionCollection
+    {
+        $this->log->debug('rarus.bonus.server.transactions.transport.organization.getTransactionsByCard.start', [
+            'cardId' => $card->getCardId()->getId(),
+        ]);
+
+        $queryString = '';
+        if (null !== $pagination) {
+            $queryString .= sprintf('&%s', BonusServer\Transport\Formatters\Pagination::toRequestUri($pagination));
+        } elseif (null !== $dateFrom) {
+            $queryString .= sprintf('&date_from=%s', $dateFrom->getTimestamp());
+        } elseif (null !== $dateTo) {
+            $queryString .= sprintf('&date_to=%s', $dateTo->getTimestamp());
+        }
+        $requestResult = $this->apiClient->executeApiRequest(
+            sprintf('/organization/transaction?card_id=%s%s', $card->getCardId()->getId(), $queryString),
+            RequestMethodInterface::METHOD_GET
+        );
+
+        $trxCollection = new BonusServer\Transactions\DTO\Points\PointTransactionCollection();
+        foreach ($requestResult['transactions'] as $arTrx) {
+            $trxCollection->attach(BonusServer\Transactions\DTO\Points\Fabric::initPointTransactionFromServerResponse(
+                $this->getDefaultCurrency(),
+                $arTrx
+            ));
+        }
+        $trxCollection->rewind();
+
+        $this->log->debug('rarus.bonus.server.transactions.transport.organization.getTransactionsByCard.finish', [
+            'operationItemsCount' => $trxCollection->count(),
+        ]);
+
+        return $trxCollection;
+    }
+
     /**
      * @param BonusServer\Transactions\DTO\Sale $saleTransaction
      *

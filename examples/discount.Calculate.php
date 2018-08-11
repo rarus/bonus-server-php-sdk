@@ -34,6 +34,10 @@ $discountDocument
 
 print('документ для предрасчёта скидок:' . PHP_EOL);
 $estimate = $discountsTransport->calculateDiscounts($discountDocument);
+if (null === $estimate) {
+    print ('скидок нет' . PHP_EOL);
+    exit();
+}
 
 print('результаты предрасчёта:' . PHP_EOL);
 print('Строки документа:' . PHP_EOL);

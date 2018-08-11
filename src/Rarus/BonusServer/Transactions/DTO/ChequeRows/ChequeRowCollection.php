@@ -6,10 +6,9 @@ namespace Rarus\BonusServer\Transactions\DTO\ChequeRows;
 use Rarus\BonusServer\Transactions\DTO\ChequeRows\ChequeRow;
 
 /**
- * Class CardCollection
+ * Class ChequeRowCollection
  *
- *
- * @method  attach(ChequeRow $chequeRow, $data = null)
+ * @method  attach(ChequeRow $pointTrx, $data = null)
  * @method  ChequeRow current()
  *
  * @package Rarus\BonusServer\Transactions\DTO\ChequeRows

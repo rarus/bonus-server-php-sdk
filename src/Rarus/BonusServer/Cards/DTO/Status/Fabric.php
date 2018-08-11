@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Rarus\BonusServer\Cards\DTO\Status;
 
 use Money\Money;
+use Rarus\BonusServer\Util\DateTimeParser;
 
 class Fabric
 {
@@ -11,6 +12,7 @@ class Fabric
      * @param array $arCard
      *
      * @return CardStatus
+     * @throws \Rarus\BonusServer\Exceptions\ApiClientException
      */
     public static function initFromServerResponse(array $arCard): CardStatus
     {
@@ -20,10 +22,10 @@ class Fabric
             ->setBlockedDescription((string)$arCard['blockeddescription']);
 
         if ($arCard['date_active'] !== 0) {
-            $cardStatus->setDateActivate(\DateTime::createFromFormat('U', (string)$arCard['date_active']));
+            $cardStatus->setDateActivate(DateTimeParser::parseTimestampFromServerResponse((string)$arCard['date_active']));
         }
         if ($arCard['date_deactivate'] !== 0) {
-            $cardStatus->setDateDeactivate(\DateTime::createFromFormat('U', (string)$arCard['date_deactivate']));
+            $cardStatus->setDateDeactivate(DateTimeParser::parseTimestampFromServerResponse((string)$arCard['date_deactivate']));
         }
 
         return $cardStatus;

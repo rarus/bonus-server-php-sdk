@@ -13,6 +13,55 @@ use \Rarus\BonusServer\Transactions;
 class DemoDataGenerator
 {
     /**
+     * @param int $cardsCount
+     *
+     * @return Cards\DTO\CardCollection
+     * @throws Exception
+     */
+    public static function createNewCardCollection(int $cardsCount): Cards\DTO\CardCollection
+    {
+        $cards = new Cards\DTO\CardCollection();
+        for ($i = 1; $i <= $cardsCount; $i++) {
+            $cards->attach(
+                Cards\DTO\Fabric::createNewInstance(
+                    'php-unit-test-card #' . $i,
+                    (string)random_int(1000000, 100000000),
+                    \TestEnvironmentManager::getDefaultCurrency())
+            );
+        }
+
+        return $cards;
+    }
+
+    /**
+     * @return Cards\DTO\Card
+     * @throws Exception
+     */
+    public static function createNewCard(): Cards\DTO\Card
+    {
+        return Cards\DTO\Fabric::createNewInstance(
+            'php-unit-test-card',
+            (string)random_int(1000000, 100000000),
+            \TestEnvironmentManager::getDefaultCurrency());
+    }
+
+    /**
+     * @param int $usersCount
+     *
+     * @return Users\DTO\UserCollection
+     */
+    public static function createNewUserWithUserUidAndPasswordCollection(int $usersCount): Users\DTO\UserCollection
+    {
+        $newUsers = new Users\DTO\UserCollection();
+
+        for ($i = 0; $i < $usersCount; $i++) {
+            $newUsers->attach(self::createNewUserWithUserUidAndPassword('userID' . (string)rand(0, PHP_INT_MAX), 'userPass' . (string)rand(0, PHP_INT_MAX)));
+        }
+
+        return $newUsers;
+    }
+
+    /**
      * @param string $userUid
      * @param string $userPasswordHash
      *
@@ -23,13 +72,30 @@ class DemoDataGenerator
         return Users\DTO\Fabric::createNewInstance(
             $userUid,
             'Михаил Гришин',
-            '+7978 888 22 22',
+            '+79788882222',
             'grishi@rarus.ru',
             null,
             null,
             $userPasswordHash,
             new Users\DTO\UserId($userUid),
             Users\DTO\Status\Fabric::initDefaultStatusForNewUser()
+        );
+    }
+
+    /**
+     * @return Users\DTO\User
+     * @throws Exception
+     */
+    public static function createNewUser(): \Rarus\BonusServer\Users\DTO\User
+    {
+        return \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
+            'grishi-' . random_int(0, PHP_INT_MAX),
+            'Михаил Гришин',
+            '+7978 888 22 22',
+            'grishi@rarus.ru',
+            Users\DTO\Gender\Fabric::getMale(),
+            new DateTime('06.08.1995 00:00:00')
+
         );
     }
 

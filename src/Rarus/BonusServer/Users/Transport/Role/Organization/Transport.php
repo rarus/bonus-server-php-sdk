@@ -78,6 +78,41 @@ class Transport extends BonusServer\Transport\AbstractTransport
     }
 
     /**
+     * @param BonusServer\Users\DTO\User $newUser
+     *
+     * @return BonusServer\Users\DTO\User
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function addNewUserAndAttachFreeCard(BonusServer\Users\DTO\User $newUser): BonusServer\Users\DTO\User
+    {
+        $this->log->debug('rarus.bonus.server.users.transport.addNewUser.start');
+
+        // добавили юзера
+        $requestResult = $this->apiClient->executeApiRequest(
+            '/organization/user/new',
+            RequestMethodInterface::METHOD_POST,
+            array_merge(
+                BonusServer\Users\Formatters\User::toArrayForCreateNewUser($newUser),
+                ['attach_free_card' => true]
+            )
+        );
+
+        // вычитываем юзера с сервера
+        $user = $this->getByUserId(new BonusServer\Users\DTO\UserId($requestResult['id']));
+
+        $this->log->debug('rarus.bonus.server.users.transport.addNewUser.finish', [
+            'id' => $user->getUserId()->getId(),
+            'login' => $user->getLogin(),
+            'name' => $user->getName(),
+            'phone' => $user->getPhone(),
+        ]);
+
+        return $user;
+    }
+
+    /**
      * пакетная загрузка пользователей, требование - уникальный логин, если найдены дубли, то они игнорируются
      *
      * @param BonusServer\Users\DTO\UserCollection $usersCollection - ограничение в 500 штук пользователей

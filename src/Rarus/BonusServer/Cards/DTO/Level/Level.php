@@ -13,9 +13,9 @@ use \Money\Money;
 final class Level
 {
     /**
-     * @var string
+     * @var LevelId
      */
-    private $id;
+    private $levelId;
     /**
      * @var string
      */
@@ -30,21 +30,21 @@ final class Level
     private $accumLevel;
 
     /**
-     * @return string
+     * @return LevelId
      */
-    public function getId(): string
+    public function getLevelId(): LevelId
     {
-        return $this->id;
+        return $this->levelId;
     }
 
     /**
-     * @param string $id
+     * @param LevelId $levelId
      *
      * @return Level
      */
-    public function setId(string $id): Level
+    public function setLevelId(LevelId $levelId): Level
     {
-        $this->id = $id;
+        $this->levelId = $levelId;
 
         return $this;
     }

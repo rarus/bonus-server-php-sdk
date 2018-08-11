@@ -1,5 +1,29 @@
 # bonus-server-php-sdk change log
 
+## 0.5.0 (6.08.2018)
+- исправлен ошибочный 404 статус если нет скидок, результаты рассчёта скидок стали опциональными [issue#36](https://github.com/rarus/bonus-server-php-sdk/issues/36)
+- для сущности `Cards` для роли `Organization` добавлен метод `getByBarcode` [issue#31](https://github.com/rarus/bonus-server-php-sdk/issues/31) 
+- для сущности `Cards` для роли `Organization` добавлен метод `getByUser` [issue#37](https://github.com/rarus/bonus-server-php-sdk/issues/37)
+- для сущности `Transactions` для роли `Organization` добавлен метод `getTransactionsByCard` [issue#37](https://github.com/rarus/bonus-server-php-sdk/issues/37)
+- для сущности `Transactions` для роли `Organization` добавлен метод `getSalesHistoryByCard` [issue#37](https://github.com/rarus/bonus-server-php-sdk/issues/37)
+- для сущности `User` для роли `Organization` добавлен метод `addNewUserAndAttachFreeCard` [issue#32](https://github.com/rarus/bonus-server-php-sdk/issues/32)
+- добавлен объект постраничной навигации `Pagination`
+- добавлен объект идентификатор ККМ `CashRegisterId`
+- добавлен объект идентификатор документа `DocumentId`
+- добавлен объект идентификатор чека `ChequeId`
+- добавлен парсер timestamp `Rarus\BonusServer\Util\DateTimeParser` [issue#40](https://github.com/rarus/bonus-server-php-sdk/issues/40)
+- для сущности `Cards` для роли `Organization` добавлен метод `getAccountStatement` [issue#40](https://github.com/rarus/bonus-server-php-sdk/issues/40)
+- добавлен объект выписка по карточному счёту `AccountStatement`
+- добавлен объект идентификатор уровня карты `LevelId`
+- для сущности `Cards` для роли `Organization` в методе `levelUp` теперь возвращается обновлённый объект карты
+- для сущности `Cards` для роли `Organization` добавлен метод `getPaymentBalance` [issue#45](https://github.com/rarus/bonus-server-php-sdk/issues/45)
+- добавлен объект доступный для платежа баланс по карточному счёту `PaymentBalance`
+- исправлены ошибки при конвертации дат и времени, добавлен служебный класс `Rarus\BonusServer\Util\DateTimeParser` [issue#47](https://github.com/rarus/bonus-server-php-sdk/issues/47) 
+- для сущности `Cards` для роли `Organization`для метода `list` добавлена обязательная постраничная навигация [issue#50](https://github.com/rarus/bonus-server-php-sdk/issues/50)
+- для сущности `Shops` для роли `Organization`добавлен метод `isShopExistsWithId` [issue#49](https://github.com/rarus/bonus-server-php-sdk/issues/49)
+- для сущности `Shops` добавлена роль `Organization` [issue#49](https://github.com/rarus/bonus-server-php-sdk/issues/49)
+
+
 ## 0.3.5 (24.07.2018)
 - для сущности `Transactions` в транспорте для роли `Organization` добавлен метод `addRefundTransaction`
 

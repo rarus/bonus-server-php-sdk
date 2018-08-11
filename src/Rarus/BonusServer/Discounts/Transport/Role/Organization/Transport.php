@@ -15,30 +15,38 @@ use Fig\Http\Message\RequestMethodInterface;
  */
 class Transport extends BonusServer\Transport\AbstractTransport
 {
+
     /**
      * @param Discounts\DTO\Document $discountDocument
      *
-     * @return Discounts\DTO\Estimate
+     * @return null|Discounts\DTO\Estimate
      * @throws BonusServer\Exceptions\ApiClientException
-     * @throws BonusServer\Exceptions\NetworkException
      * @throws BonusServer\Exceptions\UnknownException
      */
-    public function calculateDiscounts(BonusServer\Discounts\DTO\Document $discountDocument): Discounts\DTO\Estimate
+    public function calculateDiscounts(BonusServer\Discounts\DTO\Document $discountDocument): ?Discounts\DTO\Estimate
     {
         $this->log->debug('rarus.bonus.server.Discounts.transport.calculateDiscounts.start', [
             'role' => 'organization',
         ]);
 
-        $requestResult = $this->apiClient->executeApiRequest(
-            '/organization/calculate_document',
-            RequestMethodInterface::METHOD_POST,
-            Discounts\Formatters\Document::toArray($discountDocument)
-        );
-        $estimate = Discounts\DTO\Fabric::initEstimateFromServerResponse($this->getDefaultCurrency(), $requestResult);
-        $this->log->debug('rarus.bonus.server.Discounts.transport.calculateDiscounts.start', [
-            'documentItemsCount' => $estimate->getDocumentItems()->count(),
-            'discountItemsCount' => $estimate->getDiscountItems()->count(),
-        ]);
+        $estimate = null;
+        try {
+            $requestResult = $this->apiClient->executeApiRequest(
+                '/organization/calculate_document',
+                RequestMethodInterface::METHOD_POST,
+                Discounts\Formatters\Document::toArray($discountDocument)
+            );
+            $estimate = Discounts\DTO\Fabric::initEstimateFromServerResponse($this->getDefaultCurrency(), $requestResult);
+            $this->log->debug('rarus.bonus.server.Discounts.transport.calculateDiscounts.finish', [
+                'documentItemsCount' => $estimate->getDocumentItems()->count(),
+                'discountItemsCount' => $estimate->getDiscountItems()->count(),
+            ]);
+        } catch (BonusServer\Exceptions\ApiClientException $exception) {
+            // если скидки не найдены, то сервер возврашает 404 статус выставив 114 код в данном случае мы его подавляем
+            if ($exception->getCode() !== 114) {
+                throw $exception;
+            }
+        }
 
         return $estimate;
     }
@@ -49,29 +57,34 @@ class Transport extends BonusServer\Transport\AbstractTransport
      *
      * @param Discounts\DTO\Document $discountDocument
      *
-     * @return Discounts\DTO\Estimate
+     * @return null|Discounts\DTO\Estimate
      * @throws BonusServer\Exceptions\ApiClientException
-     * @throws BonusServer\Exceptions\NetworkException
      * @throws BonusServer\Exceptions\UnknownException
-     *
      */
-    public function calculateDiscountsAndBonusDiscounts(BonusServer\Discounts\DTO\Document $discountDocument): Discounts\DTO\Estimate
+    public function calculateDiscountsAndBonusDiscounts(BonusServer\Discounts\DTO\Document $discountDocument): ?Discounts\DTO\Estimate
     {
         $this->log->debug('rarus.bonus.server.Discounts.transport.calculateDiscountsAndBonusDiscounts.start', [
             'role' => 'organization',
         ]);
+        $estimate = null;
+        try {
+            $requestResult = $this->apiClient->executeApiRequest(
+                '/organization/calculate',
+                RequestMethodInterface::METHOD_POST,
+                Discounts\Formatters\Document::toArray($discountDocument)
+            );
 
-        $requestResult = $this->apiClient->executeApiRequest(
-            '/organization/calculate',
-            RequestMethodInterface::METHOD_POST,
-            Discounts\Formatters\Document::toArray($discountDocument)
-        );
-
-        $estimate = Discounts\DTO\Fabric::initEstimateFromServerResponse($this->getDefaultCurrency(), $requestResult);
-        $this->log->debug('rarus.bonus.server.Discounts.transport.calculateDiscountsAndBonusDiscounts.start', [
-            'documentItemsCount' => $estimate->getDocumentItems()->count(),
-            'discountItemsCount' => $estimate->getDiscountItems()->count(),
-        ]);
+            $estimate = Discounts\DTO\Fabric::initEstimateFromServerResponse($this->getDefaultCurrency(), $requestResult);
+            $this->log->debug('rarus.bonus.server.Discounts.transport.calculateDiscountsAndBonusDiscounts.finish', [
+                'documentItemsCount' => $estimate->getDocumentItems()->count(),
+                'discountItemsCount' => $estimate->getDiscountItems()->count(),
+            ]);
+        } catch (BonusServer\Exceptions\ApiClientException $exception) {
+            // если скидки не найдены, то сервер возврашает 404 статус выставив 114 код в данном случае мы его подавляем
+            if ($exception->getCode() !== 114) {
+                throw $exception;
+            }
+        }
 
         return $estimate;
     }

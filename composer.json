@@ -30,8 +30,7 @@
   "require-dev": {
     "jakub-onderka/php-parallel-lint": "0.9",
     "jakub-onderka/php-console-highlighter": "~0.3",
-    "phpunit/phpunit": "~4.8",
-    "phpunit/phpunit-mock-objects": "2.3.0"
+    "phpunit/phpunit": "^7"
   },
   "autoload": {
     "psr-4": {

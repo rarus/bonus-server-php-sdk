@@ -23,8 +23,8 @@ class CardFilter
         if ($cardFilter->getCode() !== '') {
             $arFilter['code'] = $cardFilter->getCode();
         }
-        if ($cardFilter->getBarcode() !== '') {
-            $arFilter['barcode'] = $cardFilter->getBarcode();
+        if ($cardFilter->getBarcode() !== null) {
+            $arFilter['barcode'] = $cardFilter->getBarcode()->getCode();
         }
         if ($cardFilter->getCardLevelId() !== '') {
             $arFilter['card_level_id'] = $cardFilter->getCardLevelId();

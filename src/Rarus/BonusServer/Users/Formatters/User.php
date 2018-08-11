@@ -49,7 +49,7 @@ class User
             'phone' => $newUser->getPhone(),
             'email' => $newUser->getEmail(),
             'gender' => $newUser->getGender() === null ? '' : $newUser->getGender()->getCode(),
-            'birthdate' => $newUser->getBirthdate() === null ? 0 : $newUser->getBirthdate()->getTimestamp(),
+            'birthdate' => $newUser->getBirthdate() === null ? 0 : BonusServer\Util\DateTimeParser::convertToServerFormatTimestamp($newUser->getBirthdate()),
         ];
     }
 

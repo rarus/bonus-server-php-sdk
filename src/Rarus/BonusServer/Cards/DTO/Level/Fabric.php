@@ -25,7 +25,7 @@ class Fabric
         $moneyParser = new DecimalMoneyParser(new ISOCurrencies());
 
         return (new Level())
-            ->setId($arLevel['level_id'])
+            ->setLevelId(new LevelId($arLevel['level_id']))
             ->setName($arLevel['level_name'])
             ->setAccumAmount($moneyParser->parse((string)$arLevel['accum_amount'], $currency->getCode()))
             ->setAccumLevel($moneyParser->parse((string)$arLevel['accum_level'], $currency->getCode()));

@@ -52,7 +52,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
         }
         $operationCollection->rewind();
 
-        $this->log->debug('rarus.bonus.server.transactions.transport.getSalesHistory.start', [
+        $this->log->debug('rarus.bonus.server.transactions.transport.getSalesHistory.finish', [
             'operationItemsCount' => $operationCollection->count(),
         ]);
 

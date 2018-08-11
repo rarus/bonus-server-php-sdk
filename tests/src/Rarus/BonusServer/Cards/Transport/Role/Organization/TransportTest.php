@@ -3,20 +3,20 @@ declare(strict_types=1);
 
 namespace Rarus\BonusServer\Cards\Transport\Role\Organization;
 
-
+use Money\Money;
+use PHPUnit\Framework\TestCase;
 use \Rarus\BonusServer\Cards;
+use \Rarus\BonusServer\Shops;
+use Rarus\BonusServer\Exceptions\ApiClientException;
+use Rarus\BonusServer\Transport\DTO\Pagination;
 
 /**
  * Class TransportTest
  *
  * @package Rarus\BonusServer\Cards\Transport
  */
-class TransportTest extends \PHPUnit_Framework_TestCase
+class TransportTest extends TestCase
 {
-    /**
-     * @var \Rarus\BonusServer\ApiClient
-     */
-    private $apiClient;
     /**
      * @var Transport
      */
@@ -25,26 +25,128 @@ class TransportTest extends \PHPUnit_Framework_TestCase
      * @var \Rarus\BonusServer\Users\Transport\Role\Organization\Transport
      */
     private $userTransport;
+    /**
+     * @var \Rarus\BonusServer\Shops\Transport\Transport
+     */
+    private $shopTransport;
+    /**
+     * @var \Rarus\BonusServer\Transactions\Transport\Role\Organization\Transport
+     */
+    private $transactionTransport;
+
+    /**
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getPaymentBalance
+     * @tim
+     */
+    public function testGetPaymentBalanceMethod(): void
+    {
+        $newShop = Shops\DTO\Fabric::createNewInstance('integration test shop');
+        $shop = $this->shopTransport->add($newShop);
+
+        $card = $this->cardTransport->addNewCard(\DemoDataGenerator::createNewCard());
+        $card = $this->cardTransport->activate($card);
+
+        // накидываем транзакций на счёт
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+
+        $paymentBalance = $this->cardTransport->getPaymentBalance($shop->getShopId(), $card);
+        $this->assertEquals($paymentBalance->getPaymentBalance()->getAmount(), $paymentBalance->getAvailableBalance()->getAmount());
+    }
+
+    /**
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getPaymentBalance
+     * @tim
+     */
+    public function testGetPaymentBalanceWithProductsMethod(): void
+    {
+        $newShop = Shops\DTO\Fabric::createNewInstance('integration test shop');
+        $shop = $this->shopTransport->add($newShop);
+
+        $card = $this->cardTransport->addNewCard(\DemoDataGenerator::createNewCard());
+        $card = $this->cardTransport->activate($card);
+
+        // накидываем транзакций на счёт
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+
+        $chequeRowCollection = \DemoDataGenerator::createChequeRows(rand(2, 10), \TestEnvironmentManager::getDefaultCurrency());
+
+        $paymentBalance = $this->cardTransport->getPaymentBalance($shop->getShopId(), $card, $chequeRowCollection);
+        $this->assertGreaterThan(0, $paymentBalance->getPaymentBalance()->getAmount());
+    }
 
     /**
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::list()
      */
     public function testListMethod(): void
     {
-        $shopCollection = $this->cardTransport->list();
+        $newCardCount = 10;
+        $paginationResponse = $this->cardTransport->list(new Pagination());
+        $totalCardCount = $paginationResponse->getPagination()->getResultItemsCount();
+
+        $newCardCollection = \DemoDataGenerator::createNewCardCollection($newCardCount);
+        foreach ($newCardCollection as $newCard) {
+            $this->cardTransport->addNewCard($newCard);
+        }
+        $paginationResponse = $this->cardTransport->list(new Pagination());
+        $this->assertEquals($totalCardCount + $newCardCount, $paginationResponse->getPagination()->getResultItemsCount());
     }
 
     /**
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::addNewCard()
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByBarcode()
      */
     public function testAddNewCardMethod(): void
     {
+        $barcode = (string)random_int(1000000, 100000000);
+
         $newCard = Cards\DTO\Fabric::createNewInstance(
             'php-unit-test-card',
-            (string)random_int(1000000, 100000000),
+            $barcode,
             \TestEnvironmentManager::getDefaultCurrency());
         $card = $this->cardTransport->addNewCard($newCard);
+        $cardFromServer = $this->cardTransport->getByBarcode(new Cards\DTO\Barcode\Barcode($barcode));
+
+        $this->assertEquals($newCard->getCode(), $cardFromServer->getCode());
+    }
+
+    /**
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByUser()
+     */
+    public function testGetByUserMethod(): void
+    {
+        $newUser = \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
+            'grishi-' . random_int(0, PHP_INT_MAX),
+            'Михаил Гришин',
+            '+7978 888 22 21',
+            'grishi@rarus.ru'
+        );
+        $user = $this->userTransport->addNewUser($newUser);
+        $attachedCards = $this->cardTransport->getByUser($user);
+        $attachedCardsCount = $attachedCards->count();
+        $newCardsCount = 2;
+
+        // добавляем ещё карт
+        $newCards = \DemoDataGenerator::createNewCardCollection($newCardsCount);
+
+        foreach ($newCards as $newCard) {
+            $card = $this->cardTransport->addNewCard($newCard);
+            $this->cardTransport->attachToUser($card, $user);
+        }
+        $attachedCards = $this->cardTransport->getByUser($user);
+        $totalCardsCount = $attachedCards->count();
+
+        $this->assertEquals($totalCardsCount, $attachedCardsCount + $newCardsCount);
     }
 
     /**
@@ -121,17 +223,22 @@ class TransportTest extends \PHPUnit_Framework_TestCase
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::addNewCard()
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::delete()
-     *
      */
     public function testDeleteMethod(): void
     {
+        $barcode = (string)random_int(1000000, 100000000);
         $newCard = Cards\DTO\Fabric::createNewInstance(
             'php-unit-test-card',
-            (string)random_int(1000000, 100000000),
+            $barcode,
             \TestEnvironmentManager::getDefaultCurrency());
         $card = $this->cardTransport->addNewCard($newCard);
-
         $this->cardTransport->delete($card);
+
+        $cardFilter = new Cards\DTO\CardFilter();
+        $cardFilter
+            ->setBarcode(new Cards\DTO\Barcode\Barcode($barcode));
+        $emptyResult = $this->cardTransport->getByFilter($cardFilter);
+        $this->assertEquals(0, $emptyResult->count());
     }
 
     /**
@@ -180,14 +287,16 @@ class TransportTest extends \PHPUnit_Framework_TestCase
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::isCardCanLevelUp()
      */
-    public function testiIsCardCanLevelUpMethod(): void
+    public function testIsCardCanLevelUpMethod(): void
     {
         $newCard = Cards\DTO\Fabric::createNewInstance('12345987654321', (string)random_int(1000000, 100000000), new \Money\Currency('RUB'));
 
         $card = $this->cardTransport->addNewCard($newCard);
         $activatedCard = $this->cardTransport->activate($card);
 
-        $this->cardTransport->isCardCanLevelUp($activatedCard);
+        $result = $this->cardTransport->isCardCanLevelUp($activatedCard);
+
+        $this->assertEquals(\is_bool($result), true);
     }
 
     /**
@@ -201,8 +310,9 @@ class TransportTest extends \PHPUnit_Framework_TestCase
 
         $card = $this->cardTransport->addNewCard($newCard);
         $activatedCard = $this->cardTransport->activate($card);
+        $updatedCard = $this->cardTransport->levelUp($activatedCard);
 
-        $this->cardTransport->levelUp($activatedCard);
+        $this->assertNotEquals($activatedCard->getCardLevelId()->getId(), $updatedCard->getCardLevelId()->getId());
     }
 
     /**
@@ -222,7 +332,23 @@ class TransportTest extends \PHPUnit_Framework_TestCase
         $cardsCollection = $this->cardTransport->getByFilter($cardFilter);
         $filteredCard = $cardsCollection->current();
 
-        $this->assertEquals($card->getBarcode(), $filteredCard->getBarcode());
+        $this->assertEquals($card->getBarcode()->getCode(), $filteredCard->getBarcode()->getCode());
+    }
+
+    /**
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByBarcode()
+     */
+    public function testGetByBarcode(): void
+    {
+        $newCard = Cards\DTO\Fabric::createNewInstance(
+            'php-unit-test-card',
+            (string)random_int(1000000, 100000000),
+            \TestEnvironmentManager::getDefaultCurrency());
+        $card = $this->cardTransport->addNewCard($newCard);
+
+        $filteredCard = $this->cardTransport->getByBarcode($card->getBarcode());
+
+        $this->assertEquals($card->getBarcode()->getCode(), $filteredCard->getBarcode()->getCode());
     }
 
     /**
@@ -261,11 +387,21 @@ class TransportTest extends \PHPUnit_Framework_TestCase
             \TestEnvironmentManager::getDefaultCurrency(),
             \TestEnvironmentManager::getMonologInstance()
         );
-
         $this->userTransport = \Rarus\BonusServer\Users\Transport\Role\Organization\Fabric::getInstance(
             \TestEnvironmentManager::getInstanceForRoleOrganization(),
             \TestEnvironmentManager::getDefaultCurrency(),
             \TestEnvironmentManager::getMonologInstance()
         );
+        $this->shopTransport = Shops\Transport\Role\Organization\Fabric::getInstance(
+            \TestEnvironmentManager::getInstanceForRoleOrganization(),
+            \TestEnvironmentManager::getDefaultCurrency(),
+            \TestEnvironmentManager::getMonologInstance()
+        );
+        $this->transactionTransport = \Rarus\BonusServer\Transactions\Transport\Role\Organization\Fabric::getInstance(
+            \TestEnvironmentManager::getInstanceForRoleOrganization(),
+            \TestEnvironmentManager::getDefaultCurrency(),
+            \TestEnvironmentManager::getMonologInstance()
+        );
+
     }
 }

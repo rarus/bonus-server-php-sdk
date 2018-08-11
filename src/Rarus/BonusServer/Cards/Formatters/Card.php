@@ -24,7 +24,7 @@ class Card
             'parent_id' => $card->getParentId() !== null ? $card->getParentId()->getId() : null,
             'name' => $card->getName(),
             'code' => $card->getCode(),
-            'barcode' => $card->getBarcode(),
+            'barcode' => $card->getBarcode()->getCode(),
             'description' => $card->getDescription(),
             'last_transaction' => $card->getLastTransaction(),
             'accum_sale_amount' => $card->getAccumSaleAmount() !== null ?
@@ -54,7 +54,7 @@ class Card
     {
         return [
             'code' => $newCard->getCode(),
-            'barcode' => $newCard->getBarcode(),
+            'barcode' => $newCard->getBarcode()->getCode(),
             'accum_sale_amount' => (int)$newCard->getAccumSaleAmount()->getAmount(),
         ];
     }
@@ -69,7 +69,7 @@ class Card
         return [
             'parent_id' => $card->getParentId() === null ? '' : $card->getParentId()->getId(),
             'code' => $card->getCode(),
-            'barcode' => $card->getBarcode(),
+            'barcode' => $card->getBarcode()->getCode(),
             'name' => $card->getName() ?? '',
             'description' => $card->getDescription() ?? '',
             'mastercard_id' => $card->getMastercardId() ?? '',
@@ -78,7 +78,6 @@ class Card
             'external_card' => $card->getExternalCardId() ?? 0,
             'accum_sale_amount' => $card->getAccumSaleAmount() !== null ?
                 (int)$card->getAccumSaleAmount()->getAmount() : 0,
-            'card_level_id' => $card->getCardLevelId() ?? '',
         ];
     }
 }
