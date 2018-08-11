@@ -26,7 +26,7 @@ class TransportTest extends TestCase
     private $userTransport;
 
     /**
-     * @var Shops\Transport\Transport
+     * @var Shops\Transport\Role\Organization\Transport
      */
     private $shopTransport;
     /**
@@ -54,7 +54,11 @@ class TransportTest extends TestCase
         $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
         $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
 
-        $this->transactionTransport->getSalesHistoryByCard($card);
+        $historyCollection = $this->transactionTransport->getSalesHistoryByCard($card);
+        $this->assertGreaterThan(0, $historyCollection->count());
+
+        $this->shopTransport->delete($shop);
+        $this->cardTransport->delete($card, true);
     }
 
     /**
@@ -78,6 +82,10 @@ class TransportTest extends TestCase
         $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
 
         $transactionCollection = $this->transactionTransport->getTransactionsByCard($card);
+        $this->shopTransport->delete($shop);
+        $this->cardTransport->delete($card, true);
+
+        $this->assertGreaterThan(0, $transactionCollection->count());
     }
 
     /**
@@ -92,7 +100,11 @@ class TransportTest extends TestCase
         $newShop = Shops\DTO\Fabric::createNewInstance('Новый магазин');
         $shop = $this->shopTransport->add($newShop);
 
-        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $finalScore = $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+
+        $this->assertGreaterThan(0, $finalScore->getCardAccumulationAmount()->getAmount());
+        $this->shopTransport->delete($shop);
+        $this->cardTransport->delete($card, true);
     }
 
     /**
@@ -155,6 +167,11 @@ class TransportTest extends TestCase
             ->setChequeRows($chequeRowCollection);
 
         $finalScore = $this->transactionTransport->addRefundTransaction($refundTransaction);
+
+        $this->assertEquals(0, $finalScore->getCardAccumulationAmount()->getAmount());
+
+        $this->shopTransport->delete($shop);
+        $this->cardTransport->delete($card, true);
     }
 
     /**
@@ -172,7 +189,7 @@ class TransportTest extends TestCase
             \TestEnvironmentManager::getDefaultCurrency(),
             \TestEnvironmentManager::getMonologInstance()
         );
-        $this->shopTransport = Shops\Transport\Fabric::getInstance(
+        $this->shopTransport = Shops\Transport\Role\Organization\Fabric::getInstance(
             \TestEnvironmentManager::getInstanceForRoleOrganization(),
             \TestEnvironmentManager::getDefaultCurrency(),
             \TestEnvironmentManager::getMonologInstance()

@@ -81,7 +81,7 @@ class TransportTest extends TestCase
         $chequeRowCollection = \DemoDataGenerator::createChequeRows(rand(2, 10), \TestEnvironmentManager::getDefaultCurrency());
 
         $paymentBalance = $this->cardTransport->getPaymentBalance($shop->getShopId(), $card, $chequeRowCollection);
-        $this->assertEquals($paymentBalance->getPaymentBalance()->getAmount(), $paymentBalance->getAvailableBalance()->getAmount());
+        $this->assertGreaterThan(0, $paymentBalance->getPaymentBalance()->getAmount());
     }
 
     /**
@@ -392,7 +392,7 @@ class TransportTest extends TestCase
             \TestEnvironmentManager::getDefaultCurrency(),
             \TestEnvironmentManager::getMonologInstance()
         );
-        $this->shopTransport = \Rarus\BonusServer\Shops\Transport\Fabric::getInstance(
+        $this->shopTransport = Shops\Transport\Role\Organization\Fabric::getInstance(
             \TestEnvironmentManager::getInstanceForRoleOrganization(),
             \TestEnvironmentManager::getDefaultCurrency(),
             \TestEnvironmentManager::getMonologInstance()

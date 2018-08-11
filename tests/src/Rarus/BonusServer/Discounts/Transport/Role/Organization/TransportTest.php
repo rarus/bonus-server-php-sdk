@@ -23,7 +23,7 @@ class TransportTest extends TestCase
      */
     private $cardTransport;
     /**
-     * @var Shops\Transport\Transport
+     * @var Shops\Transport\Role\Organization\Transport
      */
     private $shopTransport;
     /**
@@ -52,6 +52,10 @@ class TransportTest extends TestCase
             ->setChequeRows(\DemoDataGenerator::createChequeRows(random_int(1, 20), \TestEnvironmentManager::getDefaultCurrency()));
 
         $estimate = $this->discountTransport->calculateDiscountsAndBonusDiscounts($discountDocument);
+        $this->shopTransport->delete($shop);
+
+        $this->assertGreaterThan(0, $estimate->getDocumentItems()->count());
+        $this->assertGreaterThan(0, $estimate->getDiscountItems()->count());
     }
 
     /**
@@ -75,6 +79,10 @@ class TransportTest extends TestCase
             ->setChequeRows(\DemoDataGenerator::createChequeRows(random_int(1, 20), \TestEnvironmentManager::getDefaultCurrency()));
 
         $estimate = $this->discountTransport->calculateDiscounts($discountDocument);
+        $this->shopTransport->delete($shop);
+
+        $this->assertGreaterThan(0, $estimate->getDiscountItems()->count());
+        $this->assertGreaterThan(0, $estimate->getDocumentItems()->count());
     }
 
     /**
@@ -94,7 +102,7 @@ class TransportTest extends TestCase
             \TestEnvironmentManager::getMonologInstance()
         );
 
-        $this->shopTransport = Shops\Transport\Fabric::getInstance(
+        $this->shopTransport = Shops\Transport\Role\Organization\Fabric::getInstance(
             \TestEnvironmentManager::getInstanceForRoleOrganization(),
             \TestEnvironmentManager::getDefaultCurrency(),
             \TestEnvironmentManager::getMonologInstance()

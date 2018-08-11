@@ -22,8 +22,8 @@ class DateTimeParser
      */
     public static function parseTimestampFromServerResponse(string $timestampStr): \DateTime
     {
-        if (\strlen($timestampStr) !== 13) {
-            throw new ApiClientException(sprintf('неизвестный формат времени в ответе сервера [%s], ожидали 13 символов, получили %s',
+        if (\strlen($timestampStr) < 13) {
+            throw new ApiClientException(sprintf('неизвестный формат времени в ответе сервера [%s], ожидали 13 или больше символов, получили %s',
                 $timestampStr,
                 \strlen($timestampStr)
             ));

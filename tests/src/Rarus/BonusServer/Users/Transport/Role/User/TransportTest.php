@@ -25,15 +25,20 @@ class TransportTest extends TestCase
 
     /**
      * @covers \Rarus\BonusServer\Users\Transport\Role\User\Transport::current()
+     *
+     * @throws \Rarus\BonusServer\Exceptions\ApiClientException
+     * @throws \Rarus\BonusServer\Exceptions\NetworkException
+     * @throws \Rarus\BonusServer\Exceptions\UnknownException
      */
     public function testCurrentMethod(): void
     {
         // добавляем пользователя
         $userUid = 'grishi-uid-' . \random_int(0, PHP_INT_MAX);
         $userPasswordHash = sha1('qwerty12345');
+        $newUser = \DemoDataGenerator::createNewUserWithUserUidAndPassword($userUid, $userPasswordHash);
 
         $newUsersCollection = new Users\DTO\UserCollection();
-        $newUsersCollection->attach(\DemoDataGenerator::createNewUserWithUserUidAndPassword($userUid, $userPasswordHash));
+        $newUsersCollection->attach($newUser);
         $this->userTransport->importNewUsers($newUsersCollection);
 
         // авторизуемся на бонусном сервере под учётной записью пользователя
@@ -44,7 +49,9 @@ class TransportTest extends TestCase
         $apiClient->setAuthToken($userAuthToken);
 
         $userUserRoleTransport = Users\Transport\Role\User\Fabric::getInstance($apiClient, \TestEnvironmentManager::getDefaultCurrency(), \TestEnvironmentManager::getMonologInstance());
-        $userUserRoleTransport->current();
+        $user = $userUserRoleTransport->current();
+
+        $this->assertEquals($user->getPhone(), $newUser->getPhone());
     }
 
     /**

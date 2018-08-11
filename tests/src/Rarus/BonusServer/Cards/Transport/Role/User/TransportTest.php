@@ -67,6 +67,8 @@ class TransportTest extends TestCase
 
         $cardsUserRoleTransport = Cards\Transport\Role\User\Fabric::getInstance($apiClient, \TestEnvironmentManager::getDefaultCurrency(), \TestEnvironmentManager::getMonologInstance());
         $cards = $cardsUserRoleTransport->list();
+
+        $this->assertEquals(1, $cards->count());
     }
 
     /**
