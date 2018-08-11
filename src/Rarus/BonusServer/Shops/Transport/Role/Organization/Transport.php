@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Rarus\BonusServer\Shops\Transport;
+namespace Rarus\BonusServer\Shops\Transport\Role\Organization;
 
 use Rarus\BonusServer;
 use Fig\Http\Message\RequestMethodInterface;
@@ -96,6 +96,41 @@ class Transport extends BonusServer\Transport\AbstractTransport
         ]);
 
         return $shop;
+    }
+
+    /**
+     * @param BonusServer\Shops\DTO\ShopId $shopId
+     *
+     * @return bool
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function isShopExistsWithId(BonusServer\Shops\DTO\ShopId $shopId): bool
+    {
+        $this->log->debug('rarus.bonus.server.shop.transport.isShopExistsWithId.start', [
+            'id' => $shopId->getId(),
+        ]);
+
+        $isExists = false;
+        try {
+            $requestResult = $this->apiClient->executeApiRequest(
+                sprintf('/organization/shop/%s', $shopId->getId()),
+                RequestMethodInterface::METHOD_GET
+            );
+            BonusServer\Shops\DTO\Fabric::initShopFromServerResponse($requestResult['shop']);
+            $isExists = true;
+        } catch (BonusServer\Exceptions\ApiClientException $exception) {
+            // если магазин не найден, то сервер возврашает 404 статус выставив 114 код в данном случае мы его подавляем
+            if ($exception->getCode() !== 114) {
+                throw $exception;
+            }
+        }
+        $this->log->debug('rarus.bonus.server.shop.transport.isShopExistsWithId.finish', [
+            'id' => $shopId->getId(),
+            'isShopExists' => $isExists,
+        ]);
+
+        return $isExists;
     }
 
     /**

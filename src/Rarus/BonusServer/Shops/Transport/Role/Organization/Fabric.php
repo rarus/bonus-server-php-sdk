@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Rarus\BonusServer\Shops\Transport;
+namespace Rarus\BonusServer\Shops\Transport\Role\Organization;
 
 use Rarus\BonusServer;
 
