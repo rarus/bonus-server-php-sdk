@@ -27,7 +27,7 @@ class TransportTest extends TestCase
     private $userTransport;
 
     /**
-     * @var Shops\Transport\Transport
+     * @var Shops\Transport\Role\Organization\Transport
      */
     private $shopTransport;
     /**
@@ -69,6 +69,8 @@ class TransportTest extends TestCase
         $cards = $cardsUserRoleTransport->list();
 
         $this->assertEquals(1, $cards->count());
+
+        $this->cardTransport->delete($card);
     }
 
     /**
@@ -121,6 +123,7 @@ class TransportTest extends TestCase
             $this->assertGreaterThan(0, $balance->getAvailable()->getAmount());
             $this->assertGreaterThan(0, $balance->getTotal()->getAmount());
         }
+        $this->shopTransport->delete($shop);
     }
 
     /**
@@ -138,7 +141,7 @@ class TransportTest extends TestCase
             \TestEnvironmentManager::getDefaultCurrency(),
             \TestEnvironmentManager::getMonologInstance()
         );
-        $this->shopTransport = Shops\Transport\Fabric::getInstance(
+        $this->shopTransport = Shops\Transport\Role\Organization\Fabric::getInstance(
             \TestEnvironmentManager::getInstanceForRoleOrganization(),
             \TestEnvironmentManager::getDefaultCurrency(),
             \TestEnvironmentManager::getMonologInstance()

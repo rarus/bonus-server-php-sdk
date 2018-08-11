@@ -27,7 +27,7 @@ class TransportTest extends TestCase
     private $userTransport;
 
     /**
-     * @var Shops\Transport\Transport
+     * @var Shops\Transport\Role\Organization\Transport
      */
     private $shopTransport;
     /**
@@ -142,6 +142,9 @@ class TransportTest extends TestCase
             // количество транзакций по карте
             $this->assertEquals($history->count(), 2);
         }
+
+        $this->shopTransport->delete($shop);
+        $this->cardTransport->delete($card);
     }
 
     /**
@@ -159,7 +162,7 @@ class TransportTest extends TestCase
             \TestEnvironmentManager::getDefaultCurrency(),
             \TestEnvironmentManager::getMonologInstance()
         );
-        $this->shopTransport = Shops\Transport\Fabric::getInstance(
+        $this->shopTransport = Shops\Transport\Role\Organization\Fabric::getInstance(
             \TestEnvironmentManager::getInstanceForRoleOrganization(),
             \TestEnvironmentManager::getDefaultCurrency(),
             \TestEnvironmentManager::getMonologInstance()
