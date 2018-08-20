@@ -53,6 +53,17 @@ class TransportTest extends TestCase
     }
 
     /**
+     * @covers \Rarus\BonusServer\Users\Transport\Role\Organization\Transport::addNewUser()
+     */
+    public function testAddNewUserWithoutBirthday(): void
+    {
+        $newUser = \DemoDataGenerator::createNewUserWithoutBirthday();
+        $user = $this->userTransport->addNewUser($newUser);
+
+        $this->assertEquals(null, $user->getBirthdate());
+    }
+
+    /**
      * @covers \Rarus\BonusServer\Users\Transport\Role\Organization\Transport::addNewUserAndAttachFreeCard()
      */
     public function testAddNewUserAndAttachFreeCardMethod(): void
