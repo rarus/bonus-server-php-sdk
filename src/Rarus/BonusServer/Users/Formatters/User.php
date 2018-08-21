@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Rarus\BonusServer\Users\Formatters;
 
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use Rarus\BonusServer;
 
 /**
@@ -38,40 +39,58 @@ class User
 
     /**
      * @param BonusServer\Users\DTO\User $newUser
+     * @param \DateTimeZone              $dateTimeZone
      *
      * @return array
      */
-    public static function toArrayForCreateNewUser(BonusServer\Users\DTO\User $newUser): array
+    public static function toArrayForCreateNewUser(BonusServer\Users\DTO\User $newUser, \DateTimeZone $dateTimeZone): array
     {
-        return [
+        $arNewUser = [
             'login' => $newUser->getLogin(),
             'name' => $newUser->getName(),
             'phone' => $newUser->getPhone(),
             'email' => $newUser->getEmail(),
             'gender' => $newUser->getGender() === null ? '' : $newUser->getGender()->getCode(),
-            'birthdate' => $newUser->getBirthdate() === null ? 0 : BonusServer\Util\DateTimeParser::convertToServerFormatTimestamp($newUser->getBirthdate()),
         ];
+        if ($newUser->getBirthdate() !== null) {
+            $gmtOffsetInSeconds = $dateTimeZone->getOffset(new \DateTime('now', $dateTimeZone));
+            $gmtTimestamp = (string)($newUser->getBirthdate()->getTimestamp() - $gmtOffsetInSeconds);
+            $arNewUser['birthdate'] = BonusServer\Util\DateTimeParser::convertToServerFormatTimestamp(\DateTime::createFromFormat('U', $gmtTimestamp, $dateTimeZone));
+        } else {
+            $arNewUser['birthdate'] = 0;
+        }
+
+        return $arNewUser;
     }
 
     /**
-     * @param BonusServer\Users\DTO\User $user
+     * @param BonusServer\Users\DTO\User $newUser
+     * @param \DateTimeZone              $dateTimeZone
      *
      * @return array
      */
-    public static function toArrayForImportNewUser(BonusServer\Users\DTO\User $user): array
+    public static function toArrayForImportNewUser(BonusServer\Users\DTO\User $newUser, \DateTimeZone $dateTimeZone): array
     {
-        return [
-            'id' => $user->getUserId()->getId(),
-            'login' => $user->getLogin(),
-            'name' => $user->getName(),
-            'phone' => $user->getPhone(),
-            'email' => $user->getEmail(),
-            'gender' => $user->getGender() === null ? '' : $user->getGender()->getCode(),
-            'birthdate' => $user->getBirthdate() === null ? 0 : $user->getBirthdate()->getTimestamp(),
-            'isConfirmed' => $user->getStatus()->isConfirmed(),
-            'isBlocked' => $user->getStatus()->isBlocked(),
-            'blockedDescription' => $user->getStatus()->getBlockedDescription(),
-            'password' => $user->getPasswordHash() ?? '',
+        $arNewUser = [
+            'id' => $newUser->getUserId()->getId(),
+            'login' => $newUser->getLogin(),
+            'name' => $newUser->getName(),
+            'phone' => $newUser->getPhone(),
+            'email' => $newUser->getEmail(),
+            'gender' => $newUser->getGender() === null ? '' : $newUser->getGender()->getCode(),
+            'isConfirmed' => $newUser->getStatus()->isConfirmed(),
+            'isBlocked' => $newUser->getStatus()->isBlocked(),
+            'blockedDescription' => $newUser->getStatus()->getBlockedDescription(),
+            'password' => $newUser->getPasswordHash() ?? '',
         ];
+        if ($newUser->getBirthdate() !== null) {
+            $gmtOffsetInSeconds = $dateTimeZone->getOffset(new \DateTime('now', $dateTimeZone));
+            $gmtTimestamp = (string)($newUser->getBirthdate()->getTimestamp() - $gmtOffsetInSeconds);
+            $arNewUser['birthdate'] = BonusServer\Util\DateTimeParser::convertToServerFormatTimestamp(\DateTime::createFromFormat('U', $gmtTimestamp, $dateTimeZone));
+        } else {
+            $arNewUser['birthdate'] = 0;
+        }
+
+        return $arNewUser;
     }
 }

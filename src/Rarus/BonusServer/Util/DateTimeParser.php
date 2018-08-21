@@ -20,12 +20,13 @@ class DateTimeParser
     /**
      * парсим время в виде timestamp + milliseconds
      *
-     * @param string $timestampStr
+     * @param string        $timestampStr
+     * @param \DateTimeZone $dateTimeZone
      *
      * @return \DateTime
      * @throws ApiClientException
      */
-    public static function parseTimestampFromServerResponse(string $timestampStr): \DateTime
+    public static function parseTimestampFromServerResponse(string $timestampStr, \DateTimeZone $dateTimeZone): \DateTime
     {
         if (\strlen($timestampStr) < self::MIN_TIMESTAMP_LENGTH) {
             throw new ApiClientException(sprintf('неизвестный формат времени в ответе сервера [%s], ожидали %s или больше символов, получили %s',
@@ -34,9 +35,11 @@ class DateTimeParser
                 \strlen($timestampStr)
             ));
         }
-        // отделяем миллисекунды - 4 последних цифры
+        // отделяем миллисекунды - 3 последних цифры
         $timestampStr = substr($timestampStr, 0, 9) . '.' . substr($timestampStr, 9);
-        $timestamp = \DateTime::createFromFormat('U.u', $timestampStr);
+
+        $timestamp = \DateTime::createFromFormat('U.u', $timestampStr, $dateTimeZone);
+        $timestamp->setTimezone($dateTimeZone);
         if (false === $timestamp) {
             throw new ApiClientException(sprintf('ошибка при разборе поля время в ответе сервера [%s]', $timestampStr));
         }
@@ -55,4 +58,6 @@ class DateTimeParser
     {
         return $dateTime->getTimestamp() * 1000;
     }
+
+
 }

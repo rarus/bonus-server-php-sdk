@@ -36,6 +36,10 @@ class TestEnvironmentManager
      * @var string
      */
     private const LOG_FILE = 'rarus-bonus-service-integration-tests.log';
+    /**
+     * @var string
+     */
+    private const DEFAULT_TIMEZONE = 'Europe/Moscow';
 
     /**
      * @return \Rarus\BonusServer\ApiClient
@@ -57,7 +61,10 @@ class TestEnvironmentManager
         $httpClient = new \GuzzleHttp\Client();
 
         $apiClient = new Rarus\BonusServer\ApiClient(self::URL, new \GuzzleHttp\Client(), $log);
-        $apiClient->setGuzzleHandlerStack($guzzleHandlerStack);
+        $apiClient
+            ->setTimezone(new \DateTimeZone(self::DEFAULT_TIMEZONE))
+            ->setGuzzleHandlerStack($guzzleHandlerStack);
+
         $newAuthToken = $apiClient->getNewAuthToken($credentials);
         $apiClient->setAuthToken($newAuthToken);
 
@@ -93,5 +100,13 @@ class TestEnvironmentManager
     public static function getDefaultCurrency(): \Money\Currency
     {
         return new \Money\Currency('RUB');
+    }
+
+    /**
+     * @return DateTimeZone
+     */
+    public static function getDefaultTimezone(): \DateTimeZone
+    {
+        return new \DateTimeZone(self::DEFAULT_TIMEZONE);
     }
 }

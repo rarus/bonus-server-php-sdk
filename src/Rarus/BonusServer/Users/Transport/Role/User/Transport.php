@@ -31,7 +31,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
             RequestMethodInterface::METHOD_GET
         );
 
-        $userPersonalInfo = BonusServer\Users\DTO\PersonalInfo\Fabric::initFromServerResponse($requestResult['user']);
+        $userPersonalInfo = BonusServer\Users\DTO\PersonalInfo\Fabric::initFromServerResponse($requestResult['user'], $this->apiClient->getTimezone());
 
         $this->log->debug('rarus.bonus.server.users.transport.current.start', [
             'role' => 'user',
