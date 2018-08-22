@@ -13,24 +13,33 @@ use Rarus\BonusServer\Exceptions\ApiClientException;
 class DateTimeParser
 {
     /**
+     * @var int
+     */
+    private const MIN_TIMESTAMP_LENGTH = 12;
+
+    /**
      * парсим время в виде timestamp + milliseconds
      *
-     * @param string $timestampStr
+     * @param string        $timestampStr
+     * @param \DateTimeZone $dateTimeZone
      *
      * @return \DateTime
      * @throws ApiClientException
      */
-    public static function parseTimestampFromServerResponse(string $timestampStr): \DateTime
+    public static function parseTimestampFromServerResponse(string $timestampStr, \DateTimeZone $dateTimeZone): \DateTime
     {
-        if (\strlen($timestampStr) < 13) {
-            throw new ApiClientException(sprintf('неизвестный формат времени в ответе сервера [%s], ожидали 13 или больше символов, получили %s',
+        if (\strlen($timestampStr) < self::MIN_TIMESTAMP_LENGTH) {
+            throw new ApiClientException(sprintf('неизвестный формат времени в ответе сервера [%s], ожидали %s или больше символов, получили %s',
                 $timestampStr,
+                self::MIN_TIMESTAMP_LENGTH,
                 \strlen($timestampStr)
             ));
         }
-        // отделяем миллисекунды - 4 последних цифры
+        // отделяем миллисекунды - 3 последних цифры
         $timestampStr = substr($timestampStr, 0, 9) . '.' . substr($timestampStr, 9);
-        $timestamp = \DateTime::createFromFormat('U.u', $timestampStr);
+
+        $timestamp = \DateTime::createFromFormat('U.u', $timestampStr, $dateTimeZone);
+        $timestamp->setTimezone($dateTimeZone);
         if (false === $timestamp) {
             throw new ApiClientException(sprintf('ошибка при разборе поля время в ответе сервера [%s]', $timestampStr));
         }
@@ -47,6 +56,8 @@ class DateTimeParser
      */
     public static function convertToServerFormatTimestamp(\DateTime $dateTime): int
     {
-        return $dateTime->getTimestamp() * 10000;
+        return $dateTime->getTimestamp() * 1000;
     }
+
+
 }

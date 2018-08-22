@@ -1,5 +1,6 @@
 .idea/*
 vendor
+tests/logs/*
 composer.phar
 phpunit.xml
 composer.lock

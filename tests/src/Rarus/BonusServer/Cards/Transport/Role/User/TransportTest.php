@@ -120,8 +120,8 @@ class TransportTest extends TestCase
         $cards = $cardsUserRoleTransport->list();
         foreach ($cards as $card) {
             $balance = $cardsUserRoleTransport->getBalanceInfo($card, $trxCount);
-            $this->assertGreaterThan(0, $balance->getAvailable()->getAmount());
-            $this->assertGreaterThan(0, $balance->getTotal()->getAmount());
+            $this->assertGreaterThan(-1, $balance->getAvailable()->getAmount());
+            $this->assertGreaterThan(-1, $balance->getTotal()->getAmount());
         }
         $this->shopTransport->delete($shop);
     }

@@ -57,6 +57,10 @@ class ApiClient
      * @var float number of seconds to wait while trying to connect to a server. Use 0 to wait indefinitely (the default behavior).
      */
     protected $connectTimeout;
+    /**
+     * @var \DateTimeZone временная зона в которой работает API-клиент, по умолчанию берётся зона установленная на сервере
+     */
+    protected $timezone;
 
     /**
      * ApiClient constructor.
@@ -67,15 +71,16 @@ class ApiClient
      */
     public function __construct(string $apiEndpointUrl, GuzzleHttp\ClientInterface $obHttpClient, LoggerInterface $obLogger = null)
     {
-        $this->apiEndpoint = $apiEndpointUrl;
-        $this->httpClient = $obHttpClient;
-        $this->setConnectTimeout(2.0);
-
         if ($obLogger !== null) {
             $this->log = $obLogger;
         } else {
             $this->log = new NullLogger();
         }
+        $this->apiEndpoint = $apiEndpointUrl;
+        $this->httpClient = $obHttpClient;
+        $this->setConnectTimeout(2.0);
+        $this->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+
         $this->guzzleHandlerStack = GuzzleHttp\HandlerStack::create();
 
         $this->log->debug(
@@ -83,6 +88,7 @@ class ApiClient
             [
                 'url' => $apiEndpointUrl,
                 'connect_timeout' => $this->getConnectTimeout(),
+                'timezone' => $this->getTimezone()->getName(),
             ]
         );
     }
@@ -97,10 +103,42 @@ class ApiClient
 
     /**
      * @param float $connectTimeout
+     *
+     * @return ApiClient
      */
-    public function setConnectTimeout(float $connectTimeout): void
+    public function setConnectTimeout(float $connectTimeout): ApiClient
     {
+        $this->log->debug('rarus.bonus.server.apiClient.setConnectTimeout.start', [
+            'connectTimeout' => $connectTimeout,
+        ]);
         $this->connectTimeout = $connectTimeout;
+        $this->log->debug('rarus.bonus.server.apiClient.setConnectTimeout.finish');
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTimeZone
+     */
+    public function getTimezone(): \DateTimeZone
+    {
+        return $this->timezone;
+    }
+
+    /**
+     * @param \DateTimeZone $timezone
+     *
+     * @return ApiClient
+     */
+    public function setTimezone(\DateTimeZone $timezone): ApiClient
+    {
+        $this->log->debug('rarus.bonus.server.apiClient.setTimezone.start', [
+            'name' => $timezone->getName(),
+        ]);
+        $this->timezone = $timezone;
+        $this->log->debug('rarus.bonus.server.apiClient.setTimezone.finish');
+
+        return $this;
     }
 
     /**
@@ -381,9 +419,15 @@ class ApiClient
 
     /**
      * @param GuzzleHttp\HandlerStack $guzzleHandlerStack
+     *
+     * @return ApiClient
      */
-    public function setGuzzleHandlerStack(GuzzleHttp\HandlerStack $guzzleHandlerStack): void
+    public function setGuzzleHandlerStack(GuzzleHttp\HandlerStack $guzzleHandlerStack): ApiClient
     {
+        $this->log->debug('rarus.bonus.server.apiClient.setGuzzleHandlerStack.start');
         $this->guzzleHandlerStack = $guzzleHandlerStack;
+        $this->log->debug('rarus.bonus.server.apiClient.setGuzzleHandlerStack.finish');
+
+        return $this;
     }
 }

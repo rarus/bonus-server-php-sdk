@@ -19,13 +19,14 @@ use Rarus\BonusServer\Util\DateTimeParser;
 class Fabric
 {
     /**
-     * @param array    $arCard
-     * @param Currency $currency
+     * @param array         $arCard
+     * @param Currency      $currency
+     * @param \DateTimeZone $dateTimeZone
      *
      * @return Card
      * @throws \Rarus\BonusServer\Exceptions\ApiClientException
      */
-    public static function initCardFromServerResponse(array $arCard, \Money\Currency $currency): Card
+    public static function initCardFromServerResponse(array $arCard, \Money\Currency $currency, \DateTimeZone $dateTimeZone): Card
     {
         $currencies = new ISOCurrencies();
         $moneyParser = new DecimalMoneyParser($currencies);
@@ -39,10 +40,10 @@ class Fabric
             ->setDescription((string)$arCard['description'])
             ->setCardLevelId(new LevelId((string)$arCard['card_level_id']))
             ->setAccumSaleAmount($moneyParser->parse((string)$arCard['accum_sale_amount'], $currency->getCode()))
-            ->setCardStatus(Status\Fabric::initFromServerResponse($arCard));
+            ->setCardStatus(Status\Fabric::initFromServerResponse($arCard, $dateTimeZone));
 
         if ($arCard['date_last_transaction'] !== 0) {
-            $card->setDateLastTransaction(DateTimeParser::parseTimestampFromServerResponse((string)$arCard['date_last_transaction']));
+            $card->setDateLastTransaction(DateTimeParser::parseTimestampFromServerResponse((string)$arCard['date_last_transaction'], $dateTimeZone));
         }
         if ($arCard['last_transaction'] !== '') {
             $card->setLastTransaction((string)$arCard['last_transaction']);

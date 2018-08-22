@@ -29,7 +29,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
         $requestResult = $this->apiClient->executeApiRequest(
             '/organization/user/new',
             RequestMethodInterface::METHOD_POST,
-            BonusServer\Users\Formatters\User::toArrayForCreateNewUser($newUser)
+            BonusServer\Users\Formatters\User::toArrayForCreateNewUser($newUser, $this->apiClient->getTimezone())
         );
 
         // вычитываем юзера с сервера
@@ -65,7 +65,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
             RequestMethodInterface::METHOD_GET
         );
 
-        $user = BonusServer\Users\DTO\Fabric::initUserFromServerResponse($requestResult['user']);
+        $user = BonusServer\Users\DTO\Fabric::initUserFromServerResponse($requestResult['user'], $this->apiClient->getTimezone());
 
         $this->log->debug('rarus.bonus.server.users.transport.getByUserId.start', [
             'id' => $user->getUserId()->getId(),
@@ -94,7 +94,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
             '/organization/user/new',
             RequestMethodInterface::METHOD_POST,
             array_merge(
-                BonusServer\Users\Formatters\User::toArrayForCreateNewUser($newUser),
+                BonusServer\Users\Formatters\User::toArrayForCreateNewUser($newUser, $this->apiClient->getTimezone()),
                 ['attach_free_card' => true]
             )
         );
@@ -132,7 +132,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
 
         // собираем пакет из юзеров
         foreach ($usersCollection as $user) {
-            $arNewUsers[] = BonusServer\Users\Formatters\User::toArrayForImportNewUser($user);
+            $arNewUsers[] = BonusServer\Users\Formatters\User::toArrayForImportNewUser($user, $this->apiClient->getTimezone());
         }
 
         $this->apiClient->executeApiRequest(

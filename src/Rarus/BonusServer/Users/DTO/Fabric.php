@@ -15,15 +15,17 @@ class Fabric
 {
 
     /**
-     * @param array $arUser
+     * @param array         $arUser
+     * @param \DateTimeZone $dateTimeZone
      *
      * @return User
      * @throws \Rarus\BonusServer\Exceptions\ApiClientException
      */
-    public static function initUserFromServerResponse(array $arUser): User
+    public static function initUserFromServerResponse(array $arUser, \DateTimeZone $dateTimeZone): User
     {
         $user = (new User())
             ->setUserId(new UserId($arUser['id']))
+            ->setLogin($arUser['login'])
             ->setName($arUser['name'])
             ->setPhone($arUser['phone'])
             ->setStatus(Users\DTO\Status\Fabric::initFromServerResponse($arUser))
@@ -33,7 +35,12 @@ class Fabric
             $user->setGender(Users\DTO\Gender\Fabric::initFromServerResponse($arUser['gender']));
         }
         if ($arUser['birthdate'] !== 0) {
-            $user->setBirthdate(DateTimeParser::parseTimestampFromServerResponse((string)$arUser['birthdate']));
+            $gmtOffsetInSeconds = $dateTimeZone->getOffset(new \DateTime('now', $dateTimeZone));
+            $realTimestamp = (int)$arUser['birthdate'];
+            $birthdateWithGmt = DateTimeParser::parseTimestampFromServerResponse((string)$realTimestamp, $dateTimeZone);
+            $birthday = \DateTime::createFromFormat('U', (string)($birthdateWithGmt->getTimestamp() + $gmtOffsetInSeconds), $dateTimeZone);
+            $birthday->setTimezone($dateTimeZone);
+            $user->setBirthdate($birthday);
         }
 
         return $user;

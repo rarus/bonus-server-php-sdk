@@ -17,18 +17,19 @@ use Rarus\BonusServer\Util\DateTimeParser;
 class Fabric
 {
     /**
-     * @param Currency $currency
-     * @param array    $arTransactionAmount
+     * @param Currency      $currency
+     * @param array         $arTransactionAmount
+     * @param \DateTimeZone $dateTimeZone
      *
      * @return TransactionAmount
      * @throws \Rarus\BonusServer\Exceptions\ApiClientException
      */
-    public static function initFromServerResponse(Currency $currency, array $arTransactionAmount): TransactionAmount
+    public static function initFromServerResponse(Currency $currency, array $arTransactionAmount, \DateTimeZone $dateTimeZone): TransactionAmount
     {
         $moneyParser = new DecimalMoneyParser(new ISOCurrencies());
 
         return (new TransactionAmount())
             ->setTransactionSum($moneyParser->parse((string)$arTransactionAmount['sum'], $currency->getCode()))
-            ->setDate(DateTimeParser::parseTimestampFromServerResponse((string)$arTransactionAmount['date']));
+            ->setDate(DateTimeParser::parseTimestampFromServerResponse((string)$arTransactionAmount['date'], $dateTimeZone));
     }
 }

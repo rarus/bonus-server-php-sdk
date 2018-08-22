@@ -34,7 +34,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
 
         $cardCollection = new BonusServer\Cards\DTO\CardCollection();
         foreach ((array)$requestResult['cards'] as $card) {
-            $cardCollection->attach(BonusServer\Cards\DTO\Fabric::initCardFromServerResponse($card, $this->getDefaultCurrency()));
+            $cardCollection->attach(BonusServer\Cards\DTO\Fabric::initCardFromServerResponse($card, $this->getDefaultCurrency(), $this->apiClient->getTimezone()));
         }
 
         $this->log->debug('rarus.bonus.server.cards.transport.list.finish', [
