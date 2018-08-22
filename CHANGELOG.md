@@ -3,7 +3,9 @@
 ## 0.5.1 (20.08.2018)
 - исправлена ошибка с точностью в парсере timestamp `Rarus\BonusServer\Util\DateTimeParser` [issue#55](https://github.com/rarus/bonus-server-php-sdk/issues/55)
 - исправлена ошибка с некорректными датами рождения при добавлении новых пользователей [issue#55](https://github.com/rarus/bonus-server-php-sdk/issues/55)
-- в ApiClient добавлена поддержка таймзон и метод 'setTimezone' который позволяет указать нужную таймзону
+- исправлена ошибка с получением пустого логина для всех пользователей [issue#55](https://github.com/rarus/bonus-server-php-sdk/issues/55)
+- подробный лог работы юнит-тестов теперь сохраняется в папке `/tests/logs/`
+- в ApiClient добавлена поддержка таймзон и метод `setTimezone` который позволяет указать нужную таймзону
 
 ## 0.5.0 (6.08.2018)
 - исправлен ошибочный 404 статус если нет скидок, результаты рассчёта скидок стали опциональными [issue#36](https://github.com/rarus/bonus-server-php-sdk/issues/36)

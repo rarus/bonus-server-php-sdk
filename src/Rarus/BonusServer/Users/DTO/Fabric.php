@@ -25,6 +25,7 @@ class Fabric
     {
         $user = (new User())
             ->setUserId(new UserId($arUser['id']))
+            ->setLogin($arUser['login'])
             ->setName($arUser['name'])
             ->setPhone($arUser['phone'])
             ->setStatus(Users\DTO\Status\Fabric::initFromServerResponse($arUser))

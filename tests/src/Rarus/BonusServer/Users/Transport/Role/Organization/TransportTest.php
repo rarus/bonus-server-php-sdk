@@ -98,12 +98,9 @@ class TransportTest extends TestCase
         $newUser = \DemoDataGenerator::createNewUser();
         $user = $this->userTransport->addNewUserAndAttachFreeCard($newUser);
         // юзера вычитали корректного
-        $this->assertEquals($newUser->getLogin(), $newUser->getLogin());
-
+        $this->assertEquals($user->getLogin(), $newUser->getLogin());
 
         $cards = $this->cardTransport->getByUser($user);
-        var_dump($cards->count());
-        
         // у него одна привязанная карта
         $attachedCard = $cards->current();
         $this->assertEquals($user->getUserId()->getId(), $attachedCard->getUserId()->getId());

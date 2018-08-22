@@ -39,6 +39,24 @@ class User
 
     /**
      * @param BonusServer\Users\DTO\User $newUser
+     *
+     * @return array
+     */
+    public static function toArrayForViewNewUserData(BonusServer\Users\DTO\User $newUser): array
+    {
+        return [
+            'login' => $newUser->getLogin(),
+            'name' => $newUser->getName(),
+            'email' => $newUser->getEmail(),
+            'phone' => $newUser->getPhone(),
+            'birthday' => $newUser->getBirthdate() === null ? null : $newUser->getBirthdate()->format(\DateTime::ATOM),
+            'gender' => $newUser->getGender() === null ? null : $newUser->getGender()->getCode(),
+            'imageUrl' => $newUser->getImageUrl(),
+        ];
+    }
+
+    /**
+     * @param BonusServer\Users\DTO\User $newUser
      * @param \DateTimeZone              $dateTimeZone
      *
      * @return array
