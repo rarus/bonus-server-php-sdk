@@ -313,6 +313,8 @@ class TransportTest extends TestCase
         $updatedCard = $this->cardTransport->levelUp($activatedCard);
 
         $this->assertNotEquals($activatedCard->getCardLevelId()->getId(), $updatedCard->getCardLevelId()->getId());
+
+        $this->cardTransport->delete($updatedCard);
     }
 
     /**

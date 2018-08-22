@@ -113,7 +113,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
 
         $cardCollection = new BonusServer\Cards\DTO\CardCollection();
         foreach ((array)$requestResult['cards'] as $card) {
-            $cardCollection->attach(BonusServer\Cards\DTO\Fabric::initCardFromServerResponse($card, $this->getDefaultCurrency()));
+            $cardCollection->attach(BonusServer\Cards\DTO\Fabric::initCardFromServerResponse($card, $this->getDefaultCurrency(), $this->apiClient->getTimezone()));
         }
 
         $paginationResponse = new BonusServer\Cards\Transport\DTO\PaginationResponse(
@@ -146,19 +146,25 @@ class Transport extends BonusServer\Transport\AbstractTransport
             'phone' => $user->getPhone(),
         ]);
 
-        $requestResult = $this->apiClient->executeApiRequest(
-            sprintf('/organization/card?%s&calculate_count=true&user_id=%s',
-                BonusServer\Transport\Formatters\Pagination::toRequestUri($pagination),
-                $user->getUserId()->getId()
-            ),
-            RequestMethodInterface::METHOD_GET
-        );
-
         $cardCollection = new BonusServer\Cards\DTO\CardCollection();
-        foreach ((array)$requestResult['cards'] as $card) {
-            $cardCollection->attach(BonusServer\Cards\DTO\Fabric::initCardFromServerResponse($card, $this->getDefaultCurrency()));
+        try {
+            $requestResult = $this->apiClient->executeApiRequest(
+                sprintf('/organization/card?%s&calculate_count=true&user_id=%s',
+                    BonusServer\Transport\Formatters\Pagination::toRequestUri($pagination),
+                    $user->getUserId()->getId()
+                ),
+                RequestMethodInterface::METHOD_GET
+            );
+            foreach ((array)$requestResult['cards'] as $card) {
+                $cardCollection->attach(BonusServer\Cards\DTO\Fabric::initCardFromServerResponse($card, $this->getDefaultCurrency(), $this->apiClient->getTimezone()));
+            }
+            $cardCollection->rewind();
+        } catch (BonusServer\Exceptions\ApiClientException $exception) {
+            // если карты не найдены, то сервер возврашает 404 статус выставив 114 код в данном случае мы его подавляем
+            if ($exception->getCode() !== 114) {
+                throw $exception;
+            }
         }
-        $cardCollection->rewind();
 
         $this->log->debug('rarus.bonus.server.cards.transport.organization.getByUser.finish', [
             'itemsCount' => $cardCollection->count(),
@@ -216,7 +222,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
             RequestMethodInterface::METHOD_GET
         );
 
-        $card = BonusServer\Cards\DTO\Fabric::initCardFromServerResponse($requestResult['card'], $this->getDefaultCurrency());
+        $card = BonusServer\Cards\DTO\Fabric::initCardFromServerResponse($requestResult['card'], $this->getDefaultCurrency(), $this->apiClient->getTimezone());
 
         $this->log->debug('rarus.bonus.server.cards.transport.organization.getByCardId.finish', [
             'cardId' => $card->getCardId()->getId(),
@@ -546,7 +552,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
             RequestMethodInterface::METHOD_GET
         );
 
-        $card = BonusServer\Cards\DTO\Fabric::initCardFromServerResponse($requestResult['cards'][0], $this->getDefaultCurrency());
+        $card = BonusServer\Cards\DTO\Fabric::initCardFromServerResponse($requestResult['cards'][0], $this->getDefaultCurrency(), $this->apiClient->getTimezone());
 
         $this->log->debug('rarus.bonus.server.cards.transport.organization.getByBarcode.finish', [
             'cardId' => $card->getCardId()->getId(),
@@ -579,7 +585,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
             );
 
             foreach ((array)$requestResult['cards'] as $card) {
-                $cardCollection->attach(BonusServer\Cards\DTO\Fabric::initCardFromServerResponse($card, $this->getDefaultCurrency()));
+                $cardCollection->attach(BonusServer\Cards\DTO\Fabric::initCardFromServerResponse($card, $this->getDefaultCurrency(), $this->apiClient->getTimezone()));
             }
 
             $this->log->debug('rarus.bonus.server.cards.transport.organization.getByFilter.finish', [

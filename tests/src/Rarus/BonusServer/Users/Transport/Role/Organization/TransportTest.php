@@ -50,6 +50,44 @@ class TransportTest extends TestCase
 
         $this->assertEquals('grishi@rarus.ru', $user->getEmail());
         $this->assertEquals($newUser->getBirthdate()->getTimestamp(), $user->getBirthdate()->getTimestamp());
+        $this->assertEquals($newUser->getBirthdate()->format('d.m.Y H:i:s'), $user->getBirthdate()->format('d.m.Y H:i:s'));
+    }
+
+    /**
+     * @covers \Rarus\BonusServer\Users\Transport\Role\Organization\Transport::addNewUser()
+     */
+    public function testAddNewUserWithSummerBirthdayMethod(): void
+    {
+        $newUser = \DemoDataGenerator::createNewUserWithSummerBirthday();
+        $user = $this->userTransport->addNewUser($newUser);
+
+        $this->assertEquals($newUser->getEmail(), $user->getEmail());
+        $this->assertEquals($newUser->getBirthdate()->getTimestamp(), $user->getBirthdate()->getTimestamp());
+        $this->assertEquals($newUser->getBirthdate()->format('d.m.Y H:i:s'), $user->getBirthdate()->format('d.m.Y H:i:s'));
+    }
+
+    /**
+     * @covers \Rarus\BonusServer\Users\Transport\Role\Organization\Transport::addNewUser()
+     */
+    public function testAddNewUserWithWinterBirthdayMethod(): void
+    {
+        $newUser = \DemoDataGenerator::createNewUserWithWinterBirthday();
+        $user = $this->userTransport->addNewUser($newUser);
+
+        $this->assertEquals($newUser->getEmail(), $user->getEmail());
+        $this->assertEquals($newUser->getBirthdate()->getTimestamp(), $user->getBirthdate()->getTimestamp());
+        $this->assertEquals($newUser->getBirthdate()->format('d.m.Y H:i:s'), $user->getBirthdate()->format('d.m.Y H:i:s'));
+    }
+
+    /**
+     * @covers \Rarus\BonusServer\Users\Transport\Role\Organization\Transport::addNewUser()
+     */
+    public function testAddNewUserWithoutBirthday(): void
+    {
+        $newUser = \DemoDataGenerator::createNewUserWithoutBirthday();
+        $user = $this->userTransport->addNewUser($newUser);
+
+        $this->assertEquals(null, $user->getBirthdate());
     }
 
     /**
@@ -57,9 +95,11 @@ class TransportTest extends TestCase
      */
     public function testAddNewUserAndAttachFreeCardMethod(): void
     {
-        $user = $this->userTransport->addNewUserAndAttachFreeCard(\DemoDataGenerator::createNewUser());
+        $newUser = \DemoDataGenerator::createNewUser();
+        $user = $this->userTransport->addNewUserAndAttachFreeCard($newUser);
         // юзера вычитали корректного
-        $this->assertEquals('grishi@rarus.ru', $user->getEmail());
+        $this->assertEquals($user->getLogin(), $newUser->getLogin());
+
         $cards = $this->cardTransport->getByUser($user);
         // у него одна привязанная карта
         $attachedCard = $cards->current();

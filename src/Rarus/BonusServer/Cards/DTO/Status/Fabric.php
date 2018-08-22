@@ -9,12 +9,13 @@ use Rarus\BonusServer\Util\DateTimeParser;
 class Fabric
 {
     /**
-     * @param array $arCard
+     * @param array         $arCard
+     * @param \DateTimeZone $dateTimeZone
      *
      * @return CardStatus
      * @throws \Rarus\BonusServer\Exceptions\ApiClientException
      */
-    public static function initFromServerResponse(array $arCard): CardStatus
+    public static function initFromServerResponse(array $arCard, \DateTimeZone $dateTimeZone): CardStatus
     {
         $cardStatus = (new CardStatus())
             ->setIsActive((bool)$arCard['active'])
@@ -22,10 +23,10 @@ class Fabric
             ->setBlockedDescription((string)$arCard['blockeddescription']);
 
         if ($arCard['date_active'] !== 0) {
-            $cardStatus->setDateActivate(DateTimeParser::parseTimestampFromServerResponse((string)$arCard['date_active']));
+            $cardStatus->setDateActivate(DateTimeParser::parseTimestampFromServerResponse((string)$arCard['date_active'], $dateTimeZone));
         }
         if ($arCard['date_deactivate'] !== 0) {
-            $cardStatus->setDateDeactivate(DateTimeParser::parseTimestampFromServerResponse((string)$arCard['date_deactivate']));
+            $cardStatus->setDateDeactivate(DateTimeParser::parseTimestampFromServerResponse((string)$arCard['date_deactivate'], $dateTimeZone));
         }
 
         return $cardStatus;

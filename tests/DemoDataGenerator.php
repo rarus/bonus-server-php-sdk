@@ -94,8 +94,54 @@ class DemoDataGenerator
             '+7978 888 22 22',
             'grishi@rarus.ru',
             Users\DTO\Gender\Fabric::getMale(),
-            new DateTime('06.08.1995 00:00:00')
+            new DateTime('06.08.1995 00:00:00', \TestEnvironmentManager::getDefaultTimezone())
+        );
+    }
 
+    /**
+     * @return Users\DTO\User
+     * @throws Exception
+     */
+    public static function createNewUserWithSummerBirthday(): \Rarus\BonusServer\Users\DTO\User
+    {
+        return \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
+            'grishi-' . random_int(0, PHP_INT_MAX),
+            'Михаил Гришин',
+            '+7978 888 22 22',
+            'grishi@rarus.ru',
+            Users\DTO\Gender\Fabric::getMale(),
+            new DateTime('06.08.1995 00:00:00', \TestEnvironmentManager::getDefaultTimezone())
+        );
+    }
+
+    /**
+     * @return Users\DTO\User
+     * @throws Exception
+     */
+    public static function createNewUserWithWinterBirthday(): \Rarus\BonusServer\Users\DTO\User
+    {
+        return \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
+            'grishi-' . random_int(0, PHP_INT_MAX),
+            'Михаил Гришин',
+            '+7978 888 22 22',
+            'grishi@rarus.ru',
+            Users\DTO\Gender\Fabric::getMale(),
+            new DateTime('06.01.1995 00:00:00', \TestEnvironmentManager::getDefaultTimezone())
+        );
+    }
+
+    /**
+     * @return Users\DTO\User
+     * @throws Exception
+     */
+    public static function createNewUserWithoutBirthday(): \Rarus\BonusServer\Users\DTO\User
+    {
+        return \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
+            'grishi-' . random_int(0, PHP_INT_MAX),
+            'Михаил Гришин',
+            '+7978 888 22 22',
+            'grishi@rarus.ru',
+            Users\DTO\Gender\Fabric::getMale()
         );
     }
 
