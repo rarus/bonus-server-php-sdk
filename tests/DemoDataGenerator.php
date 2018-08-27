@@ -39,9 +39,11 @@ class DemoDataGenerator
      */
     public static function createNewCard(): Cards\DTO\Card
     {
+        $cardPrefix = random_int(1000000, 100000000);
+
         return Cards\DTO\Fabric::createNewInstance(
-            'php-unit-test-card',
-            (string)random_int(1000000, 100000000),
+            'php-unit-test-card' . $cardPrefix,
+            (string)$cardPrefix,
             \TestEnvironmentManager::getDefaultCurrency());
     }
 
@@ -49,6 +51,7 @@ class DemoDataGenerator
      * @param int $usersCount
      *
      * @return Users\DTO\UserCollection
+     * @throws Exception
      */
     public static function createNewUserWithUserUidAndPasswordCollection(int $usersCount): Users\DTO\UserCollection
     {
@@ -66,12 +69,15 @@ class DemoDataGenerator
      * @param string $userPasswordHash
      *
      * @return Users\DTO\User
+     * @throws Exception
      */
     public static function createNewUserWithUserUidAndPassword(string $userUid, string $userPasswordHash): \Rarus\BonusServer\Users\DTO\User
     {
+        $userUUID = random_int(0, PHP_INT_MAX);
+
         return Users\DTO\Fabric::createNewInstance(
             $userUid,
-            'Михаил Гришин',
+            'Михаил Гришин | ' . $userUUID,
             '+79788882222',
             'grishi@rarus.ru',
             null,
@@ -88,13 +94,15 @@ class DemoDataGenerator
      */
     public static function createNewUser(): \Rarus\BonusServer\Users\DTO\User
     {
+        $userUUID = random_int(0, PHP_INT_MAX);
+
         return \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
-            'grishi-' . random_int(0, PHP_INT_MAX),
-            'Михаил Гришин',
+            'grishi-' . $userUUID,
+            'Михаил Гришин | ' . $userUUID,
             '+7978 888 22 22',
             'grishi@rarus.ru',
             Users\DTO\Gender\Fabric::getMale(),
-            new DateTime('06.08.1995 00:00:00', \TestEnvironmentManager::getDefaultTimezone())
+            new DateTime('27.08.2018 00:00:00', \TestEnvironmentManager::getDefaultTimezone())
         );
     }
 
@@ -104,9 +112,11 @@ class DemoDataGenerator
      */
     public static function createNewUserWithSummerBirthday(): \Rarus\BonusServer\Users\DTO\User
     {
+        $userUUID = random_int(0, PHP_INT_MAX);
+
         return \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
-            'grishi-' . random_int(0, PHP_INT_MAX),
-            'Михаил Гришин',
+            'grishi-' . $userUUID,
+            'Михаил Гришин | ' . $userUUID,
             '+7978 888 22 22',
             'grishi@rarus.ru',
             Users\DTO\Gender\Fabric::getMale(),
@@ -118,11 +128,31 @@ class DemoDataGenerator
      * @return Users\DTO\User
      * @throws Exception
      */
+    public static function createNewUserWithNowDateTimeBirthday(): \Rarus\BonusServer\Users\DTO\User
+    {
+        $userUUID = random_int(0, PHP_INT_MAX);
+
+        return \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
+            'grishi-' . $userUUID,
+            'Михаил Гришин | ' . $userUUID,
+            '+7978 888 22 22',
+            'grishi@rarus.ru',
+            Users\DTO\Gender\Fabric::getMale(),
+            new DateTime('now', \TestEnvironmentManager::getDefaultTimezone())
+        );
+    }
+
+    /**
+     * @return Users\DTO\User
+     * @throws Exception
+     */
     public static function createNewUserWithWinterBirthday(): \Rarus\BonusServer\Users\DTO\User
     {
+        $userUUID = random_int(0, PHP_INT_MAX);
+
         return \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
-            'grishi-' . random_int(0, PHP_INT_MAX),
-            'Михаил Гришин',
+            'grishi-' . $userUUID,
+            'Михаил Гришин | ' . $userUUID,
             '+7978 888 22 22',
             'grishi@rarus.ru',
             Users\DTO\Gender\Fabric::getMale(),
@@ -136,9 +166,11 @@ class DemoDataGenerator
      */
     public static function createNewUserWithoutBirthday(): \Rarus\BonusServer\Users\DTO\User
     {
+        $userUUID = random_int(0, PHP_INT_MAX);
+
         return \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
-            'grishi-' . random_int(0, PHP_INT_MAX),
-            'Михаил Гришин',
+            'grishi-' . $userUUID,
+            'Михаил Гришин | ' . $userUUID,
             '+7978 888 22 22',
             'grishi@rarus.ru',
             Users\DTO\Gender\Fabric::getMale()

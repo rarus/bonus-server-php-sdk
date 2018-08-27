@@ -35,11 +35,7 @@ class Fabric
             $user->setGender(Users\DTO\Gender\Fabric::initFromServerResponse($arUser['gender']));
         }
         if ($arUser['birthdate'] !== 0) {
-            $gmtOffsetInSeconds = $dateTimeZone->getOffset(new \DateTime('now', $dateTimeZone));
-            $realTimestamp = (int)$arUser['birthdate'];
-            $birthdateWithGmt = DateTimeParser::parseTimestampFromServerResponse((string)$realTimestamp, $dateTimeZone);
-            $birthday = \DateTime::createFromFormat('U', (string)($birthdateWithGmt->getTimestamp() + $gmtOffsetInSeconds), $dateTimeZone);
-            $birthday->setTimezone($dateTimeZone);
+            $birthday = DateTimeParser::parseTimestampFromServerResponse((string)$arUser['birthdate'], $dateTimeZone);
             $user->setBirthdate($birthday);
         }
 
