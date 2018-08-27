@@ -27,11 +27,11 @@ class TestEnvironmentManager
     /**
      * @var string
      */
-    private const LOGIN = 'beligo';
+    private const LOGIN = 'mesm';
     /**
      * @var string
      */
-    private const PASSWORD = 'ef2ba1a5da4aa1d2e22fe2d2697cba94e5a7d9d0';
+    private const PASSWORD = '3a9e090168bf592bcc35990bcc9fab9aff090004';
     /**
      * @var string
      */

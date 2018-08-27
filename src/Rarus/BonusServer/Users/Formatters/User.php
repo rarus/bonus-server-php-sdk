@@ -71,9 +71,8 @@ class User
             'gender' => $newUser->getGender() === null ? '' : $newUser->getGender()->getCode(),
         ];
         if ($newUser->getBirthdate() !== null) {
-            $gmtOffsetInSeconds = $dateTimeZone->getOffset(new \DateTime('now', $dateTimeZone));
-            $gmtTimestamp = (string)($newUser->getBirthdate()->getTimestamp() - $gmtOffsetInSeconds);
-            $arNewUser['birthdate'] = BonusServer\Util\DateTimeParser::convertToServerFormatTimestamp(\DateTime::createFromFormat('U', $gmtTimestamp, $dateTimeZone));
+            $utcBirthday = new \DateTime($newUser->getBirthdate()->format('d.m.Y H:i:s'), new \DateTimeZone('UTC'));
+            $arNewUser['birthdate'] = BonusServer\Util\DateTimeParser::convertToServerFormatTimestamp($utcBirthday);
         } else {
             $arNewUser['birthdate'] = 0;
         }
