@@ -32,6 +32,10 @@ class TransportTest extends TestCase
      */
     public function testGetByUserIdMethod(): void
     {
+        // гарантированно создаём карту для привязки к пользователю, если карт нет, то юзера не создать
+        $newFreeCard = \DemoDataGenerator::createNewCard();
+        $this->cardTransport->addNewCard($newFreeCard);
+
         $user = $this->userTransport->addNewUser(\DemoDataGenerator::createNewUser());
 
         $user2 = $this->userTransport->getByUserId($user->getUserId());
@@ -45,11 +49,14 @@ class TransportTest extends TestCase
      */
     public function testAddNewUserMethod(): void
     {
+        // гарантированно создаём карту для привязки к пользователю, если карт нет, то юзера не создать
+        $newFreeCard = \DemoDataGenerator::createNewCard();
+        $this->cardTransport->addNewCard($newFreeCard);
+        // создаём нового юзера
         $newUser = \DemoDataGenerator::createNewUser();
+        // пробуем его добавить
         $user = $this->userTransport->addNewUser($newUser);
-
         $this->assertEquals('grishi@rarus.ru', $user->getEmail());
-        $this->assertEquals($newUser->getBirthdate()->getTimestamp(), $user->getBirthdate()->getTimestamp());
         $this->assertEquals($newUser->getBirthdate()->format('d.m.Y H:i:s'), $user->getBirthdate()->format('d.m.Y H:i:s'));
     }
 
@@ -58,11 +65,30 @@ class TransportTest extends TestCase
      */
     public function testAddNewUserWithSummerBirthdayMethod(): void
     {
+        // гарантированно создаём карту для привязки к пользователю, если карт нет, то юзера не создать
+        $newFreeCard = \DemoDataGenerator::createNewCard();
+        $this->cardTransport->addNewCard($newFreeCard);
+
         $newUser = \DemoDataGenerator::createNewUserWithSummerBirthday();
         $user = $this->userTransport->addNewUser($newUser);
 
         $this->assertEquals($newUser->getEmail(), $user->getEmail());
-        $this->assertEquals($newUser->getBirthdate()->getTimestamp(), $user->getBirthdate()->getTimestamp());
+        $this->assertEquals($newUser->getBirthdate()->format('d.m.Y H:i:s'), $user->getBirthdate()->format('d.m.Y H:i:s'));
+    }
+
+    /**
+     * @covers \Rarus\BonusServer\Users\Transport\Role\Organization\Transport::addNewUser()
+     */
+    public function testAddNewUserWithNowDateTimeBirthdayMethod(): void
+    {
+        // гарантированно создаём карту для привязки к пользователю, если карт нет, то юзера не создать
+        $newFreeCard = \DemoDataGenerator::createNewCard();
+        $this->cardTransport->addNewCard($newFreeCard);
+
+        $newUser = \DemoDataGenerator::createNewUserWithNowDateTimeBirthday();
+        $user = $this->userTransport->addNewUser($newUser);
+
+        $this->assertEquals($newUser->getEmail(), $user->getEmail());
         $this->assertEquals($newUser->getBirthdate()->format('d.m.Y H:i:s'), $user->getBirthdate()->format('d.m.Y H:i:s'));
     }
 
@@ -71,11 +97,14 @@ class TransportTest extends TestCase
      */
     public function testAddNewUserWithWinterBirthdayMethod(): void
     {
+        // гарантированно создаём карту для привязки к пользователю, если карт нет, то юзера не создать
+        $newFreeCard = \DemoDataGenerator::createNewCard();
+        $this->cardTransport->addNewCard($newFreeCard);
+
         $newUser = \DemoDataGenerator::createNewUserWithWinterBirthday();
         $user = $this->userTransport->addNewUser($newUser);
 
         $this->assertEquals($newUser->getEmail(), $user->getEmail());
-        $this->assertEquals($newUser->getBirthdate()->getTimestamp(), $user->getBirthdate()->getTimestamp());
         $this->assertEquals($newUser->getBirthdate()->format('d.m.Y H:i:s'), $user->getBirthdate()->format('d.m.Y H:i:s'));
     }
 
@@ -84,6 +113,10 @@ class TransportTest extends TestCase
      */
     public function testAddNewUserWithoutBirthday(): void
     {
+        // гарантированно создаём карту для привязки к пользователю, если карт нет, то юзера не создать
+        $newFreeCard = \DemoDataGenerator::createNewCard();
+        $this->cardTransport->addNewCard($newFreeCard);
+
         $newUser = \DemoDataGenerator::createNewUserWithoutBirthday();
         $user = $this->userTransport->addNewUser($newUser);
 
@@ -95,6 +128,10 @@ class TransportTest extends TestCase
      */
     public function testAddNewUserAndAttachFreeCardMethod(): void
     {
+        // гарантированно создаём карту для привязки к пользователю, если карт нет, то юзера не создать
+        $newFreeCard = \DemoDataGenerator::createNewCard();
+        $this->cardTransport->addNewCard($newFreeCard);
+
         $newUser = \DemoDataGenerator::createNewUser();
         $user = $this->userTransport->addNewUserAndAttachFreeCard($newUser);
         // юзера вычитали корректного
