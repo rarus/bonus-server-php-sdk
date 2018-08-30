@@ -107,7 +107,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
         ]);
 
         $requestResult = $this->apiClient->executeApiRequest(
-            sprintf('/organization/card?%s', BonusServer\Transport\Formatters\Pagination::toRequestUri($pagination)),
+            sprintf('/organization/card?calculate_count=true%s', BonusServer\Transport\Formatters\Pagination::toRequestUri($pagination)),
             RequestMethodInterface::METHOD_GET
         );
 

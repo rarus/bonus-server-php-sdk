@@ -90,7 +90,7 @@ class TransportTest extends TestCase
     public function testListMethod(): void
     {
         $newCardCount = 10;
-        $paginationResponse = $this->cardTransport->list(new Pagination());
+        $paginationResponse = $this->cardTransport->list(new Pagination(3, 1));
         $totalCardCount = $paginationResponse->getPagination()->getResultItemsCount();
 
         $newCardCollection = \DemoDataGenerator::createNewCardCollection($newCardCount);
@@ -98,7 +98,7 @@ class TransportTest extends TestCase
             $this->cardTransport->addNewCard($newCard);
         }
         $paginationResponse = $this->cardTransport->list(new Pagination());
-        $this->assertEquals($totalCardCount + $newCardCount, $paginationResponse->getPagination()->getResultItemsCount());
+        $this::assertEquals($totalCardCount + $newCardCount, $paginationResponse->getPagination()->getResultItemsCount());
     }
 
     /**
