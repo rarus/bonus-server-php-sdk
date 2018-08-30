@@ -320,19 +320,6 @@ class TransportTest extends TestCase
     {
         // получаем список уровней карт
         $cardLevels = $this->cardTransport->getCardLevelList();
-
-        foreach ($cardLevels as $level) {
-            print(
-            sprintf('row id %s |%s | id %s | order %s | min sum %s %s ' . PHP_EOL,
-                $level->getRowNumber(),
-                $level->getName(),
-                $level->getLevelId()->getId(),
-                $level->getOrder(),
-                $level->getAccumulationAmountToNextLevel()->getAmount(),
-                $level->getAccumulationAmountToNextLevel()->getCurrency()->getCode()
-            )
-            );
-        }
         $this::assertGreaterThan(2, $cardLevels->count(), 'для корректной работы теста должно быть минимум два уровня карт');
 
         // создаём карту с дефолтным уровнем
@@ -340,10 +327,7 @@ class TransportTest extends TestCase
         // активируем её
         $activatedCard = $this->cardTransport->activate($card);
 
-        print(sprintf('barcode карты [%s] | id-уровня [%s]' . PHP_EOL,
-            $activatedCard->getBarcode()->getCode(), $activatedCard->getCardLevelId()->getId()));
-
-        //пробуем апгрейдить её уровень
+        //пробуем апгрейдить её уровень и это будет неудачно, т.к. накоплений по карте нет
         $levelUpResult = $this->cardTransport->levelUp($activatedCard);
         $this::assertInstanceOf(Cards\DTO\Level\LevelDescription::class, $levelUpResult);
     }
@@ -357,51 +341,16 @@ class TransportTest extends TestCase
     {
         // получаем список уровней карт
         $cardLevels = $this->cardTransport->getCardLevelList();
-
-        foreach ($cardLevels as $level) {
-            print(
-            sprintf('row id %s |%s | id %s | order %s | min sum %s %s ' . PHP_EOL,
-                $level->getRowNumber(),
-                $level->getName(),
-                $level->getLevelId()->getId(),
-                $level->getOrder(),
-                $level->getAccumulationAmountToNextLevel()->getAmount(),
-                $level->getAccumulationAmountToNextLevel()->getCurrency()->getCode()
-            )
-            );
-        }
         $this::assertGreaterThan(2, $cardLevels->count(), 'для корректной работы теста должно быть минимум два уровня карт');
-        // создаём карту с дефолтным уровнем
+        // создаём карту с дефолтным начальным уровнем
         $newCard = $this->cardTransport->addNewCard(\DemoDataGenerator::createNewCardWithCardLevel($cardLevels->getFirstLevel()->getLevelId()));
         // активируем её
         $card = $this->cardTransport->activate($newCard);
-        // создаём магазин
-        $shop = $this->shopTransport->add(\DemoDataGenerator::createNewShop());
-
-        print(sprintf('Оборот по карте до транзакций: %s' . PHP_EOL, $card->getAccumSaleAmount()->getAmount()));
-        // накидываем тестовых транзакций на карту с суммой гарантированно выше первого уровня
-        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
-        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
-        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
-        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
-        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
-
-        $card = $this->cardTransport->getByBarcode($card->getBarcode());
-
-        print(sprintf('Оборот по карте после транзакций: %s' . PHP_EOL, $card->getAccumSaleAmount()->getAmount()));
-
-        print(sprintf('barcode карты [%s] | id-уровня [%s]' . PHP_EOL,
-            $card->getBarcode()->getCode(), $card->getCardLevelId()->getId()));
-
+        // обновляем в ней сумму накоплений на превосходящую (>=) желаемый уровень
+        $card->setAccumSaleAmount(new Money(1500000000, \TestEnvironmentManager::getDefaultCurrency()));
+        $card = $this->cardTransport->update($card);
         //пробуем апгрейдить её уровень
         $levelUpResult = $this->cardTransport->levelUp($card);
-
-        // перечитываем карту
-        $card = $this->cardTransport->getByBarcode($card->getBarcode());
-        print(sprintf('barcode карты [%s] | id-уровня [%s]' . PHP_EOL,
-            $card->getBarcode()->getCode(), $card->getCardLevelId()->getId()));
-
-
         // если всё ок, то функция вернёт null
         $this::assertNull($levelUpResult);
     }

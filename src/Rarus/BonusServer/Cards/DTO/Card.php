@@ -83,7 +83,7 @@ final class Card
      */
     private $accumSaleAmount;
     /**
-     * @var LevelId Уровень карты. Используется при расчете скидок.
+     * @var LevelId|null Уровень карты. Используется при расчете скидок.
      */
     private $cardLevelId;
 
@@ -113,9 +113,9 @@ final class Card
     private $cardStatus;
 
     /**
-     * @return LevelId
+     * @return LevelId|null
      */
-    public function getCardLevelId(): LevelId
+    public function getCardLevelId(): ?LevelId
     {
         return $this->cardLevelId;
     }

@@ -34,6 +34,20 @@ class DemoDataGenerator
     }
 
     /**
+     * @param Cards\DTO\Level\LevelId $cardLevelId
+     *
+     * @return Cards\DTO\Card
+     * @throws Exception
+     */
+    public static function createNewCardWithCardLevel(Cards\DTO\Level\LevelId $cardLevelId): Cards\DTO\Card
+    {
+        $newCard = self::createNewCard();
+        $newCard->setCardLevelId($cardLevelId);
+
+        return $newCard;
+    }
+
+    /**
      * @return Cards\DTO\Card
      * @throws Exception
      */
@@ -228,5 +242,14 @@ class DemoDataGenerator
         }
 
         return $chequeRowCollection;
+    }
+
+    /**
+     * @return Shops\DTO\Shop
+     * @throws Exception
+     */
+    public static function createNewShop(): Shops\DTO\Shop
+    {
+        return Shops\DTO\Fabric::createNewInstance(sprintf('php-unit-test-shop' . \random_int(0, PHP_INT_MAX)));
     }
 }

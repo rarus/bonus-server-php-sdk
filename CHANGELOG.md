@@ -1,5 +1,10 @@
 # bonus-server-php-sdk change log
 
+## 0.5.3 (31.08.2018)
+- добавлены уровни для карт [issue#61](https://github.com/rarus/bonus-server-php-sdk/issues/61)
+- для сущности `Cards` для роли `Organization` добавлен метод `getCardLevelList` [issue#61](https://github.com/rarus/bonus-server-php-sdk/issues/61) 
+- множественные исправления в тестах
+
 ## 0.5.2 (27.08.2018)
 - исправлена ошибка c часовыми поясами и добавлены проверки в тесты `Rarus\BonusServer\Util\DateTimeParser` [issue#58](https://github.com/rarus/bonus-server-php-sdk/issues/58)
 

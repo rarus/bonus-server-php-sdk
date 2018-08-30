@@ -14,4 +14,29 @@ namespace Rarus\BonusServer\Cards\DTO\Level;
  */
 class LevelCollection extends \SplObjectStorage
 {
+    /**
+     * получение первого уровня (дефолтного)
+     *
+     * @return Level
+     */
+    public function getFirstLevel(): Level
+    {
+        $this->rewind();
+        $minLevelOrder = null;
+        $minLevel = null;
+
+        while ($this->valid()) {
+            $object = $this->current();
+            if ($minLevelOrder === null) {
+                $minLevelOrder = $object->getOrder();
+            }
+            if ($minLevelOrder > $object->getOrder()) {
+                $minLevel = $object;
+                $minLevelOrder = $object->getOrder();
+            }
+            $this->next();
+        }
+
+        return $minLevel;
+    }
 }

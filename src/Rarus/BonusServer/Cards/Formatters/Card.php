@@ -52,11 +52,17 @@ class Card
      */
     public static function toArrayForCreateNewCard(BonusServer\Cards\DTO\Card $newCard): array
     {
-        return [
+        $arNewCard = [
             'code' => $newCard->getCode(),
             'barcode' => $newCard->getBarcode()->getCode(),
             'accum_sale_amount' => (int)$newCard->getAccumSaleAmount()->getAmount(),
         ];
+
+        if ($newCard->getCardLevelId() instanceof BonusServer\Cards\DTO\Level\LevelId) {
+            $arNewCard['card_level_id'] = $newCard->getCardLevelId()->getId();
+        }
+
+        return $arNewCard;
     }
 
     /**

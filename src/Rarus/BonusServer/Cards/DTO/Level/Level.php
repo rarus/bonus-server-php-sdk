@@ -6,6 +6,8 @@ namespace Rarus\BonusServer\Cards\DTO\Level;
 use \Money\Money;
 
 /**
+ * Уровни карты
+ *
  * Class Level
  *
  * @package Rarus\BonusServer\Cards\DTO\Level
@@ -13,21 +15,117 @@ use \Money\Money;
 final class Level
 {
     /**
-     * @var LevelId
+     * @var int Номер строки
+     */
+    private $rowNumber;
+    /**
+     * @var LevelId Идентификатор уровня
      */
     private $levelId;
     /**
-     * @var string
+     * @var string Наименование уровня
      */
     private $name;
     /**
-     * @var Money Оборот накоплений по карте
+     * @var int Порядок следования. 0 - первый уровень, далее просматриваются большие - в зависимости от текущего уровня карты и суммы накоплений
      */
-    private $accumAmount;
+    private $order;
     /**
-     * @var Money сумма порога для перехода на следующий уровень
+     * @var Money Сумма накоплений, при достижении которой уровень становится доступным для перехода
      */
-    private $accumLevel;
+    private $accumulationAmountToNextLevel;
+    /**
+     * @var bool Сбрасывать сумму накопления при переходе на новый уровень
+     */
+    private $isResetAccumulationSumWhenUpgradeLevel;
+    /**
+     * @var int Максимальный процент при оплате чека, влияет на функцию post balance
+     */
+    private $maxPaymentPercent;
+    /**
+     * @var RestrictionRule
+     */
+    private $restrictionRule;
+
+    /**
+     * @return RestrictionRule
+     */
+    public function getRestrictionRule(): RestrictionRule
+    {
+        return $this->restrictionRule;
+    }
+
+    /**
+     * @param RestrictionRule $restrictionRule
+     *
+     * @return Level
+     */
+    public function setRestrictionRule(RestrictionRule $restrictionRule): Level
+    {
+        $this->restrictionRule = $restrictionRule;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaxPaymentPercent(): int
+    {
+        return $this->maxPaymentPercent;
+    }
+
+    /**
+     * @param int $maxPaymentPercent
+     *
+     * @return Level
+     */
+    public function setMaxPaymentPercent(int $maxPaymentPercent): Level
+    {
+        $this->maxPaymentPercent = $maxPaymentPercent;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isResetAccumulationSumWhenUpgradeLevel(): bool
+    {
+        return $this->isResetAccumulationSumWhenUpgradeLevel;
+    }
+
+    /**
+     * @param bool $isResetAccumulationSumWhenUpgradeLevel
+     *
+     * @return Level
+     */
+    public function setResetAccumulationSumWhenUpgradeLevel(bool $isResetAccumulationSumWhenUpgradeLevel): Level
+    {
+        $this->isResetAccumulationSumWhenUpgradeLevel = $isResetAccumulationSumWhenUpgradeLevel;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRowNumber(): int
+    {
+        return $this->rowNumber;
+    }
+
+    /**
+     * @param int $rowNumber
+     *
+     * @return Level
+     */
+    public function setRowNumber(int $rowNumber): Level
+    {
+        $this->rowNumber = $rowNumber;
+
+        return $this;
+    }
 
     /**
      * @return LevelId
@@ -70,21 +168,21 @@ final class Level
     }
 
     /**
-     * @return Money
+     * @return int
      */
-    public function getAccumAmount(): Money
+    public function getOrder(): int
     {
-        return $this->accumAmount;
+        return $this->order;
     }
 
     /**
-     * @param Money $accumAmount
+     * @param int $order
      *
      * @return Level
      */
-    public function setAccumAmount(Money $accumAmount): Level
+    public function setOrder(int $order): Level
     {
-        $this->accumAmount = $accumAmount;
+        $this->order = $order;
 
         return $this;
     }
@@ -92,19 +190,19 @@ final class Level
     /**
      * @return Money
      */
-    public function getAccumLevel(): Money
+    public function getAccumulationAmountToNextLevel(): Money
     {
-        return $this->accumLevel;
+        return $this->accumulationAmountToNextLevel;
     }
 
     /**
-     * @param Money $accumLevel
+     * @param Money $accumulationAmountToNextLevel
      *
      * @return Level
      */
-    public function setAccumLevel(Money $accumLevel): Level
+    public function setAccumulationAmountToNextLevel(Money $accumulationAmountToNextLevel): Level
     {
-        $this->accumLevel = $accumLevel;
+        $this->accumulationAmountToNextLevel = $accumulationAmountToNextLevel;
 
         return $this;
     }
