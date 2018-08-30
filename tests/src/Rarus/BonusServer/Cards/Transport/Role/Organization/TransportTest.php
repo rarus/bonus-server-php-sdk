@@ -101,16 +101,52 @@ class TransportTest extends TestCase
      */
     public function testAddNewCardMethod(): void
     {
-        $barcode = (string)random_int(1000000, 100000000);
-
-        $newCard = Cards\DTO\Fabric::createNewInstance(
-            'php-unit-test-card',
-            $barcode,
-            \TestEnvironmentManager::getDefaultCurrency());
+        $newCard = \DemoDataGenerator::createNewCard();
         $card = $this->cardTransport->addNewCard($newCard);
-        $cardFromServer = $this->cardTransport->getByBarcode(new Cards\DTO\Barcode\Barcode($barcode));
 
-        $this->assertEquals($newCard->getCode(), $cardFromServer->getCode());
+        $card = $this->cardTransport->getByBarcode($card->getBarcode());
+
+        $this::assertEquals($newCard->getCode(), $card->getCode());
+    }
+
+    /**
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::addNewCard()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByBarcode()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getAccountStatement()
+     */
+    public function testAddNewCardWithInitialBalanceWithPennyMethod(): void
+    {
+        $newCard = \DemoDataGenerator::createNewCard();
+        $initialBalance = new Money(1234567, \TestEnvironmentManager::getDefaultCurrency());
+
+        $card = $this->cardTransport->addNewCard($newCard, $initialBalance);
+
+        $accountStatement = $this->cardTransport->getAccountStatement($card);
+        // карта создана
+        $this::assertEquals($newCard->getCode(), $card->getCode());
+        // баланс по карте установлен
+        $this::assertEquals($initialBalance->getAmount(), $accountStatement->getBalance()->getAvailable()->getAmount());
+    }
+
+    /**
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::addNewCard()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByBarcode()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getAccountStatement()
+     */
+    public function testAddNewCardWithInitialBalanceWithoutPennyMethod(): void
+    {
+        $newCard = \DemoDataGenerator::createNewCard();
+        $initialBalance = new Money(1234500, \TestEnvironmentManager::getDefaultCurrency());
+
+        $card = $this->cardTransport->addNewCard($newCard, $initialBalance);
+
+        $accountStatement = $this->cardTransport->getAccountStatement($card);
+        // карта создана
+        $this::assertEquals($newCard->getCode(), $card->getCode());
+        // баланс по карте установлен
+        $this::assertEquals($initialBalance->getAmount(), $accountStatement->getBalance()->getAvailable()->getAmount());
     }
 
     /**
