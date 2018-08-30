@@ -70,18 +70,11 @@ class TransportTest extends TestCase
         $card = $this->cardTransport->addNewCard(\DemoDataGenerator::createNewCard());
         $card = $this->cardTransport->activate($card);
 
-        // накидываем транзакций на счёт
-        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
-        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
-        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
-        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
-        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
-        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
-
         $chequeRowCollection = \DemoDataGenerator::createChequeRows(rand(2, 10), \TestEnvironmentManager::getDefaultCurrency());
 
         $paymentBalance = $this->cardTransport->getPaymentBalance($shop->getShopId(), $card, $chequeRowCollection);
-        $this->assertGreaterThan(0, $paymentBalance->getPaymentBalance()->getAmount());
+        $this::assertEquals(0, $paymentBalance->getAvailableBalance()->getAmount());
+        $this::assertEquals(0, $paymentBalance->getPaymentBalance()->getAmount());
     }
 
     /**
