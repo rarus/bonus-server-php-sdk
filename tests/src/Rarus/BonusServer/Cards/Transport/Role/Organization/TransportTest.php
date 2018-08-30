@@ -125,17 +125,10 @@ class TransportTest extends TestCase
      */
     public function testGetByUserMethod(): void
     {
-        $newUser = \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
-            'grishi-' . random_int(0, PHP_INT_MAX),
-            'Михаил Гришин',
-            '+7978 888 22 21',
-            'grishi@rarus.ru'
-        );
-        $user = $this->userTransport->addNewUser($newUser);
+        $user = $this->userTransport->addNewUser(\DemoDataGenerator::createNewUser());
         $attachedCards = $this->cardTransport->getByUser($user);
         $attachedCardsCount = $attachedCards->count();
-        $newCardsCount = 2;
-
+        $newCardsCount = 1;
         // добавляем ещё карт
         $newCards = \DemoDataGenerator::createNewCardCollection($newCardsCount);
 
@@ -146,7 +139,7 @@ class TransportTest extends TestCase
         $attachedCards = $this->cardTransport->getByUser($user);
         $totalCardsCount = $attachedCards->count();
 
-        $this->assertEquals($totalCardsCount, $attachedCardsCount + $newCardsCount);
+        $this::assertEquals($totalCardsCount, $attachedCardsCount + $newCardsCount);
     }
 
     /**
