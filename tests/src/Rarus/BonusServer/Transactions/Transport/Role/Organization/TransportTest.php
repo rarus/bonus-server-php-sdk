@@ -70,23 +70,16 @@ class TransportTest extends TestCase
         $card = $this->cardTransport->addNewCard(\DemoDataGenerator::createNewCard());
         $card = $this->cardTransport->activate($card);
 
-        var_dump($card->getAccumSaleAmount()->getAmount());
-
         $shop = $this->shopTransport->add(\DemoDataGenerator::createNewShop());
-
-        print(sprintf('штрихкод карты: %s' . PHP_EOL, $card->getBarcode()->getCode()));
 
         // конструируем транзакцию
         $saleTransaction = \DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency());
         $finalScore = $this->transactionTransport->addSaleTransaction($saleTransaction);
 
         // сумма накоплений по карте совпадает с результатами добавления продажи
+        // срабатывание process/bonus с начислением баллов не проверям, т.к. програмно его не можем смоделировать - mors
         $cardWithTransaction = $this->cardTransport->getByBarcode($card->getBarcode());
         $this::assertEquals($cardWithTransaction->getAccumSaleAmount()->getAmount(), (int)$finalScore->getCardAccumulationAmount()->getAmount());
-
-        // получаем транзакции по карте
-        $transactions = $this->transactionTransport->getTransactionsByCard($card);
-        $this::assertGreaterThan(0, $transactions->count());
     }
 
     /**
