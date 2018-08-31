@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Rarus\BonusServer\Transactions\Transport\Role\Organization\Transport;
 
+use Money\Money;
 use \Rarus\BonusServer\Cards;
 use \Rarus\BonusServer\Shops;
 use \Rarus\BonusServer\Users;
@@ -62,49 +63,62 @@ class TransportTest extends TestCase
     }
 
     /**
-     * @covers \Rarus\BonusServer\Transactions\Transport\Role\Organization\Transport::addSaleTransaction()
+     * @covers \Rarus\BonusServer\Transactions\Transport\Role\Organization\Transport::getSalesHistoryByCard()
      */
-    public function testGetTransactionsByCard(): void
+    public function testGetSalesHistoryByCardForNewCard(): void
     {
         $newCard = Cards\DTO\Fabric::createNewInstance((string)random_int(1000000, 100000000), (string)random_int(1000000, 100000000), new \Money\Currency('RUB'));
         $card = $this->cardTransport->addNewCard($newCard);
         $card = $this->cardTransport->activate($card);
 
-        $newShop = Shops\DTO\Fabric::createNewInstance('Новый магазин');
-        $shop = $this->shopTransport->add($newShop);
+        $historyCollection = $this->transactionTransport->getSalesHistoryByCard($card);
+        $this::assertEquals(0, $historyCollection->count());
 
-        // конструируем транзакцию
-        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
-        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
-        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
-        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
-        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
-        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
-
-        $transactionCollection = $this->transactionTransport->getTransactionsByCard($card);
-        $this->shopTransport->delete($shop);
         $this->cardTransport->delete($card, true);
-
-        $this->assertGreaterThan(0, $transactionCollection->count());
     }
 
     /**
      * @covers \Rarus\BonusServer\Transactions\Transport\Role\Organization\Transport::addSaleTransaction()
      */
-    public function testAddSaleTransactionMethod(): void
+    public function testGetTransactionsByCard(): void
     {
-        $newCard = Cards\DTO\Fabric::createNewInstance((string)random_int(1000000, 100000000), (string)random_int(1000000, 100000000), new \Money\Currency('RUB'));
-        $card = $this->cardTransport->addNewCard($newCard);
+        $card = $this->cardTransport->addNewCard(\DemoDataGenerator::createNewCard());
         $card = $this->cardTransport->activate($card);
 
-        $newShop = Shops\DTO\Fabric::createNewInstance('Новый магазин');
-        $shop = $this->shopTransport->add($newShop);
+        $shop = $this->shopTransport->add(\DemoDataGenerator::createNewShop());
 
-        $finalScore = $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        // конструируем транзакцию
+        $saleTransaction = \DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency());
+        $finalScore = $this->transactionTransport->addSaleTransaction($saleTransaction);
 
-        $this->assertGreaterThan(0, $finalScore->getCardAccumulationAmount()->getAmount());
-        $this->shopTransport->delete($shop);
-        $this->cardTransport->delete($card, true);
+        // сумма накоплений по карте совпадает с результатами добавления продажи
+        // срабатывание process/bonus с начислением баллов не проверям, т.к. програмно его не можем смоделировать - mors
+        $cardWithTransaction = $this->cardTransport->getByBarcode($card->getBarcode());
+        $this::assertEquals($cardWithTransaction->getAccumSaleAmount()->getAmount(), (int)$finalScore->getCardAccumulationAmount()->getAmount());
+    }
+
+    /**
+     * @covers \Rarus\BonusServer\Transactions\Transport\Role\Organization\Transport::getTransactionsByCard()
+     */
+    public function testGetTransactionsByCardWithInitialBalanceMethod(): void
+    {
+        $initialBalance = new Money(12345600, \TestEnvironmentManager::getDefaultCurrency());
+        $card = $this->cardTransport->addNewCard(\DemoDataGenerator::createNewCard(), $initialBalance);
+        $card = $this->cardTransport->activate($card);
+
+        // получаем транзакции по карте
+        $transactions = $this->transactionTransport->getTransactionsByCard($card);
+
+        // по только что созданной карте должна быть только одна транзакция начисления баланса
+        $this::assertEquals(1, $transactions->count());
+        foreach ($transactions as $trx) {
+            // транзакция должна принадлежать карте
+            $this::assertEquals($card->getCardId()->getId(), $trx->getCardId()->getId());
+            // сумма по ней должна совпадать с начальным балансом
+            $this::assertEquals($initialBalance->getAmount(), $trx->getSum()->getAmount());
+            // тип транзакции - внесение
+            $this::assertEquals('refund', $trx->getType()->getCode());
+        }
     }
 
     /**

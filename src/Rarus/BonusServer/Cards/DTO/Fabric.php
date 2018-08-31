@@ -56,19 +56,24 @@ class Fabric
     }
 
     /**
-     * @param string          $code
-     * @param string          $barcode
-     * @param \Money\Currency $currency
+     * @param string       $code
+     * @param string       $barcode
+     * @param Currency     $currency
+     * @param null|LevelId $defaultCardLevelId
      *
      * @return Card
      */
-    public static function createNewInstance(string $code, string $barcode, Currency $currency): Card
+    public static function createNewInstance(string $code, string $barcode, Currency $currency, ?LevelId $defaultCardLevelId = null): Card
     {
         $card = (new Card())
             ->setCode($code)
             ->setBarcode(new Barcode\Barcode($barcode))
             ->setAccumSaleAmount(new Money('0', $currency))
             ->setCardStatus(Status\Fabric::initDefaultStatusForNewCard());
+
+        if ($defaultCardLevelId instanceof LevelId) {
+            $card->setCardLevelId($defaultCardLevelId);
+        }
 
         return $card;
     }

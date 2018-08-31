@@ -4,6 +4,7 @@ declare(strict_types=1);
 use \Rarus\BonusServer\Users;
 use \Rarus\BonusServer\Cards;
 use \Rarus\BonusServer\Shops;
+use \Rarus\BonusServer\Discounts;
 use \Rarus\BonusServer\Transactions;
 
 /**
@@ -12,6 +13,53 @@ use \Rarus\BonusServer\Transactions;
  */
 class DemoDataGenerator
 {
+
+    /**
+     * @param Shops\DTO\Shop $shop
+     * @param Cards\DTO\Card $card
+     *
+     * @return Discounts\DTO\Document
+     * @throws Exception
+     */
+    public static function createNewDiscountDocument(Shops\DTO\Shop $shop, Cards\DTO\Card $card): \Rarus\BonusServer\Discounts\DTO\Document
+    {
+        $discountDocument = new Discounts\DTO\Document();
+        $discountDocument
+            ->setShopId($shop->getShopId())
+            ->setCard($card)
+            ->setChequeRows(self::createChequeRows(random_int(1, 20), \TestEnvironmentManager::getDefaultCurrency()));
+
+        return $discountDocument;
+    }
+
+    /**
+     * @param int             $rowCount
+     * @param \Money\Currency $defaultCurrency
+     *
+     * @return Transactions\DTO\ChequeRows\ChequeRowCollection
+     * @throws Exception
+     */
+    public static function createChequeRows(int $rowCount, \Money\Currency $defaultCurrency): Transactions\DTO\ChequeRows\ChequeRowCollection
+    {
+        $chequeRowCollection = new Transactions\DTO\ChequeRows\ChequeRowCollection();
+
+        for ($i = 0; $i < $rowCount; $i++) {
+            $productCnt = \random_int(1, 20);
+            $productPrice = \random_int(50000, 10000000);
+
+            $chequeRowCollection->attach((new Transactions\DTO\ChequeRows\ChequeRow())
+                ->setLineNumber($i + 1)
+                ->setArticleId(new \Rarus\BonusServer\Articles\DTO\ArticleId(sprintf('ART-[%s]-%s,', $i, md5((string)$i))))
+                ->setName(sprintf('товар № %s', $i + 1))
+                ->setQuantity($productCnt)
+                ->setPrice(new \Money\Money($productPrice, $defaultCurrency))
+                ->setSum(new \Money\Money($productCnt * $productPrice, $defaultCurrency))
+                ->setDiscount(new \Money\Money(\random_int(1000, 100000), $defaultCurrency)));
+        }
+
+        return $chequeRowCollection;
+    }
+
     /**
      * @param int $cardsCount
      *
@@ -31,6 +79,20 @@ class DemoDataGenerator
         }
 
         return $cards;
+    }
+
+    /**
+     * @param Cards\DTO\Level\LevelId $cardLevelId
+     *
+     * @return Cards\DTO\Card
+     * @throws Exception
+     */
+    public static function createNewCardWithCardLevel(Cards\DTO\Level\LevelId $cardLevelId): Cards\DTO\Card
+    {
+        $newCard = self::createNewCard();
+        $newCard->setCardLevelId($cardLevelId);
+
+        return $newCard;
     }
 
     /**
@@ -203,30 +265,11 @@ class DemoDataGenerator
     }
 
     /**
-     * @param int             $rowCount
-     * @param \Money\Currency $defaultCurrency
-     *
-     * @return Transactions\DTO\ChequeRows\ChequeRowCollection
+     * @return Shops\DTO\Shop
      * @throws Exception
      */
-    public static function createChequeRows(int $rowCount, \Money\Currency $defaultCurrency): Transactions\DTO\ChequeRows\ChequeRowCollection
+    public static function createNewShop(): Shops\DTO\Shop
     {
-        $chequeRowCollection = new Transactions\DTO\ChequeRows\ChequeRowCollection();
-
-        for ($i = 0; $i < $rowCount; $i++) {
-            $productCnt = \random_int(1, 20);
-            $productPrice = \random_int(50000, 10000000);
-
-            $chequeRowCollection->attach((new Transactions\DTO\ChequeRows\ChequeRow())
-                ->setLineNumber($i + 1)
-                ->setArticleId(new \Rarus\BonusServer\Articles\DTO\ArticleId(sprintf('ART-[%s]-%s,', $i, md5((string)$i))))
-                ->setName(sprintf('товар № %s', $i + 1))
-                ->setQuantity($productCnt)
-                ->setPrice(new \Money\Money($productPrice, $defaultCurrency))
-                ->setSum(new \Money\Money($productCnt * $productPrice, $defaultCurrency))
-                ->setDiscount(new \Money\Money(\random_int(1000, 100000), $defaultCurrency)));
-        }
-
-        return $chequeRowCollection;
+        return Shops\DTO\Fabric::createNewInstance(sprintf('php-unit-test-shop' . \random_int(0, PHP_INT_MAX)));
     }
 }

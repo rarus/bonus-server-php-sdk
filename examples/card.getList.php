@@ -46,7 +46,6 @@ print(sprintf('сard id: %s' . PHP_EOL, $card->getCardId()->getId()));
 print(sprintf('сard user id: %s' . PHP_EOL, $card->getUserId() !== null ? $card->getUserId()->getId() : null));
 
 
-
 // авторизуемся на бонусном сервере под учётной записью пользователя
 $userCredentials = Auth\Fabric::createCredentialsForRoleClient($companyId, $userUid, $userPassword);
 $userAuthToken = $apiClient->getNewAuthToken($userCredentials);

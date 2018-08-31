@@ -17,22 +17,23 @@ use Rarus\BonusServer;
 class Fabric
 {
     /**
-     * @param Currency $currency
-     * @param array    $arAccountStatement
+     * @param Currency      $currency
+     * @param array         $arAccountStatement
+     * @param \DateTimeZone $dateTimeZone
      *
      * @return AccountStatement
      * @throws BonusServer\Exceptions\ApiClientException
      */
-    public static function initFromServerResponse(Currency $currency, array $arAccountStatement): AccountStatement
+    public static function initFromServerResponse(Currency $currency, array $arAccountStatement, \DateTimeZone $dateTimeZone): AccountStatement
     {
         $trxAmount = new BonusServer\Cards\DTO\TransactionAmount\TransactionAmountCollection();
-        foreach ($arAccountStatement['last_transactions'] as $arTrx) {
-            $trxAmount->attach(BonusServer\Cards\DTO\TransactionAmount\Fabric::initFromServerResponse($currency, $arTrx));
+        foreach ((array)$arAccountStatement['last_transactions'] as $arTrx) {
+            $trxAmount->attach(BonusServer\Cards\DTO\TransactionAmount\Fabric::initFromServerResponse($currency, $arTrx, $dateTimeZone));
         }
 
         $points = new BonusServer\Transactions\DTO\Points\PointCollection();
-        foreach ($arAccountStatement['bonusactive'] as $arPoint) {
-            $points->attach(BonusServer\Transactions\DTO\Points\Fabric::initPointFromServerResponse($currency, $arPoint));
+        foreach ((array)$arAccountStatement['bonusactive'] as $arPoint) {
+            $points->attach(BonusServer\Transactions\DTO\Points\Fabric::initPointFromServerResponse($currency, $arPoint, $dateTimeZone));
         }
         $points->rewind();
 

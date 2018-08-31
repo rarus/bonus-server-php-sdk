@@ -20,10 +20,27 @@ $orgUsersTransport = Users\Transport\Role\Organization\Fabric::getInstance($apiC
 $orgTransactionsTransport = Transactions\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
 
 // готовим тестовые данные
+$newUser = \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
+    'grishi-' . random_int(0, PHP_INT_MAX),
+    'Михаил Гришин',
+    '+7978 888 22 22',
+    'grishi@rarus.ru',
+    null,
+    new \DateTime('06.06.1985')
+);
+$user = $orgUsersTransport->addNewUser($newUser);
+
+$cardLevels = $orgCardsTransport->getCardLevelList();
+$newCard = Cards\DTO\Fabric::createNewInstance('12345987654321', (string)random_int(1000000, 100000000), new \Money\Currency('RUB'));
+$newCard->setCardLevelId($cardLevels->getFirstLevel()->getLevelId());
+$card = $orgCardsTransport->addNewCard($newCard, new \Money\Money(5000000000, new \Money\Currency('RUB')));
+$updatedCard = $orgCardsTransport->attachToUser($card, $user);
+
+$activatedCard = $orgCardsTransport->activate($card);
 
 // получаем тестовые данные
 // получили пользователя
-$user = $orgUsersTransport->getByUserId(new Users\DTO\UserId('35518a45-2fca-49bb-88c3-f697fbf7b036'));
+$user = $orgUsersTransport->getByUserId($user->getUserId());
 var_dump($user->getName());
 var_dump($user->getEmail());
 
