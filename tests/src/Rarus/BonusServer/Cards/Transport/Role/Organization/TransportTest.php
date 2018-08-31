@@ -26,7 +26,7 @@ class TransportTest extends TestCase
      */
     private $userTransport;
     /**
-     * @var \Rarus\BonusServer\Shops\Transport\Transport
+     * @var \Rarus\BonusServer\Shops\Transport\Role\Organization\Transport
      */
     private $shopTransport;
     /**
@@ -70,18 +70,11 @@ class TransportTest extends TestCase
         $card = $this->cardTransport->addNewCard(\DemoDataGenerator::createNewCard());
         $card = $this->cardTransport->activate($card);
 
-        // накидываем транзакций на счёт
-        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
-        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
-        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
-        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
-        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
-        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
-
         $chequeRowCollection = \DemoDataGenerator::createChequeRows(rand(2, 10), \TestEnvironmentManager::getDefaultCurrency());
 
         $paymentBalance = $this->cardTransport->getPaymentBalance($shop->getShopId(), $card, $chequeRowCollection);
-        $this->assertGreaterThan(0, $paymentBalance->getPaymentBalance()->getAmount());
+        $this::assertEquals(0, $paymentBalance->getAvailableBalance()->getAmount());
+        $this::assertEquals(0, $paymentBalance->getPaymentBalance()->getAmount());
     }
 
     /**
@@ -90,7 +83,7 @@ class TransportTest extends TestCase
     public function testListMethod(): void
     {
         $newCardCount = 10;
-        $paginationResponse = $this->cardTransport->list(new Pagination());
+        $paginationResponse = $this->cardTransport->list(new Pagination(3, 1));
         $totalCardCount = $paginationResponse->getPagination()->getResultItemsCount();
 
         $newCardCollection = \DemoDataGenerator::createNewCardCollection($newCardCount);
@@ -98,7 +91,7 @@ class TransportTest extends TestCase
             $this->cardTransport->addNewCard($newCard);
         }
         $paginationResponse = $this->cardTransport->list(new Pagination());
-        $this->assertEquals($totalCardCount + $newCardCount, $paginationResponse->getPagination()->getResultItemsCount());
+        $this::assertEquals($totalCardCount + $newCardCount, $paginationResponse->getPagination()->getResultItemsCount());
     }
 
     /**
@@ -108,34 +101,108 @@ class TransportTest extends TestCase
      */
     public function testAddNewCardMethod(): void
     {
-        $barcode = (string)random_int(1000000, 100000000);
-
-        $newCard = Cards\DTO\Fabric::createNewInstance(
-            'php-unit-test-card',
-            $barcode,
-            \TestEnvironmentManager::getDefaultCurrency());
+        $newCard = \DemoDataGenerator::createNewCard();
         $card = $this->cardTransport->addNewCard($newCard);
-        $cardFromServer = $this->cardTransport->getByBarcode(new Cards\DTO\Barcode\Barcode($barcode));
 
-        $this->assertEquals($newCard->getCode(), $cardFromServer->getCode());
+        $card = $this->cardTransport->getByBarcode($card->getBarcode());
+
+        $this::assertEquals($newCard->getCode(), $card->getCode());
     }
+
+    /**
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::addNewCard()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByBarcode()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getAccountStatement()
+     */
+    public function testAddNewCardWithInitialBalanceWithPennyMethod(): void
+    {
+        $newCard = \DemoDataGenerator::createNewCard();
+        $initialBalance = new Money(1234567, \TestEnvironmentManager::getDefaultCurrency());
+
+        $card = $this->cardTransport->addNewCard($newCard, $initialBalance);
+
+        $accountStatement = $this->cardTransport->getAccountStatement($card);
+        // карта создана
+        $this::assertEquals($newCard->getCode(), $card->getCode());
+        // баланс по карте установлен
+        $this::assertEquals($initialBalance->getAmount(), $accountStatement->getBalance()->getAvailable()->getAmount());
+    }
+
+    /**
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::setAccumulationAmount()
+     * @throws ApiClientException
+     * @throws \Rarus\BonusServer\Exceptions\NetworkException
+     * @throws \Rarus\BonusServer\Exceptions\UnknownException
+     */
+    public function testSetAccumulationAmountWithPennyMethod(): void
+    {
+        $newCard = \DemoDataGenerator::createNewCard();
+        $accumulationAmount = new Money(1234567, \TestEnvironmentManager::getDefaultCurrency());
+
+        $card = $this->cardTransport->addNewCard($newCard);
+        $card = $this->cardTransport->activate($card);
+
+        // устанавливаем на ней нужную сумму накоплений по транзакциям
+        $this->cardTransport->setAccumulationAmount($card, $accumulationAmount);
+
+        $updatedCard = $this->cardTransport->getByCardId($card->getCardId());
+
+        $this::assertEquals($accumulationAmount->getAmount(), $updatedCard->getAccumSaleAmount()->getAmount());
+    }
+
+    /**
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::setAccumulationAmount()
+     * @throws ApiClientException
+     * @throws \Rarus\BonusServer\Exceptions\NetworkException
+     * @throws \Rarus\BonusServer\Exceptions\UnknownException
+     */
+    public function testSetAccumulationAmountWithoutPennyMethod(): void
+    {
+        $newCard = \DemoDataGenerator::createNewCard();
+        $accumulationAmount = new Money(1234500, \TestEnvironmentManager::getDefaultCurrency());
+
+        $card = $this->cardTransport->addNewCard($newCard);
+        $card = $this->cardTransport->activate($card);
+
+        // устанавливаем на ней нужную сумму накоплений по транзакциям
+        $this->cardTransport->setAccumulationAmount($card, $accumulationAmount);
+
+        $updatedCard = $this->cardTransport->getByCardId($card->getCardId());
+
+        $this::assertEquals($accumulationAmount->getAmount(), $updatedCard->getAccumSaleAmount()->getAmount());
+    }
+
+    /**
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::addNewCard()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByBarcode()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getAccountStatement()
+     */
+    public function testAddNewCardWithInitialBalanceWithoutPennyMethod(): void
+    {
+        $newCard = \DemoDataGenerator::createNewCard();
+        $initialBalance = new Money(1234500, \TestEnvironmentManager::getDefaultCurrency());
+
+        $card = $this->cardTransport->addNewCard($newCard, $initialBalance);
+
+        $accountStatement = $this->cardTransport->getAccountStatement($card);
+        // карта создана
+        $this::assertEquals($newCard->getCode(), $card->getCode());
+        // баланс по карте установлен
+        $this::assertEquals($initialBalance->getAmount(), $accountStatement->getBalance()->getAvailable()->getAmount());
+    }
+
 
     /**
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByUser()
      */
     public function testGetByUserMethod(): void
     {
-        $newUser = \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
-            'grishi-' . random_int(0, PHP_INT_MAX),
-            'Михаил Гришин',
-            '+7978 888 22 21',
-            'grishi@rarus.ru'
-        );
-        $user = $this->userTransport->addNewUser($newUser);
+        $user = $this->userTransport->addNewUser(\DemoDataGenerator::createNewUser());
         $attachedCards = $this->cardTransport->getByUser($user);
         $attachedCardsCount = $attachedCards->count();
-        $newCardsCount = 2;
-
+        $newCardsCount = 1;
         // добавляем ещё карт
         $newCards = \DemoDataGenerator::createNewCardCollection($newCardsCount);
 
@@ -146,7 +213,7 @@ class TransportTest extends TestCase
         $attachedCards = $this->cardTransport->getByUser($user);
         $totalCardsCount = $attachedCards->count();
 
-        $this->assertEquals($totalCardsCount, $attachedCardsCount + $newCardsCount);
+        $this::assertEquals($totalCardsCount, $attachedCardsCount + $newCardsCount);
     }
 
     /**
@@ -300,21 +367,59 @@ class TransportTest extends TestCase
     }
 
     /**
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getCardLevelList
+     * @throws ApiClientException
+     * @throws \Rarus\BonusServer\Exceptions\UnknownException
+     */
+    public function testGetCardLevelListMethod(): void
+    {
+        $cardLevels = $this->cardTransport->getCardLevelList();
+
+        $this::assertGreaterThan(-1, $cardLevels);
+    }
+
+    /**
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::addNewCard()
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::levelUp()
      */
-    public function testCanLevelUpMethod(): void
+    public function testCanLevelUpWithFailureResultMethod(): void
     {
-        $newCard = Cards\DTO\Fabric::createNewInstance('12345987654321', (string)random_int(1000000, 100000000), new \Money\Currency('RUB'));
+        // получаем список уровней карт
+        $cardLevels = $this->cardTransport->getCardLevelList();
+        $this::assertGreaterThan(2, $cardLevels->count(), 'для корректной работы теста должно быть минимум два уровня карт');
 
-        $card = $this->cardTransport->addNewCard($newCard);
+        // создаём карту с дефолтным уровнем
+        $card = $this->cardTransport->addNewCard(\DemoDataGenerator::createNewCardWithCardLevel($cardLevels->getFirstLevel()->getLevelId()));
+        // активируем её
         $activatedCard = $this->cardTransport->activate($card);
-        $updatedCard = $this->cardTransport->levelUp($activatedCard);
 
-        $this->assertNotEquals($activatedCard->getCardLevelId()->getId(), $updatedCard->getCardLevelId()->getId());
+        //пробуем апгрейдить её уровень и это будет неудачно, т.к. накоплений по карте нет
+        $levelUpResult = $this->cardTransport->levelUp($activatedCard);
+        $this::assertInstanceOf(Cards\DTO\Level\LevelDescription::class, $levelUpResult);
+    }
 
-        $this->cardTransport->delete($updatedCard);
+    /**
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::addNewCard()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::levelUp()
+     */
+    public function testCanLevelUpWithSuccessfulResultMethod(): void
+    {
+        // получаем список уровней карт
+        $cardLevels = $this->cardTransport->getCardLevelList();
+        $this::assertGreaterThan(2, $cardLevels->count(), 'для корректной работы теста должно быть минимум два уровня карт');
+        // создаём карту с дефолтным начальным уровнем
+        $newCard = $this->cardTransport->addNewCard(\DemoDataGenerator::createNewCardWithCardLevel($cardLevels->getFirstLevel()->getLevelId()));
+        // активируем её
+        $card = $this->cardTransport->activate($newCard);
+        // обновляем в ней сумму накоплений на превосходящую (>=) желаемый уровень
+        $card->setAccumSaleAmount(new Money(1500000000, \TestEnvironmentManager::getDefaultCurrency()));
+        $card = $this->cardTransport->update($card);
+        //пробуем апгрейдить её уровень
+        $levelUpResult = $this->cardTransport->levelUp($card);
+        // если всё ок, то функция вернёт null
+        $this::assertNull($levelUpResult);
     }
 
     /**
@@ -358,24 +463,11 @@ class TransportTest extends TestCase
      */
     public function testAttachToUser(): void
     {
-        $newCard = Cards\DTO\Fabric::createNewInstance(
-            'php-unit-test-card',
-            (string)random_int(1000000, 100000000),
-            \TestEnvironmentManager::getDefaultCurrency());
+        $card = $this->cardTransport->addNewCard(\DemoDataGenerator::createNewCard());
 
-        $card = $this->cardTransport->addNewCard($newCard);
-
-        $newUser = \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
-            'grishi-' . random_int(0, PHP_INT_MAX),
-            'Михаил Гришин',
-            '+7978 888 22 22',
-            'grishi@rarus.ru'
-        );
-
-        $user = $this->userTransport->addNewUser($newUser);
+        $user = $this->userTransport->addNewUser(\DemoDataGenerator::createNewUser());
 
         $updatedCard = $this->cardTransport->attachToUser($card, $user);
-
         $this->assertEquals($updatedCard->getUserId()->getId(), $user->getUserId()->getId());
     }
 

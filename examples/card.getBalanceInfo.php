@@ -14,7 +14,7 @@ $companyId = $apiClient->getAuthToken()->getCompanyId();
 $cardsOrganizationRoleTransport = Cards\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
 $userOrganizationTransport = Users\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
 $transactionsTransport = Transactions\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
-$shopTransport = Shops\Transport\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
+$shopTransport = Shops\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
 
 $newCard = Cards\DTO\Fabric::createNewInstance((string)random_int(1000000, 100000000), (string)random_int(1000000, 100000000), new \Money\Currency('RUB'));
 $card = $cardsOrganizationRoleTransport->addNewCard($newCard);
@@ -115,6 +115,7 @@ var_dump(Transactions\Formatters\FinalScore::toArray($finalScore));
 print('провели две транзакции по карте, получаем их из истории' . PHP_EOL);
 
 // авторизуемся на бонусном сервере под учётной записью пользователя
+// если работа идёт от роли организация, то это лишнее
 $userCredentials = Auth\Fabric::createCredentialsForRoleClient($companyId, $userUid, $userPassword);
 $userAuthToken = $apiClient->getNewAuthToken($userCredentials);
 $apiClient->setAuthToken($userAuthToken);

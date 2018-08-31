@@ -26,4 +26,4 @@ $cardsTransport->setAccumulationAmount($activeCard, new \Money\Money('45000', ne
 
 $card = $cardsTransport->getByCardId($activeCard->getCardId());
 
-var_dump(Cards\Formatters\Card::toArray($card));
+var_dump($card->getAccumSaleAmount()->getAmount());

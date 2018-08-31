@@ -25,9 +25,34 @@ class Fabric
         $moneyParser = new DecimalMoneyParser(new ISOCurrencies());
 
         return (new Level())
-            ->setLevelId(new LevelId($arLevel['level_id']))
-            ->setName($arLevel['level_name'])
-            ->setAccumAmount($moneyParser->parse((string)$arLevel['accum_amount'], $currency->getCode()))
-            ->setAccumLevel($moneyParser->parse((string)$arLevel['accum_level'], $currency->getCode()));
+            ->setRowNumber((int)$arLevel['row_number'])
+            ->setLevelId(new LevelId((string)$arLevel['id']))
+            ->setName((string)$arLevel['name'])
+            ->setOrder((int)$arLevel['order'])
+            ->setAccumulationAmountToNextLevel($moneyParser->parse((string)$arLevel['accum_level'], $currency->getCode()))
+            ->setResetAccumulationSumWhenUpgradeLevel((bool)$arLevel['reset_card_accum'])
+            ->setMaxPaymentPercent((int)$arLevel['max_payment_percent'])
+            ->setRestrictionRule(new RestrictionRule(
+                (int)$arLevel['activity_restriction_period'],
+                (int)$arLevel['activity_restriction_count'],
+                (int)$arLevel['inactivity_bonus_erase_period']
+            ));
+    }
+
+    /**
+     * @param array    $arLevelDescription
+     * @param Currency $currency
+     *
+     * @return LevelDescription
+     */
+    public static function initLevelDescriptionFromServerResponse(array $arLevelDescription, Currency $currency): LevelDescription
+    {
+        $moneyParser = new DecimalMoneyParser(new ISOCurrencies());
+
+        return (new LevelDescription())
+            ->setLevelId(new LevelId($arLevelDescription['level_id']))
+            ->setName($arLevelDescription['level_name'])
+            ->setLevelUpAccumulationSum($moneyParser->parse((string)$arLevelDescription['accum_level'], $currency->getCode()))
+            ->setCardAccumulationSum($moneyParser->parse((string)$arLevelDescription['accum_amount'], $currency->getCode()));
     }
 }

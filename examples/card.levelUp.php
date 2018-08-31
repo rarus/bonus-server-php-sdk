@@ -5,13 +5,13 @@ require_once __DIR__ . '/init.php';
 
 use \Rarus\BonusServer\Cards;
 
-
-// инициализируем транспорт для работы с сущностью Магазины
 $cardsTransport = Cards\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
-
+$cardLevels = $cardsTransport->getCardLevelList();
 $newCard = Cards\DTO\Fabric::createNewInstance('12345987654321', (string)random_int(1000000, 100000000), new \Money\Currency('RUB'));
-
-$card = $cardsTransport->addNewCard($newCard);
+$newCard->setCardLevelId($cardLevels->getFirstLevel()->getLevelId());
+$card = $cardsTransport->addNewCard($newCard, new \Money\Money(5000000000, new \Money\Currency('RUB')));
 $activatedCard = $cardsTransport->activate($card);
 
-$cardsTransport->levelUp($activatedCard);
+$result = $cardsTransport->levelUp($activatedCard);
+
+var_dump($result);

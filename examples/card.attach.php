@@ -32,3 +32,5 @@ print('attach card to user...' . PHP_EOL);
 $updatedCard = $cardsTransport->attachToUser($card, $user);
 
 var_dump(Cards\Formatters\Card::toArray($updatedCard));
+var_dump($updatedCard->getUserId()->getId());
+var_dump($user->getUserId()->getId());

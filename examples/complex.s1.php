@@ -58,7 +58,7 @@ $userInputCardBarcode = $cardCode;
 
 // 4. Ищем карту по штрихкоду (/organization/card?page=1&per_page=1&calculate_count=false&barcode=*номер карты*)
 $cardFilter = new Cards\DTO\CardFilter();
-$cardFilter->setBarcode($cardCode);
+$cardFilter->setBarcode(new Cards\DTO\Barcode\Barcode($userInputCardBarcode));
 print('card filter: ' . Cards\Formatters\CardFilter::toUrlArguments($cardFilter) . PHP_EOL);
 $cardsCollection = $cardsTransport->getByFilter($cardFilter);
 // 5. Получаем массив карт, если такая карта в системе зарегистрирована, запоминаем её данные.
