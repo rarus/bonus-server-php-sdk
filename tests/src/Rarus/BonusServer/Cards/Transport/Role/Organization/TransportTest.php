@@ -130,6 +130,50 @@ class TransportTest extends TestCase
     }
 
     /**
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::setAccumulationAmount()
+     * @throws ApiClientException
+     * @throws \Rarus\BonusServer\Exceptions\NetworkException
+     * @throws \Rarus\BonusServer\Exceptions\UnknownException
+     */
+    public function testSetAccumulationAmountWithPennyMethod(): void
+    {
+        $newCard = \DemoDataGenerator::createNewCard();
+        $accumulationAmount = new Money(1234567, \TestEnvironmentManager::getDefaultCurrency());
+
+        $card = $this->cardTransport->addNewCard($newCard);
+        $card = $this->cardTransport->activate($card);
+
+        // устанавливаем на ней нужную сумму накоплений по транзакциям
+        $this->cardTransport->setAccumulationAmount($card, $accumulationAmount);
+
+        $updatedCard = $this->cardTransport->getByCardId($card->getCardId());
+
+        $this::assertEquals($accumulationAmount->getAmount(), $updatedCard->getAccumSaleAmount()->getAmount());
+    }
+
+    /**
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::setAccumulationAmount()
+     * @throws ApiClientException
+     * @throws \Rarus\BonusServer\Exceptions\NetworkException
+     * @throws \Rarus\BonusServer\Exceptions\UnknownException
+     */
+    public function testSetAccumulationAmountWithoutPennyMethod(): void
+    {
+        $newCard = \DemoDataGenerator::createNewCard();
+        $accumulationAmount = new Money(1234500, \TestEnvironmentManager::getDefaultCurrency());
+
+        $card = $this->cardTransport->addNewCard($newCard);
+        $card = $this->cardTransport->activate($card);
+
+        // устанавливаем на ней нужную сумму накоплений по транзакциям
+        $this->cardTransport->setAccumulationAmount($card, $accumulationAmount);
+
+        $updatedCard = $this->cardTransport->getByCardId($card->getCardId());
+
+        $this::assertEquals($accumulationAmount->getAmount(), $updatedCard->getAccumSaleAmount()->getAmount());
+    }
+
+    /**
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::addNewCard()
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByBarcode()
@@ -148,6 +192,7 @@ class TransportTest extends TestCase
         // баланс по карте установлен
         $this::assertEquals($initialBalance->getAmount(), $accountStatement->getBalance()->getAvailable()->getAmount());
     }
+
 
     /**
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByUser()

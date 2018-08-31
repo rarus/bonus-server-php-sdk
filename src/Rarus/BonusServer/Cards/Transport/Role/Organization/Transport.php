@@ -476,14 +476,17 @@ class Transport extends BonusServer\Transport\AbstractTransport
             'sumCurrency' => $sum->getCurrency()->getCode(),
         ]);
 
+        $decimalFormatter = new DecimalMoneyFormatter(new ISOCurrencies());
+
         $requestResult = $this->apiClient->executeApiRequest(
             sprintf('/organization/card/%s/accumulate', $card->getCardId()->getId()),
             RequestMethodInterface::METHOD_POST,
             [
                 'reset' => false,
-                'sum' => (int)$sum->getAmount(),
+                'sum' => (float)$decimalFormatter->format($sum),
             ]
         );
+
         $this->log->debug('rarus.bonus.server.cards.transport.organization.setAccumulationAmount.finish');
     }
 
