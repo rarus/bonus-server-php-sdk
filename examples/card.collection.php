@@ -10,8 +10,8 @@ use \Rarus\BonusServer\Cards;
 $cardsTransport = Cards\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
 
 // получаем список магазинов
-$cards = $cardsTransport->list();
+$cardsWithPagination = $cardsTransport->list(new \Rarus\BonusServer\Transport\DTO\Pagination(10));
 // показываем список магазинов
-foreach ($cards as $card) {
+foreach ($cardsWithPagination->getCardCollection() as $card) {
     var_dump(\Rarus\BonusServer\Cards\Formatters\Card::toArray($card));
 }

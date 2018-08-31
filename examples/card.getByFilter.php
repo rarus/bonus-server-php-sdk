@@ -12,7 +12,7 @@ $cardsTransport = Cards\Transport\Role\Organization\Fabric::getInstance($apiClie
 $newCard = Cards\DTO\Fabric::createNewInstance('12345987654321', (string)random_int(1000000, 100000000), new \Money\Currency('RUB'));
 $card = $cardsTransport->addNewCard($newCard);
 
-print('barcode: ' . $card->getBarcode() . PHP_EOL);
+print('barcode: ' . $card->getBarcode()->getCode() . PHP_EOL);
 
 $cardFilter = new Cards\DTO\CardFilter();
 $cardFilter->setBarcode($card->getBarcode());
@@ -25,6 +25,6 @@ print ('cards found: ' . $cardsCollection->count() . PHP_EOL);
 foreach ($cardsCollection as $card) {
     print(sprintf('%s | %s ' . PHP_EOL,
         $card->getCardId()->getId(),
-        $card->getBarcode()
+        $card->getBarcode()->getCode()
     ));
 }

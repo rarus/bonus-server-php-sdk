@@ -4,6 +4,7 @@
 - добавлены уровни для карт [issue#61](https://github.com/rarus/bonus-server-php-sdk/issues/61)
 - для сущности `Cards` для роли `Organization` добавлен метод `getCardLevelList` [issue#61](https://github.com/rarus/bonus-server-php-sdk/issues/61) 
 - для сущности `Cards` для роли `Organization` исправлена ошибка в методе `setAccumulationAmount` [issue#61](https://github.com/rarus/bonus-server-php-sdk/issues/61) 
+- для сущности `Transactions` для роли `Organization` исправлена ошибка в методе `getSalesHistoryByCard` [issue#61](https://github.com/rarus/bonus-server-php-sdk/issues/61) 
 - для сущности `Cards` для роли `Organization` исправлена ошибка в постраничной навигации [issue#61](https://github.com/rarus/bonus-server-php-sdk/issues/61)
 - для сущности `Cards` для роли `Organization` для метода `addNewCard` добавлена возможность указать начальный баланс карты [issue#61](https://github.com/rarus/bonus-server-php-sdk/issues/61) 
 - множественные исправления в тестах

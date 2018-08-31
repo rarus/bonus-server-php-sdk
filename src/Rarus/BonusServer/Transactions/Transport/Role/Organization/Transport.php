@@ -31,29 +31,35 @@ class Transport extends BonusServer\Transport\AbstractTransport
         $this->log->debug('rarus.bonus.server.transactions.transport.organization.getSalesHistoryByCard.start', [
             'cardId' => $card->getCardId()->getId(),
         ]);
-
-        $queryString = '';
-        if (null !== $pagination) {
-            $queryString .= sprintf('&%s', BonusServer\Transport\Formatters\Pagination::toRequestUri($pagination));
-        } elseif (null !== $dateFrom) {
-            $queryString .= sprintf('&date_from=%s', $dateFrom->getTimestamp());
-        } elseif (null !== $dateTo) {
-            $queryString .= sprintf('&date_to=%s', $dateTo->getTimestamp());
-        }
-        $requestResult = $this->apiClient->executeApiRequest(
-            sprintf('/organization/sale_info?card_id=%s%s', $card->getCardId()->getId(), $queryString),
-            RequestMethodInterface::METHOD_GET
-        );
-
         $historySalesCollection = new HistoryItemCollection();
-        foreach ($requestResult['sales'] as $arSaleItem) {
-            $historySalesCollection->attach(BonusServer\Transactions\DTO\SalesHistory\Fabric::initHistoryItemFromServerResponse(
-                $this->getDefaultCurrency(),
-                $arSaleItem
-            ));
-        }
-        $historySalesCollection->rewind();
 
+        try {
+            $queryString = '';
+            if ($pagination !== null) {
+                $queryString .= sprintf('&%s', BonusServer\Transport\Formatters\Pagination::toRequestUri($pagination));
+            } elseif ($dateFrom !== null) {
+                $queryString .= sprintf('&date_from=%s', $dateFrom->getTimestamp());
+            } elseif ($dateTo !== null) {
+                $queryString .= sprintf('&date_to=%s', $dateTo->getTimestamp());
+            }
+            $requestResult = $this->apiClient->executeApiRequest(
+                sprintf('/organization/sale_info?card_id=%s%s', $card->getCardId()->getId(), $queryString),
+                RequestMethodInterface::METHOD_GET
+            );
+
+            foreach ((array)$requestResult['sales'] as $arSaleItem) {
+                $historySalesCollection->attach(BonusServer\Transactions\DTO\SalesHistory\Fabric::initHistoryItemFromServerResponse(
+                    $this->getDefaultCurrency(),
+                    $arSaleItem
+                ));
+            }
+            $historySalesCollection->rewind();
+        } catch (BonusServer\Exceptions\ApiClientException $exception) {
+            // если транзакции не найдены, то сервер возврашает 404 статус выставив 114 код в данном случае мы его подавляем
+            if ($exception->getCode() !== 114) {
+                throw $exception;
+            }
+        }
         $this->log->debug('rarus.bonus.server.transactions.transport.organization.getSalesHistoryByCard.finish', [
             'operationItemsCount' => $historySalesCollection->count(),
         ]);

@@ -63,6 +63,21 @@ class TransportTest extends TestCase
     }
 
     /**
+     * @covers \Rarus\BonusServer\Transactions\Transport\Role\Organization\Transport::getSalesHistoryByCard()
+     */
+    public function testGetSalesHistoryByCardForNewCard(): void
+    {
+        $newCard = Cards\DTO\Fabric::createNewInstance((string)random_int(1000000, 100000000), (string)random_int(1000000, 100000000), new \Money\Currency('RUB'));
+        $card = $this->cardTransport->addNewCard($newCard);
+        $card = $this->cardTransport->activate($card);
+
+        $historyCollection = $this->transactionTransport->getSalesHistoryByCard($card);
+        $this::assertEquals(0, $historyCollection->count());
+
+        $this->cardTransport->delete($card, true);
+    }
+
+    /**
      * @covers \Rarus\BonusServer\Transactions\Transport\Role\Organization\Transport::addSaleTransaction()
      */
     public function testGetTransactionsByCard(): void
