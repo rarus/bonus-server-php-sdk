@@ -10,7 +10,7 @@ use Rarus\BonusServer\Shops;
 
 $discountsTransport = Discounts\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
 $cardsTransport = Cards\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
-$shopTransport = Shops\Transport\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
+$shopTransport = Shops\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
 
 $newCard = Cards\DTO\Fabric::createNewInstance((string)random_int(1000000, 100000000), (string)random_int(1000000, 100000000), new \Money\Currency('RUB'));
 $card = $cardsTransport->addNewCard($newCard);
@@ -35,7 +35,7 @@ $discountDocument
 print('документ для предрасчёта скидок и скидочных бонусов:' . PHP_EOL);
 $estimate = $discountsTransport->calculateDiscountsAndBonusDiscounts($discountDocument);
 if (null === $estimate) {
-    print ('скидок и бонусов нет' . PHP_EOL);
+    print ('скидок и бонусов нет, создайте их в 1С' . PHP_EOL);
     exit();
 }
 

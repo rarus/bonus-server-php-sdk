@@ -9,11 +9,31 @@ use \Rarus\BonusServer\Transactions;
 
 print('запрос баланса и оборота' . PHP_EOL);
 
+$orgCardsTransport = Cards\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
+$orgUsersTransport = Users\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
+$orgTransactionsTransport = Transactions\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
+
 // готовим тестовые данные
+$newUser = \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
+    'grishi-' . random_int(0, PHP_INT_MAX),
+    'Михаил Гришин',
+    '+7978 888 22 22',
+    'grishi@rarus.ru',
+    null,
+    new \DateTime('06.06.1985')
+);
+$user = $orgUsersTransport->addNewUser($newUser);
+
+$cardLevels = $orgCardsTransport->getCardLevelList();
+$newCard = Cards\DTO\Fabric::createNewInstance('12345987654321', (string)random_int(1000000, 100000000), new \Money\Currency('RUB'));
+$newCard->setCardLevelId($cardLevels->getFirstLevel()->getLevelId());
+$card = $orgCardsTransport->addNewCard($newCard, new \Money\Money(1000, new \Money\Currency('RUB')));
+$updatedCard = $orgCardsTransport->attachToUser($card, $user);
+
+$activatedCard = $orgCardsTransport->activate($card);
 
 // получение выписки с карты
-$orgCardsTransport = Cards\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
-$card = $orgCardsTransport->getByCardId(new Cards\DTO\CardId('d894efc8-664c-41c5-9290-24a92c3756ba'));
+$card = $orgCardsTransport->getByCardId($card->getCardId());
 print('запрос баланса без истории транзакций' . PHP_EOL);
 $accountStatement = $orgCardsTransport->getAccountStatement($card, 5);
 

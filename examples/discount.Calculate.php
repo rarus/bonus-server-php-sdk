@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__ . '/init.php';
-require_once '../tests/DemoDataGenerator.php';
+require_once '..' . '/tests/DemoDataGenerator.php';
 
 use Rarus\BonusServer\Discounts;
 use Rarus\BonusServer\Transactions;
@@ -10,7 +10,7 @@ use Rarus\BonusServer\Shops;
 
 $discountsTransport = Discounts\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
 $cardsTransport = Cards\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
-$shopTransport = Shops\Transport\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
+$shopTransport = Shops\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
 
 $newCard = Cards\DTO\Fabric::createNewInstance((string)random_int(1000000, 100000000), (string)random_int(1000000, 100000000), new \Money\Currency('RUB'));
 $card = $cardsTransport->addNewCard($newCard);
@@ -35,7 +35,7 @@ $discountDocument
 print('документ для предрасчёта скидок:' . PHP_EOL);
 $estimate = $discountsTransport->calculateDiscounts($discountDocument);
 if (null === $estimate) {
-    print ('скидок нет' . PHP_EOL);
+    print ('скидок нет, создайте их в 1С' . PHP_EOL);
     exit();
 }
 
