@@ -5,7 +5,12 @@ require_once __DIR__ . '/init.php';
 
 use \Rarus\BonusServer\Cards;
 use \Rarus\BonusServer\Users;
+use \Rarus\BonusServer\Shops;
+use \Rarus\BonusServer\Shops\DTO\ShopCollection;
 use \Rarus\BonusServer\Transactions;
+use \Rarus\BonusServer\Transactions\DTO\Points\Transactions\TransactionCollection;
+use \Rarus\BonusServer\Transactions\DTO\SalesHistory\HistoryItemCollection;
+use \Rarus\BonusServer\Transactions\DTO\Document\DocumentId;
 
 print('вывод истории операций в ЛК клиента' . PHP_EOL);
 
@@ -16,70 +21,102 @@ print('вывод истории операций в ЛК клиента' . PHP_
  */
 
 $orgCardsTransport = Cards\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
-$orgUsersTransport = Users\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
+$orgShopsTransport = Shops\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
 $orgTransactionsTransport = Transactions\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
 
 // готовим тестовые данные
-$newUser = \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
-    'grishi-' . random_int(0, PHP_INT_MAX),
-    'Михаил Гришин',
-    '+7978 888 22 22',
-    'grishi@rarus.ru',
-    null,
-    new \DateTime('06.06.1985')
-);
-$user = $orgUsersTransport->addNewUser($newUser);
+//  - тестовые данные генерируются на стороне БС
 
-$cardLevels = $orgCardsTransport->getCardLevelList();
-$newCard = Cards\DTO\Fabric::createNewInstance('12345987654321', (string)random_int(1000000, 100000000), new \Money\Currency('RUB'));
-$newCard->setCardLevelId($cardLevels->getFirstLevel()->getLevelId());
-$card = $orgCardsTransport->addNewCard($newCard, new \Money\Money(5000000000, new \Money\Currency('RUB')));
-$updatedCard = $orgCardsTransport->attachToUser($card, $user);
+// получили карту с демоданными
+$card = $orgCardsTransport->getByCardId(new Cards\DTO\CardId('e0a84c5e-bf66-4100-98ba-858bb66c0ce5'));
 
-$activatedCard = $orgCardsTransport->activate($card);
+// получили магазины организации
+$shopCollection = $orgShopsTransport->list();
 
-// получаем тестовые данные
-// получили пользователя
-$user = $orgUsersTransport->getByUserId($user->getUserId());
-var_dump($user->getName());
-var_dump($user->getEmail());
+print('---------------' . PHP_EOL);
+print(sprintf('получаем транзакции баллов по карте с id %s' . PHP_EOL, $card->getCardId()->getId()));
 
-// получили список карт по пользователю
-$cards = $orgCardsTransport->getByUser($user);
-print(sprintf('количество карт: %s' . PHP_EOL, $cards->count()));
 
-foreach ($cards as $card) {
-    print('---------------' . PHP_EOL);
-    print(sprintf('получаем транзакции баллов по карте с id %s' . PHP_EOL, $card->getCardId()->getId()));
-    // получение транзакций бонусных баллов по карте
-    $transactionCollection = $orgTransactionsTransport->getTransactionsByCard($card);
+// получаем историю покупок по карте
+// там содержится информация о покупках
+$salesHistory = $orgTransactionsTransport->getSalesHistoryByCard($card);
+
+//
+// получение транзакций бонусных баллов по карте вообще всех
+$transactionsWithPagination = $orgTransactionsTransport->getTransactionsByCard($card);
+print(sprintf('получение всех транзакций по карте и их показ: %s шт.' . PHP_EOL, $transactionsWithPagination->getTransactionCollection()->count()));
+showTransactionsList($transactionsWithPagination->getTransactionCollection(), $salesHistory, $shopCollection);
+
+
+// получаем первые 10 транзакций
+$transactionsWithPagination = $orgTransactionsTransport->getTransactionsByCard($card, null, null, new \Rarus\BonusServer\Transport\DTO\Pagination(10, 1));
+print(sprintf('получение первых 10 транзакций по карте и их показ: %s шт.' . PHP_EOL, $transactionsWithPagination->getTransactionCollection()->count()));
+showTransactionsList($transactionsWithPagination->getTransactionCollection(), $salesHistory, $shopCollection);
+
+// получаем n транзакций по фильтру с датами
+$dateFrom = DateTime::createFromFormat('Y.m.d H:i:s', '2018.09.05 09:14:00', new \DateTimeZone('UTC'));
+$dateTo = DateTime::createFromFormat('Y.m.d H:i:s', '2018.09.05 09:20:00', new \DateTimeZone('UTC'));
+
+$transactionsWithPagination = $orgTransactionsTransport->getTransactionsByCard($card, $dateFrom, $dateTo);
+print(sprintf('получение транзакций по карте за период времени и их показ: %s шт.' . PHP_EOL, $transactionsWithPagination->getTransactionCollection()->count()));
+
+showTransactionsList($transactionsWithPagination->getTransactionCollection(), $salesHistory, $shopCollection);
+
+/**
+ * @param TransactionCollection $transactionCollection
+ * @param HistoryItemCollection $historyItemCollection
+ * @param ShopCollection        $shopCollection
+ */
+function showTransactionsList(TransactionCollection $transactionCollection, HistoryItemCollection $historyItemCollection, ShopCollection $shopCollection): void
+{
+    print('                GUID                 |         timestamp        |  тип  |баллы в копейках| баллы будут доступны до | Id магазина | документ покупки | стоимость ' . PHP_EOL);
     foreach ($transactionCollection as $trx) {
-        print(sprintf('-- %s | %s %s | %s' . PHP_EOL,
-            $trx->getPointId()->getId(),
+        print(sprintf('%s | %s | %s |    %s    | %s | %s | %s | %s ' . PHP_EOL,
+            $trx->getRowNumber(),
+            $trx->getTime()->format(\DATE_ATOM),
+            $trx->getType()->getCode(),
             $trx->getSum()->getAmount(),
-            $trx->getSum()->getCurrency()->getCode(),
-            $trx->getType()->getCode())
-        );
-    }
-    // получение истории покупок по карте
-    $salesHistory = $orgTransactionsTransport->getSalesHistoryByCard($card);
-    print(sprintf('история покупок: ' . PHP_EOL));
-    foreach ($salesHistory as $historyItem) {
-        print(sprintf('%s | %s | %s %s' . PHP_EOL,
-            $historyItem->getLineNumber(),
-            $historyItem->getDocumentId()->getId(),
-            $historyItem->getSum()->getAmount(),
-            $historyItem->getSum()->getCurrency()->getCode()
+            $trx->getInvalidatePeriod()->format(\DATE_ATOM),
+            findShopAndGetName($shopCollection, $trx->getShopId()),
+            $trx->getDocumentId()->getId(),
+            findItemInSalesHistoryAndGetSumAsString($historyItemCollection, $trx->getDocumentId())
         ));
-        print('====== табличная часть: ' . PHP_EOL);
-        foreach ($historyItem->getProducts() as $productRow) {
-            print(sprintf('            %s | %s |  %s cnt | %s %s ' . PHP_EOL,
-                $productRow->getArticleId()->getId(),
-                $productRow->getName(),
-                $productRow->getQuantity(),
-                $productRow->getPrice()->getAmount(),
-                $productRow->getPrice()->getCurrency()
-            ));
+    }
+}
+
+/**
+ * @param HistoryItemCollection $historyItemCollection
+ * @param DocumentId            $documentId
+ *
+ * @return string
+ */
+function findItemInSalesHistoryAndGetSumAsString(Transactions\DTO\SalesHistory\HistoryItemCollection $historyItemCollection, DocumentId $documentId): string
+{
+    $sum = 'n/a';
+    foreach ($historyItemCollection as $historyItem) {
+        if ($historyItem->getDocumentId()->getId() === $documentId->getId()) {
+            return $historyItem->getSum()->getAmount();
+        }
+    }
+
+    return $sum;
+}
+
+/**
+ * @param ShopCollection        $shopCollection
+ * @param null|Shops\DTO\ShopId $shopId
+ *
+ * @return string
+ */
+function findShopAndGetName(Shops\DTO\ShopCollection $shopCollection, Shops\DTO\ShopId $shopId): string
+{
+    if ($shopId === null || $shopId->getId() === '') {
+        return 'n/a';
+    }
+
+    foreach ($shopCollection as $shopItem) {
+        if ($shopItem->getShopId()->getId() === $shopId->getId()) {
+            return $shopItem->getName();
         }
     }
 }
