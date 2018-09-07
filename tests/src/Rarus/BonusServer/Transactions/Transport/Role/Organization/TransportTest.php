@@ -6,6 +6,7 @@ namespace Rarus\BonusServer\Transactions\Transport\Role\Organization\Transport;
 use Money\Money;
 use \Rarus\BonusServer\Cards;
 use \Rarus\BonusServer\Shops;
+use Rarus\BonusServer\Transport\DTO\Pagination;
 use \Rarus\BonusServer\Users;
 use \Rarus\BonusServer\Transactions;
 use PHPUnit\Framework\TestCase;
@@ -110,8 +111,8 @@ class TransportTest extends TestCase
         $transactions = $this->transactionTransport->getTransactionsByCard($card);
 
         // по только что созданной карте должна быть только одна транзакция начисления баланса
-        $this::assertEquals(1, $transactions->count());
-        foreach ($transactions as $trx) {
+        $this::assertEquals(1, $transactions->getTransactionCollection()->count());
+        foreach ($transactions->getTransactionCollection() as $trx) {
             // транзакция должна принадлежать карте
             $this::assertEquals($card->getCardId()->getId(), $trx->getCardId()->getId());
             // сумма по ней должна совпадать с начальным балансом
@@ -119,6 +120,26 @@ class TransportTest extends TestCase
             // тип транзакции - внесение
             $this::assertEquals('refund', $trx->getType()->getCode());
         }
+    }
+
+    /**
+     * @throws \Rarus\BonusServer\Exceptions\ApiClientException
+     * @throws \Rarus\BonusServer\Exceptions\NetworkException
+     * @throws \Rarus\BonusServer\Exceptions\UnknownException
+     */
+    public function testGetTransactionsByCardWithPaginationPageSizeAndPageNumber(): void
+    {
+        $pageSize = 2;
+        $pageNumber = 1;
+        $initialBalance = new Money(12345600, \TestEnvironmentManager::getDefaultCurrency());
+        $card = $this->cardTransport->addNewCard(\DemoDataGenerator::createNewCard(), $initialBalance);
+        $card = $this->cardTransport->activate($card);
+
+        $paginationResponse = $this->transactionTransport->getTransactionsByCard($card, null, null, new Pagination($pageSize, $pageNumber));
+
+        $this::assertEquals($pageSize, $paginationResponse->getPagination()->getPageSize());
+        $this::assertEquals($pageNumber, $paginationResponse->getPagination()->getPageNumber());
+        $this::assertEquals(1, $paginationResponse->getTransactionCollection()->count());
     }
 
     /**

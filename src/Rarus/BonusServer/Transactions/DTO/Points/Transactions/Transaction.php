@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Rarus\BonusServer\Transactions\DTO\Points;
+namespace Rarus\BonusServer\Transactions\DTO\Points\Transactions;
 
 use Money\Money;
 use Rarus\BonusServer\Cards\DTO\CardId;
@@ -10,6 +10,7 @@ use Rarus\BonusServer\Shops\DTO\ShopId;
 use Rarus\BonusServer\Transactions\DTO\CashRegister\CashRegisterId;
 use Rarus\BonusServer\Transactions\DTO\Document\DocumentId;
 use Rarus\BonusServer\Transactions\DTO\Type\Type;
+use Rarus\BonusServer\Transactions\DTO\Points\PointId;
 
 /**
  * объект с информацией о начислении или списании баллов с карты
@@ -18,7 +19,7 @@ use Rarus\BonusServer\Transactions\DTO\Type\Type;
  *
  * @package Rarus\BonusServer\Transactions\DTO\Points
  */
-class PointTransaction
+class Transaction
 {
     /**
      * @var int
@@ -96,9 +97,9 @@ class PointTransaction
     /**
      * @param Type $type
      *
-     * @return PointTransaction
+     * @return Transaction
      */
-    public function setType(Type $type): PointTransaction
+    public function setType(Type $type): Transaction
     {
         $this->type = $type;
 
@@ -116,9 +117,9 @@ class PointTransaction
     /**
      * @param int $rowNumber
      *
-     * @return PointTransaction
+     * @return Transaction
      */
-    public function setRowNumber(int $rowNumber): PointTransaction
+    public function setRowNumber(int $rowNumber): Transaction
     {
         $this->rowNumber = $rowNumber;
 
@@ -136,9 +137,9 @@ class PointTransaction
     /**
      * @param PointId $pointId
      *
-     * @return PointTransaction
+     * @return Transaction
      */
-    public function setPointId(PointId $pointId): PointTransaction
+    public function setPointId(PointId $pointId): Transaction
     {
         $this->pointId = $pointId;
 
@@ -156,9 +157,9 @@ class PointTransaction
     /**
      * @param CardId $cardId
      *
-     * @return PointTransaction
+     * @return Transaction
      */
-    public function setCardId(CardId $cardId): PointTransaction
+    public function setCardId(CardId $cardId): Transaction
     {
         $this->cardId = $cardId;
 
@@ -176,9 +177,9 @@ class PointTransaction
     /**
      * @param CardId $mastercardId
      *
-     * @return PointTransaction
+     * @return Transaction
      */
-    public function setMastercardId(CardId $mastercardId): PointTransaction
+    public function setMastercardId(CardId $mastercardId): Transaction
     {
         $this->mastercardId = $mastercardId;
 
@@ -196,9 +197,9 @@ class PointTransaction
     /**
      * @param \DateTime $time
      *
-     * @return PointTransaction
+     * @return Transaction
      */
-    public function setTime(\DateTime $time): PointTransaction
+    public function setTime(\DateTime $time): Transaction
     {
         $this->time = $time;
 
@@ -216,9 +217,9 @@ class PointTransaction
     /**
      * @param Money $sum
      *
-     * @return PointTransaction
+     * @return Transaction
      */
-    public function setSum(Money $sum): PointTransaction
+    public function setSum(Money $sum): Transaction
     {
         $this->sum = $sum;
 
@@ -236,9 +237,9 @@ class PointTransaction
     /**
      * @param string $author
      *
-     * @return PointTransaction
+     * @return Transaction
      */
-    public function setAuthor(string $author): PointTransaction
+    public function setAuthor(string $author): Transaction
     {
         $this->author = $author;
 
@@ -256,9 +257,9 @@ class PointTransaction
     /**
      * @param string $description
      *
-     * @return PointTransaction
+     * @return Transaction
      */
-    public function setDescription(string $description): PointTransaction
+    public function setDescription(string $description): Transaction
     {
         $this->description = $description;
 
@@ -276,9 +277,9 @@ class PointTransaction
     /**
      * @param DocumentId $documentId
      *
-     * @return PointTransaction
+     * @return Transaction
      */
-    public function setDocumentId(DocumentId $documentId): PointTransaction
+    public function setDocumentId(DocumentId $documentId): Transaction
     {
         $this->documentId = $documentId;
 
@@ -296,9 +297,9 @@ class PointTransaction
     /**
      * @param CashRegisterId $cashRegisterId
      *
-     * @return PointTransaction
+     * @return Transaction
      */
-    public function setCashRegisterId(CashRegisterId $cashRegisterId): PointTransaction
+    public function setCashRegisterId(CashRegisterId $cashRegisterId): Transaction
     {
         $this->cashRegisterId = $cashRegisterId;
 
@@ -316,9 +317,9 @@ class PointTransaction
     /**
      * @param ShopId $shopId
      *
-     * @return PointTransaction
+     * @return Transaction
      */
-    public function setShopId(ShopId $shopId): PointTransaction
+    public function setShopId(ShopId $shopId): Transaction
     {
         $this->shopId = $shopId;
 
@@ -336,9 +337,9 @@ class PointTransaction
     /**
      * @param string $documentTypeId
      *
-     * @return PointTransaction
+     * @return Transaction
      */
-    public function setDocumentTypeId(string $documentTypeId): PointTransaction
+    public function setDocumentTypeId(string $documentTypeId): Transaction
     {
         $this->documentTypeId = $documentTypeId;
 
@@ -356,9 +357,9 @@ class PointTransaction
     /**
      * @param \DateTime $invalidatePeriod
      *
-     * @return PointTransaction
+     * @return Transaction
      */
-    public function setInvalidatePeriod(\DateTime $invalidatePeriod): PointTransaction
+    public function setInvalidatePeriod(\DateTime $invalidatePeriod): Transaction
     {
         $this->invalidatePeriod = $invalidatePeriod;
 
@@ -376,9 +377,9 @@ class PointTransaction
     /**
      * @param \DateTime $activationPeriod
      *
-     * @return PointTransaction
+     * @return Transaction
      */
-    public function setActivationPeriod(\DateTime $activationPeriod): PointTransaction
+    public function setActivationPeriod(\DateTime $activationPeriod): Transaction
     {
         $this->activationPeriod = $activationPeriod;
 
@@ -396,9 +397,9 @@ class PointTransaction
     /**
      * @param DiscountId $discountId
      *
-     * @return PointTransaction
+     * @return Transaction
      */
-    public function setDiscountId(DiscountId $discountId): PointTransaction
+    public function setDiscountId(DiscountId $discountId): Transaction
     {
         $this->discountId = $discountId;
 

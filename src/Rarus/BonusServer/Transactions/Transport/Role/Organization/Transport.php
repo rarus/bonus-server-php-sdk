@@ -30,6 +30,12 @@ class Transport extends BonusServer\Transport\AbstractTransport
     {
         $this->log->debug('rarus.bonus.server.transactions.transport.organization.getSalesHistoryByCard.start', [
             'cardId' => $card->getCardId()->getId(),
+            'dateFrom' => $dateFrom === null ? null : $dateFrom->format(\DATE_ATOM),
+            'dateTo' => $dateTo === null ? null : $dateTo->format(\DATE_ATOM),
+            'pagination' => $pagination === null ? null : [
+                'pageNumber' => $pagination->getPageNumber(),
+                'pageSize' => $pagination->getPageSize(),
+            ],
         ]);
         $historySalesCollection = new HistoryItemCollection();
 
@@ -37,11 +43,14 @@ class Transport extends BonusServer\Transport\AbstractTransport
             $queryString = '';
             if ($pagination !== null) {
                 $queryString .= sprintf('&%s', BonusServer\Transport\Formatters\Pagination::toRequestUri($pagination));
-            } elseif ($dateFrom !== null) {
-                $queryString .= sprintf('&date_from=%s', $dateFrom->getTimestamp());
-            } elseif ($dateTo !== null) {
-                $queryString .= sprintf('&date_to=%s', $dateTo->getTimestamp());
             }
+            if ($dateFrom !== null) {
+                $queryString .= sprintf('&date_from=%s', BonusServer\Util\DateTimeParser::convertToServerFormatTimestamp($dateFrom));
+            }
+            if ($dateTo !== null) {
+                $queryString .= sprintf('&date_to=%s', BonusServer\Util\DateTimeParser::convertToServerFormatTimestamp($dateTo));
+            }
+
             $requestResult = $this->apiClient->executeApiRequest(
                 sprintf('/organization/sale_info?card_id=%s%s', $card->getCardId()->getId(), $queryString),
                 RequestMethodInterface::METHOD_GET
@@ -73,50 +82,65 @@ class Transport extends BonusServer\Transport\AbstractTransport
      * @param \DateTime|null             $dateTo
      * @param null|Pagination            $pagination
      *
-     * @return BonusServer\Transactions\DTO\Points\PointTransactionCollection
+     * @return BonusServer\Transactions\DTO\Points\Transactions\PaginationResponse
      * @throws BonusServer\Exceptions\ApiClientException
      * @throws BonusServer\Exceptions\UnknownException
      */
-    public function getTransactionsByCard(BonusServer\Cards\DTO\Card $card, ?\DateTime $dateFrom = null, ?\DateTime $dateTo = null, ?Pagination $pagination = null): BonusServer\Transactions\DTO\Points\PointTransactionCollection
+    public function getTransactionsByCard(BonusServer\Cards\DTO\Card $card, ?\DateTime $dateFrom = null, ?\DateTime $dateTo = null, ?Pagination $pagination = null): BonusServer\Transactions\DTO\Points\Transactions\PaginationResponse
     {
         $this->log->debug('rarus.bonus.server.transactions.transport.organization.getTransactionsByCard.start', [
             'cardId' => $card->getCardId()->getId(),
+            'dateFrom' => $dateFrom === null ? null : $dateFrom->format(\DATE_ATOM),
+            'dateTo' => $dateTo === null ? null : $dateTo->format(\DATE_ATOM),
+            'pagination' => $pagination === null ? null : [
+                'pageNumber' => $pagination->getPageNumber(),
+                'pageSize' => $pagination->getPageSize(),
+            ],
         ]);
 
-        $trxCollection = new BonusServer\Transactions\DTO\Points\PointTransactionCollection();
+        $trxCollection = new BonusServer\Transactions\DTO\Points\Transactions\TransactionCollection();
+        $paginationResponse = new BonusServer\Transactions\DTO\Points\Transactions\PaginationResponse($trxCollection, new Pagination());
+        $queryString = '';
         try {
-            $queryString = '';
             if ($pagination !== null) {
                 $queryString .= sprintf('&%s', BonusServer\Transport\Formatters\Pagination::toRequestUri($pagination));
-            } elseif ($dateFrom !== null) {
-                $queryString .= sprintf('&date_from=%s', $dateFrom->getTimestamp());
-            } elseif ($dateTo !== null) {
-                $queryString .= sprintf('&date_to=%s', $dateTo->getTimestamp());
+            }
+            if ($dateFrom !== null) {
+                $queryString .= sprintf('&date_from=%s', BonusServer\Util\DateTimeParser::convertToServerFormatTimestamp($dateFrom));
+            }
+            if ($dateTo !== null) {
+                $queryString .= sprintf('&date_to=%s', BonusServer\Util\DateTimeParser::convertToServerFormatTimestamp($dateTo));
             }
             $requestResult = $this->apiClient->executeApiRequest(
                 sprintf('/organization/transaction?card_id=%s%s', $card->getCardId()->getId(), $queryString),
                 RequestMethodInterface::METHOD_GET
             );
+
+            // формируем коллекцию транзакций
             foreach ((array)$requestResult['transactions'] as $arTrx) {
-                $trxCollection->attach(BonusServer\Transactions\DTO\Points\Fabric::initPointTransactionFromServerResponse(
+                $trxCollection->attach(BonusServer\Transactions\DTO\Points\Transactions\Fabric::initPointTransactionFromServerResponse(
                     $this->getDefaultCurrency(),
                     $arTrx,
                     $this->apiClient->getTimezone()
                 ));
             }
             $trxCollection->rewind();
+
+            $paginationResponse = new BonusServer\Transactions\DTO\Points\Transactions\PaginationResponse(
+                $trxCollection,
+                BonusServer\Transport\DTO\Fabric::initPaginationFromServerResponse($requestResult['pagination'])
+            );
         } catch (BonusServer\Exceptions\ApiClientException $exception) {
             // если транзакции не найдены, то сервер возврашает 404 статус выставив 114 код в данном случае мы его подавляем
             if ($exception->getCode() !== 114) {
                 throw $exception;
             }
         }
-
         $this->log->debug('rarus.bonus.server.transactions.transport.organization.getTransactionsByCard.finish', [
-            'operationItemsCount' => $trxCollection->count(),
+            'itemsCount' => $paginationResponse->getTransactionCollection()->count(),
         ]);
 
-        return $trxCollection;
+        return $paginationResponse;
     }
 
     /**

@@ -1,5 +1,10 @@
 # bonus-server-php-sdk change log
 
+## 0.5.4 (7.09.2018)
+- для сущности `Transactions` для роли `Organization` для метода `getTransactionsByCard` изменён тип возвращаемого результата на `PaginationResponse`  [issue#64](https://github.com/rarus/bonus-server-php-sdk/issues/64)
+- исправления ошибок в тестах
+- переписан пример `complex.s2.php` с учётом требуемых сценариев
+
 ## 0.5.3 (31.08.2018)
 - добавлены уровни для карт [issue#61](https://github.com/rarus/bonus-server-php-sdk/issues/61)
 - для сущности `Cards` для роли `Organization` добавлен метод `getCardLevelList` [issue#61](https://github.com/rarus/bonus-server-php-sdk/issues/61) 

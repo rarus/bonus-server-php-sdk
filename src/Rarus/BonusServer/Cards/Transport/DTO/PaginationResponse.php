@@ -18,6 +18,12 @@ class PaginationResponse extends \Rarus\BonusServer\Transport\DTO\PaginationResp
      */
     private $cardCollection;
 
+    /**
+     * PaginationResponse constructor.
+     *
+     * @param CardCollection $cardCollection
+     * @param Pagination     $pagination
+     */
     public function __construct(CardCollection $cardCollection, Pagination $pagination)
     {
         $this->cardCollection = $cardCollection;
