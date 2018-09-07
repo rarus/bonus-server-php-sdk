@@ -265,6 +265,31 @@ class DemoDataGenerator
     }
 
     /**
+     * @param Cards\DTO\Card  $card
+     * @param Shops\DTO\Shop  $shop
+     * @param \Money\Currency $defaultCurrency
+     *
+     * @return Transactions\DTO\Sale
+     * @throws Exception
+     */
+    public static function createNewRefundTransaction(Cards\DTO\Card $card, Shops\DTO\Shop $shop, \Money\Currency $defaultCurrency): Transactions\DTO\Sale
+    {
+        $saleTransaction = new Transactions\DTO\Refund();
+        $saleTransaction
+            ->setCardId($card->getCardId())
+            ->setShopId($shop->getShopId())
+            ->setAuthorName('Кассир Иванов')
+            ->setDescription(sprintf('возврат по документу Чек№%s', \random_int(1, 5000)))
+            ->setDocument(Transactions\DTO\Document\Fabric::createNewInstance((string)random_int(1000000, 100000000), 0))
+            ->setCashRegister(\Rarus\BonusServer\Transactions\DTO\CashRegister\Fabric::createNewInstance((string)random_int(1000000, 100000000), 'касса 1'))
+            ->setChequeNumber((string)random_int(1000000, 100000000))
+            ->setRefundBonus(10)
+            ->setChequeRows(self::createChequeRows(\random_int(2, 20), $defaultCurrency));
+
+        return $saleTransaction;
+    }
+
+    /**
      * @return Shops\DTO\Shop
      * @throws Exception
      */
