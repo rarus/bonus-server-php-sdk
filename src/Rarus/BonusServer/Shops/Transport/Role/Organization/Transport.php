@@ -34,6 +34,8 @@ class Transport extends BonusServer\Transport\AbstractTransport
         foreach ((array)$requestResult['shops'] as $shop) {
             $shopCollection->attach(BonusServer\Shops\DTO\Fabric::initShopFromServerResponse($shop));
         }
+        $shopCollection->rewind();
+
         $this->log->debug('rarus.bonus.server.shop.transport.list.end', [
             'itemsCount' => $shopCollection->count(),
         ]);
