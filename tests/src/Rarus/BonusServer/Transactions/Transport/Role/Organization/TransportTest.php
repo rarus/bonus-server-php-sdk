@@ -64,6 +64,58 @@ class TransportTest extends TestCase
     }
 
     /**
+     * @covers \Rarus\BonusServer\Transactions\Transport\Role\Organization\Transport::addSaleTransaction()
+     */
+    public function testAddSaleTransaction(): void
+    {
+        $newCard = \DemoDataGenerator::createNewCard();
+        $card = $this->cardTransport->addNewCard($newCard);
+        $card = $this->cardTransport->activate($card);
+
+        $newShop = \DemoDataGenerator::createNewShop();
+        $shop = $this->shopTransport->add($newShop);
+
+        // конструируем транзакцию
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+
+        $historyCollection = $this->transactionTransport->getSalesHistoryByCard($card);
+        $this->assertGreaterThan(0, $historyCollection->count());
+
+        $this->shopTransport->delete($shop);
+        $this->cardTransport->delete($card, true);
+    }
+
+    /**
+     * @covers \Rarus\BonusServer\Transactions\Transport\Role\Organization\Transport::addSaleTransaction()
+     */
+    public function testAddSaleTransactionWithDate(): void
+    {
+        $newCard = \DemoDataGenerator::createNewCard();
+        $card = $this->cardTransport->addNewCard($newCard);
+        $card = $this->cardTransport->activate($card);
+
+        $newShop = \DemoDataGenerator::createNewShop();
+        $shop = $this->shopTransport->add($newShop);
+
+        // конструируем транзакцию
+        $this->transactionTransport->addSaleTransaction(
+            \DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()),
+            new \DateTime('now')
+        );
+
+        $historyCollection = $this->transactionTransport->getSalesHistoryByCard($card);
+        $this->assertGreaterThan(0, $historyCollection->count());
+
+        $this->shopTransport->delete($shop);
+        $this->cardTransport->delete($card, true);
+    }
+
+    /**
      * @covers \Rarus\BonusServer\Transactions\Transport\Role\Organization\Transport::getSalesHistoryByCard()
      */
     public function testGetSalesHistoryByCardForNewCard(): void
