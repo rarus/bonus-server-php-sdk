@@ -1,5 +1,8 @@
 # bonus-server-php-sdk change log
 
+## 0.5.5 (12.09.2018)
+- для сущности `Transactions` для роли `Organization` для метода `addSaleTransaction` добавлена возможность рассчёта на конкретную дату [issue#67](https://github.com/rarus/bonus-server-php-sdk/issues/67)
+
 ## 0.5.4 (7.09.2018)
 - для сущности `Transactions` для роли `Organization` для метода `getTransactionsByCard` изменён тип возвращаемого результата на `PaginationResponse`  [issue#64](https://github.com/rarus/bonus-server-php-sdk/issues/64)
 - исправления ошибок в тестах

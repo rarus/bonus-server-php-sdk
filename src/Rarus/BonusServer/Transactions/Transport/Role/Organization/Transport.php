@@ -145,25 +145,36 @@ class Transport extends BonusServer\Transport\AbstractTransport
 
     /**
      * @param BonusServer\Transactions\DTO\Sale $saleTransaction
+     * @param \DateTime|null                    $dateCalculate
      *
      * @return BonusServer\Transactions\DTO\FinalScore\FinalScore
      * @throws BonusServer\Exceptions\ApiClientException
      * @throws BonusServer\Exceptions\NetworkException
      * @throws BonusServer\Exceptions\UnknownException
      */
-    public function addSaleTransaction(BonusServer\Transactions\DTO\Sale $saleTransaction): BonusServer\Transactions\DTO\FinalScore\FinalScore
+    public function addSaleTransaction(BonusServer\Transactions\DTO\Sale $saleTransaction, ?\DateTime $dateCalculate = null): BonusServer\Transactions\DTO\FinalScore\FinalScore
     {
         $this->log->debug('rarus.bonus.server.transactions.transport.addSaleTransaction.start', [
             'cardId' => $saleTransaction->getCardId()->getId(),
             'shopId' => $saleTransaction->getShopId()->getId(),
             'doc_id' => $saleTransaction->getDocument()->getId(),
             'kkm_id' => $saleTransaction->getCashRegister()->getId(),
+            'dateCalculate' => $dateCalculate === null ? null : $dateCalculate->format(\DATE_ATOM),
         ]);
+
+        if ($dateCalculate === null) {
+            $queryData = BonusServer\Transactions\Formatters\Sale::toArray($saleTransaction);
+        } else {
+            $queryData = array_merge(
+                BonusServer\Transactions\Formatters\Sale::toArray($saleTransaction),
+                ['date_calculate' => BonusServer\Util\DateTimeParser::convertToServerFormatTimestamp($dateCalculate)]
+            );
+        }
 
         $requestResult = $this->apiClient->executeApiRequest(
             '/organization/process_bonus',
             RequestMethodInterface::METHOD_POST,
-            BonusServer\Transactions\Formatters\Sale::toArray($saleTransaction)
+            $queryData
         );
 
         $finalScore = BonusServer\Transactions\DTO\FinalScore\Fabric::initFinalScoreFromServerResponse($this->getDefaultCurrency(), $requestResult);
