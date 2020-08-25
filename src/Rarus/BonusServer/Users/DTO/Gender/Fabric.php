@@ -23,7 +23,7 @@ class Fabric
                 return new Female();
                 break;
             default:
-                throw new ApiClientException(sprintf('неизвестный пол пользователя [%s]', $genderCode));
+                return new None();
                 break;
         }
     }

@@ -31,7 +31,7 @@ class Fabric
             ->setStatus(Users\DTO\Status\Fabric::initFromServerResponse($arUser))
             ->setImageUrl($arUser['image'])
             ->setEmail($arUser['email']);
-        if ($arUser['gender'] !== '') {
+        if ($arUser['gender'] !== 'none') {
             $user->setGender(Users\DTO\Gender\Fabric::initFromServerResponse($arUser['gender']));
         }
         if ($arUser['birthdate'] !== 0) {

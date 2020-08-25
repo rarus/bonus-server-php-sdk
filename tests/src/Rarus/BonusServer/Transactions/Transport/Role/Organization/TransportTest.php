@@ -215,7 +215,7 @@ class TransportTest extends TestCase
 
         // конструируем транзакцию
         // табличная часть транзакции
-        $chequeRowCollection = new Transactions\DTO\ChequeRows\ChequeRowCollection();;
+        $chequeRowCollection = new Transactions\DTO\ChequeRows\ChequeRowCollection();
         $chequeRowCollection->attach((new Transactions\DTO\ChequeRows\ChequeRow())
             ->setLineNumber(1)
             ->setArticleId(new \Rarus\BonusServer\Articles\DTO\ArticleId('ART-11111'))

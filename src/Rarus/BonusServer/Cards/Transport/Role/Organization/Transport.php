@@ -45,7 +45,8 @@ class Transport extends BonusServer\Transport\AbstractTransport
 
         $requestResult = $this->apiClient->executeApiRequest(
             sprintf('/organization/card/%s/balance', $card->getCardId()->getId()),
-            RequestMethodInterface::METHOD_POST, [
+            RequestMethodInterface::METHOD_POST,
+            [
                 'card_barcode' => $card->getBarcode()->getCode(),
                 'shop_id' => $shopId->getId(),
                 'cheque_items' => $arChequeRows,
@@ -152,7 +153,8 @@ class Transport extends BonusServer\Transport\AbstractTransport
         $cardCollection = new BonusServer\Cards\DTO\CardCollection();
         try {
             $requestResult = $this->apiClient->executeApiRequest(
-                sprintf('/organization/card?%s&calculate_count=true&user_id=%s',
+                sprintf(
+                    '/organization/card?%s&calculate_count=true&user_id=%s',
                     BonusServer\Transport\Formatters\Pagination::toRequestUri($pagination),
                     $user->getUserId()->getId()
                 ),
@@ -516,7 +518,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
 
         $isCardCanLevelUp = false;
         if (array_key_exists('next_level_up', $requestResult)) {
-            $nextLevel = \Rarus\BonusServer\Cards\DTO\Level\Fabric::initFromServerResponse($requestResult['next_level_up'], $this->getDefaultCurrency());
+            $nextLevel = \Rarus\BonusServer\Cards\DTO\Level\Fabric::initLevelDescriptionFromServerResponse($requestResult['next_level_up'], $this->getDefaultCurrency());
             $isCardCanLevelUp = true;
         }
 
@@ -563,7 +565,6 @@ class Transport extends BonusServer\Transport\AbstractTransport
             $this->log->info('rarus.bonus.server.cards.transport.organization.levelUp.success', [
                 'result' => $requestResult,
             ]);
-
         } else {
             // уровень карты не повышен
             $this->log->warning('rarus.bonus.server.cards.transport.organization.levelUp.failure', [
@@ -621,7 +622,8 @@ class Transport extends BonusServer\Transport\AbstractTransport
         $cardLevelCollection = new BonusServer\Cards\DTO\Level\LevelCollection();
         try {
             $requestResult = $this->apiClient->executeApiRequest(
-                sprintf('/organization/card_level?%s&calculate_count=true',
+                sprintf(
+                    '/organization/card_level?%s&calculate_count=true',
                     BonusServer\Transport\Formatters\Pagination::toRequestUri($pagination)
                 ),
                 RequestMethodInterface::METHOD_GET

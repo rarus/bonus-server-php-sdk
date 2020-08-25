@@ -35,8 +35,11 @@ class Fabric
     public static function initShopFromServerResponse(array $arShop): Shop
     {
         $scheduleCollection = new ScheduleCollection();
-        foreach ((array)$arShop['schedule'] as $arSchedule) {
-            $scheduleCollection->attach(self::initScheduleFromServerResponse($arSchedule));
+
+        if (key_exists('schedule', $arShop)) {
+            foreach ((array)$arShop['schedule'] as $arSchedule) {
+                $scheduleCollection->attach(self::initScheduleFromServerResponse($arSchedule));
+            }
         }
 
         $shop = new Shop();

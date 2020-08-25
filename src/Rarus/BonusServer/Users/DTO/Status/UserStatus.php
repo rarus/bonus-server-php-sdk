@@ -15,10 +15,6 @@ final class UserStatus
      */
     private $isBlocked;
     /**
-     * @var string|null Описание причины блокировки.
-     */
-    private $blockedDescription;
-    /**
      * @var bool Принак, что пользователь подтвержен
      */
     private $isConfirmed;
@@ -41,14 +37,6 @@ final class UserStatus
         $this->isBlocked = $isBlocked;
 
         return $this;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getBlockedDescription(): ?string
-    {
-        return $this->blockedDescription;
     }
 
     /**

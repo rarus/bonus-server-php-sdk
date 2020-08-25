@@ -152,7 +152,7 @@ class TransportTest extends TestCase
         $this->userTransport->importNewUsers($newUserCollection);
         foreach ($newUserCollection as $newUser) {
             $addedUser = $this->userTransport->getByUserId($newUser->getUserId());
-            $this->assertEquals($addedUser->getPhone(), $newUser->getPhone());
+            $this->assertEquals($addedUser->getEmail(), $newUser->getEmail());
         }
     }
 

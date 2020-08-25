@@ -23,7 +23,7 @@ class LevelCollection extends \SplObjectStorage
     {
         $this->rewind();
         $minLevelOrder = null;
-        $minLevel = null;
+        $minLevel = $this->current();
 
         while ($this->valid()) {
             $object = $this->current();

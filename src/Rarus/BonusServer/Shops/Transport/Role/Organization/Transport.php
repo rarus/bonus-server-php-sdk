@@ -87,7 +87,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
         ]);
 
         $requestResult = $this->apiClient->executeApiRequest(
-            sprintf('/organization/shop/%s', $shopId->getId()),
+            sprintf('/organization/shop/%s?schedules=true', $shopId->getId()),
             RequestMethodInterface::METHOD_GET
         );
 

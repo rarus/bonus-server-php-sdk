@@ -33,22 +33,28 @@ class Fabric
 
         $card = (new Card())
             ->setCardId(new CardId($arCard['id']))
-            ->setParentId(new CardId($arCard['parent_id']))
             ->setName((string)$arCard['name'])
             ->setBarcode(new Barcode\Barcode((string)$arCard['barcode']))
             ->setCode((string)$arCard['code'])
             ->setDescription((string)$arCard['description'])
-            ->setCardLevelId(new LevelId((string)$arCard['card_level_id']))
-            ->setAccumSaleAmount($moneyParser->parse((string)$arCard['accum_sale_amount'], $currency->getCode()))
             ->setCardStatus(Status\Fabric::initFromServerResponse($arCard, $dateTimeZone));
 
-        if ($arCard['date_last_transaction'] !== 0) {
+        if (key_exists('parent_id', $arCard)) {
+            $card->setParentId(new CardId($arCard['parent_id']));
+        }
+        if (key_exists('card_level_id', $arCard)) {
+            $card->setCardLevelId(new LevelId((string)$arCard['card_level_id']));
+        }
+        if (key_exists('accum_sale_amount', $arCard)) {
+            $card->setAccumSaleAmount($moneyParser->parse((string)$arCard['accum_sale_amount'], $currency->getCode()));
+        }
+        if (key_exists('date_last_transaction', $arCard) && $arCard['date_last_transaction'] !== 0) {
             $card->setDateLastTransaction(DateTimeParser::parseTimestampFromServerResponse((string)$arCard['date_last_transaction'], $dateTimeZone));
         }
-        if ($arCard['last_transaction'] !== '') {
+        if (key_exists('last_transaction', $arCard) && $arCard['last_transaction'] !== '') {
             $card->setLastTransaction((string)$arCard['last_transaction']);
         }
-        if ($arCard['user_id'] !== '') {
+        if (key_exists('user_id', $arCard) && $arCard['user_id'] !== '') {
             $card->setUserId(new UserId($arCard['user_id']));
         }
 

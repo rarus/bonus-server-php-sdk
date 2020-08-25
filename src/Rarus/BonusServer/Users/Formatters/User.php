@@ -30,9 +30,8 @@ class User
             'gender' => $user->getGender() === null ? null : $user->getGender()->getCode(),
             'imageUrl' => $user->getImageUrl(),
             'status' => [
-                'isConfirmed' => $user->getStatus()->isConfirmed(),
-                'isBlocked' => $user->getStatus()->isBlocked(),
-                'blockedDescription' => $user->getStatus()->getBlockedDescription(),
+                'confirmed' => (int)$user->getStatus()->isConfirmed(),
+                'is_locked' => (int)$user->getStatus()->isBlocked(),
             ],
         ];
     }
@@ -95,9 +94,8 @@ class User
             'phone' => $newUser->getPhone(),
             'email' => $newUser->getEmail(),
             'gender' => $newUser->getGender() === null ? '' : $newUser->getGender()->getCode(),
-            'isConfirmed' => $newUser->getStatus()->isConfirmed(),
-            'isBlocked' => $newUser->getStatus()->isBlocked(),
-            'blockedDescription' => $newUser->getStatus()->getBlockedDescription(),
+            'confirmed' => (int)$newUser->getStatus()->isConfirmed(),
+            'is_locked' => (int)$newUser->getStatus()->isBlocked(),
             'password' => $newUser->getPasswordHash() ?? '',
         ];
         if ($newUser->getBirthdate() !== null) {
