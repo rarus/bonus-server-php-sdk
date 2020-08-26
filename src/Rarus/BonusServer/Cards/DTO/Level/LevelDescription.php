@@ -1,9 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Cards\DTO\Level;
 
-use \Money\Money;
+use Money\Money;
 
 /**
  * Class LevelDescription

@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 require_once __DIR__ . '/init.php';
 
 use Rarus\BonusServer\Transactions;
@@ -27,7 +29,8 @@ print(sprintf('shop name: %s' . PHP_EOL, $shop->getName()));
 // конструируем транзакцию
 
 // табличная часть транзакции
-$chequeRowCollection = new Transactions\DTO\ChequeRows\ChequeRowCollection();;
+$chequeRowCollection = new Transactions\DTO\ChequeRows\ChequeRowCollection();
+
 $chequeRowCollection->attach((new Transactions\DTO\ChequeRows\ChequeRow())
     ->setLineNumber(1)
     ->setArticleId(new \Rarus\BonusServer\Articles\DTO\ArticleId('ART-11111'))

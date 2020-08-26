@@ -1,12 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Cards\Transport\Role\Organization;
 
 use Money\Money;
 use PHPUnit\Framework\TestCase;
-use \Rarus\BonusServer\Cards;
-use \Rarus\BonusServer\Shops;
+use Rarus\BonusServer\Cards;
+use Rarus\BonusServer\Shops;
 use Rarus\BonusServer\Exceptions\ApiClientException;
 use Rarus\BonusServer\Transport\DTO\Pagination;
 

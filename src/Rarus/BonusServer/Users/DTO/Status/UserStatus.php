@@ -1,7 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Users\DTO\Status;
+
 /**
  *
  * Class UserStatus
@@ -35,18 +37,6 @@ final class UserStatus
     public function setIsBlocked(bool $isBlocked): UserStatus
     {
         $this->isBlocked = $isBlocked;
-
-        return $this;
-    }
-
-    /**
-     * @param null|string $blockedDescription
-     *
-     * @return UserStatus
-     */
-    public function setBlockedDescription(?string $blockedDescription): UserStatus
-    {
-        $this->blockedDescription = $blockedDescription;
 
         return $this;
     }

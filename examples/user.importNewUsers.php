@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 require_once __DIR__ . '/init.php';
 
 $userCollection = new \Rarus\BonusServer\Users\DTO\UserCollection();
@@ -43,7 +45,7 @@ $userCollection->attach(
     )
 );
 
-print (sprintf('users count: %d' . PHP_EOL, $userCollection->count()));
+print(sprintf('users count: %d' . PHP_EOL, $userCollection->count()));
 
 $transport = \Rarus\BonusServer\Users\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
 

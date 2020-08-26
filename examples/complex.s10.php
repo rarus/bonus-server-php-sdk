@@ -1,12 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/init.php';
 
-use \Rarus\BonusServer\Cards;
-use \Rarus\BonusServer\Users;
-use \Rarus\BonusServer\Shops;
-use \Rarus\BonusServer\Transactions;
+use Rarus\BonusServer\Cards;
+use Rarus\BonusServer\Users;
+use Rarus\BonusServer\Shops;
+use Rarus\BonusServer\Transactions;
 
 print('запрос баланса и оборота' . PHP_EOL);
 
@@ -45,11 +46,11 @@ $card = $orgCardsTransport->getByBarcode($card->getBarcode());
 $paymentBalance = $orgCardsTransport->getPaymentBalance($shop->getShopId(), $card);
 
 print('доступный баланс: ' . PHP_EOL);
-print(sprintf('карта: ' . PHP_EOL .
+print(sprintf(
+    'карта: ' . PHP_EOL .
     '- available balance %s %s' . PHP_EOL .
     '- max payment balance %s %s' . PHP_EOL .
     '- card level id %s' . PHP_EOL,
-
     $paymentBalance->getAvailableBalance()->getAmount(),
     $paymentBalance->getAvailableBalance()->getCurrency()->getCode(),
     $paymentBalance->getPaymentBalance()->getAmount(),

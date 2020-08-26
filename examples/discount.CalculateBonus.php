@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 require_once __DIR__ . '/init.php';
 require_once '../tests/DemoDataGenerator.php';
 
@@ -35,14 +37,15 @@ $discountDocument
 print('документ для предрасчёта скидок и скидочных бонусов:' . PHP_EOL);
 $estimate = $discountsTransport->calculateDiscountsAndBonusDiscounts($discountDocument);
 if (null === $estimate) {
-    print ('скидок и бонусов нет, создайте их в 1С' . PHP_EOL);
+    print('скидок и бонусов нет, создайте их в 1С' . PHP_EOL);
     exit();
 }
 
 print('результаты предрасчёта:' . PHP_EOL);
 print('Строки документа:' . PHP_EOL);
 foreach ($estimate->getDocumentItems() as $documentItem) {
-    print(sprintf('%s | %s | %s шт. | с ценой %s копеек в валюте %s | итого: %s | процент скидки %s на сумму %s' . PHP_EOL,
+    print(sprintf(
+        '%s | %s | %s шт. | с ценой %s копеек в валюте %s | итого: %s | процент скидки %s на сумму %s' . PHP_EOL,
         $documentItem->getLineNumber(),
         $documentItem->getArticleId()->getId(),
         $documentItem->getQuantity(),
@@ -55,13 +58,13 @@ foreach ($estimate->getDocumentItems() as $documentItem) {
 }
 print('Скидки:' . PHP_EOL);
 foreach ($estimate->getDiscountItems() as $discountItem) {
-    print(sprintf('%s |скидка %s с id %s | тип %s|значение %s| подарки из сегмента - %s|' . PHP_EOL,
+    print(sprintf(
+        '%s |скидка %s с id %s | тип %s|значение %s| подарки из сегмента - %s|' . PHP_EOL,
         $discountItem->getLineNumber(),
         $discountItem->getName(),
         $discountItem->getDiscountId()->getId(),
         $discountItem->getTypeId(),
         $discountItem->getValue(),
         $discountItem->getGiftSegment() === null ? 'нет подарков ' : $discountItem->getGiftSegment()->getId()
-
     ));
 }

@@ -1,15 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer;
 
 use Psr\Log\NullLogger;
 use Psr\Log\LoggerInterface;
-
 use Fig\Http\Message\RequestMethodInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp;
-
 use Rarus\BonusServer;
 
 /**
@@ -333,7 +332,8 @@ class ApiClient
 
             throw new BonusServer\Exceptions\UnknownException(
                 'неизвестная ошибка: ' . $unhandledException->getMessage(),
-                $unhandledException->getCode());
+                $unhandledException->getCode()
+            );
         }
 
         $this->log->debug('rarus.bonus.server.apiClient.executeRequest.finish', [
@@ -366,9 +366,11 @@ class ApiClient
         $jsonErrorCode = \json_last_error();
 
         if (null === $jsonResult && (JSON_ERROR_NONE !== $jsonErrorCode)) {
-            $errorMsg = sprintf('ошибка при декодировании ответа от бонусного сервера при вызове функции json_decode, код ошибки: %s, текст ошибки: %s',
+            $errorMsg = sprintf(
+                'ошибка при декодировании ответа от бонусного сервера при вызове функции json_decode, код ошибки: %s, текст ошибки: %s',
                 $jsonErrorCode,
-                \json_last_error_msg());
+                \json_last_error_msg()
+            );
             $this->log->error($errorMsg);
 
             throw new BonusServer\Exceptions\ApiClientException($errorMsg);

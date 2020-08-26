@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Transactions\Transport\Role\User;
 
 use Rarus\BonusServer;
-
 use Fig\Http\Message\RequestMethodInterface;
 
 /**
@@ -33,7 +33,8 @@ class Transport extends BonusServer\Transport\AbstractTransport
         if ($dateFrom === null) {
             $queryStr = sprintf('/user/sales_history?card_id=%s', $card->getCardId()->getId());
         } else {
-            $queryStr = sprintf('/user/sales_history?card_id=%s&from=%s',
+            $queryStr = sprintf(
+                '/user/sales_history?card_id=%s&from=%s',
                 $card->getCardId()->getId(),
                 $dateFrom->getTimestamp()
             );
@@ -45,9 +46,11 @@ class Transport extends BonusServer\Transport\AbstractTransport
 
         $operationCollection = new BonusServer\Transactions\DTO\Operations\OperationCollection();
         foreach ($requestResult['history'] as $arHistoryItem) {
-            $operationCollection->attach(BonusServer\Transactions\DTO\Operations\Fabric::initFinalScoreFromServerResponse(
-                $this->getDefaultCurrency(),
-                $arHistoryItem)
+            $operationCollection->attach(
+                BonusServer\Transactions\DTO\Operations\Fabric::initFinalScoreFromServerResponse(
+                    $this->getDefaultCurrency(),
+                    $arHistoryItem
+                )
             );
         }
         $operationCollection->rewind();

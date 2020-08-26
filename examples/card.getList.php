@@ -1,11 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/init.php';
 
-use \Rarus\BonusServer\Cards;
-use \Rarus\BonusServer\Users;
-use \Rarus\BonusServer\Auth;
+use Rarus\BonusServer\Cards;
+use Rarus\BonusServer\Users;
+use Rarus\BonusServer\Auth;
 
 $companyId = $apiClient->getAuthToken()->getCompanyId();
 

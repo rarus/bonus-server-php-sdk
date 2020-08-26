@@ -1,15 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Discounts\Transport\Role\Organization\Transport;
 
 use PHPUnit\Framework\TestCase;
-use \Rarus\BonusServer\Cards;
-use \Rarus\BonusServer\Shops;
-use \Rarus\BonusServer\Users;
-use \Rarus\BonusServer\Transactions;
-use \Rarus\BonusServer\Discounts;
-
+use Rarus\BonusServer\Cards;
+use Rarus\BonusServer\Shops;
+use Rarus\BonusServer\Users;
+use Rarus\BonusServer\Transactions;
+use Rarus\BonusServer\Discounts;
 
 /**
  * Class TransportTest

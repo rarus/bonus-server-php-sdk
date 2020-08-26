@@ -1,14 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Transactions\Transport\Role\Organization\Transport;
 
 use Money\Money;
-use \Rarus\BonusServer\Cards;
-use \Rarus\BonusServer\Shops;
+use Rarus\BonusServer\Cards;
+use Rarus\BonusServer\Shops;
 use Rarus\BonusServer\Transport\DTO\Pagination;
-use \Rarus\BonusServer\Users;
-use \Rarus\BonusServer\Transactions;
+use Rarus\BonusServer\Users;
+use Rarus\BonusServer\Transactions;
 use PHPUnit\Framework\TestCase;
 
 /**

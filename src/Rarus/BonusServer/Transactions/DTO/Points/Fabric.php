@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Transactions\DTO\Points;
@@ -6,14 +7,12 @@ namespace Rarus\BonusServer\Transactions\DTO\Points;
 use Money\Currency;
 use Money\Currencies\ISOCurrencies;
 use Money\Parser\DecimalMoneyParser;
-
 use Rarus\BonusServer\Cards\DTO\CardId;
 use Rarus\BonusServer\Discounts\DTO\DiscountId;
 use Rarus\BonusServer\Shops\DTO\ShopId;
 use Rarus\BonusServer\Transactions\DTO\CashRegister\CashRegisterId;
 use Rarus\BonusServer\Transactions\DTO\Document\DocumentId;
 use Rarus\BonusServer\Transactions\DTO\Type;
-
 use Rarus\BonusServer\Util\DateTimeParser;
 
 /**

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Util;
@@ -29,7 +30,8 @@ class DateTimeParser
     public static function parseTimestampFromServerResponse(string $timestampStr, \DateTimeZone $dateTimeZone): \DateTime
     {
         if (\strlen($timestampStr) < self::MIN_TIMESTAMP_LENGTH) {
-            throw new ApiClientException(sprintf('неизвестный формат времени в ответе сервера [%s], ожидали %s или больше символов, получили %s',
+            throw new ApiClientException(sprintf(
+                'неизвестный формат времени в ответе сервера [%s], ожидали %s или больше символов, получили %s',
                 $timestampStr,
                 self::MIN_TIMESTAMP_LENGTH,
                 \strlen($timestampStr)
@@ -60,6 +62,4 @@ class DateTimeParser
     {
         return $dateTime->getTimestamp() * 1000;
     }
-
-
 }

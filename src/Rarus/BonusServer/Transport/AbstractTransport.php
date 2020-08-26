@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Абстрактный класс транспорта.
  * Все транспорты для работы с конкретными сущностями наследуются от него
  */
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Transport;
 
 use Psr\Log\LoggerInterface;
 use Rarus\BonusServer;
-
 use Money\Currency;
 
 /**

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Cards\DTO\AccountStatement;
@@ -6,7 +7,6 @@ namespace Rarus\BonusServer\Cards\DTO\AccountStatement;
 use Money\Currency;
 use Money\Parser\DecimalMoneyParser;
 use Money\Currencies\ISOCurrencies;
-
 use Rarus\BonusServer;
 
 /**

@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Shops\Transport\Role\Organization;
 
 use PHPUnit\Framework\TestCase;
-use \Rarus\BonusServer\Shops;
+use Rarus\BonusServer\Shops;
 
 /**
  * Class TransportTest

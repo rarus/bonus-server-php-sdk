@@ -1,9 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Users\DTO;
 
-use \Rarus\BonusServer\Users;
+use Rarus\BonusServer\Users;
 use Rarus\BonusServer\Util\DateTimeParser;
 
 /**

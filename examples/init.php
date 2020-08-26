@@ -1,30 +1,25 @@
 <?php
+
 declare(strict_types=1);
 
-require_once '../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
-use \Monolog\Logger;
-
-
-use \GuzzleHttp\{
-    HandlerStack,
-    Middleware,
-    MessageFormatter
-};
-
+use Monolog\Logger;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\MessageFormatter;
 use Monolog\Processor\IntrospectionProcessor;
 use Monolog\Processor\MemoryPeakUsageProcessor;
 use Monolog\Processor\MemoryUsageProcessor;
 use Monolog\Processor\UidProcessor;
-
-use \Rarus\BonusServer;
+use Rarus\BonusServer;
 
 $log = new Logger('rarus-bonus-service');
 
 $log->pushProcessor(new MemoryUsageProcessor());
-$log->pushProcessor(new MemoryUsageProcessor);
-$log->pushProcessor(new MemoryPeakUsageProcessor);
-$log->pushProcessor(new IntrospectionProcessor);
+$log->pushProcessor(new MemoryUsageProcessor());
+$log->pushProcessor(new MemoryPeakUsageProcessor());
+$log->pushProcessor(new IntrospectionProcessor());
 $log->pushProcessor(new UidProcessor());
 
 

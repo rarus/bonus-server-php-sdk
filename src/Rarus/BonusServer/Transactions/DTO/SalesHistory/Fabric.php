@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Transactions\DTO\SalesHistory;
@@ -7,7 +8,6 @@ use Money\Currency;
 use Money\Money;
 use Money\Currencies\ISOCurrencies;
 use Money\Parser\DecimalMoneyParser;
-
 use Rarus\BonusServer\Cards\DTO\CardId;
 use Rarus\BonusServer\Shops\DTO\ShopId;
 use Rarus\BonusServer\Transactions\DTO\Document\DocumentId;
