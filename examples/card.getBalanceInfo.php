@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 require_once __DIR__ . '/init.php';
 
 use Rarus\BonusServer\Transactions;
@@ -57,7 +59,8 @@ print(sprintf('сard user id: %s' . PHP_EOL, $card->getUserId() !== null ? $card
 // конструируем транзакцию
 
 // табличная часть транзакции
-$chequeRowCollection = new Transactions\DTO\ChequeRows\ChequeRowCollection();;
+$chequeRowCollection = new Transactions\DTO\ChequeRows\ChequeRowCollection();
+
 $chequeRowCollection->attach((new Transactions\DTO\ChequeRows\ChequeRow())
     ->setLineNumber(1)
     ->setArticleId(new \Rarus\BonusServer\Articles\DTO\ArticleId('ART-11111'))
@@ -128,7 +131,8 @@ print('cards list from user:' . PHP_EOL);
 foreach ($cards as $card) {
     print(sprintf('card [%s]' . PHP_EOL, $card->getCardId()->getId()));
     $balance = $cardsUserRoleTransport->getBalanceInfo($card, 10);
-    print(sprintf('- total: %s' . PHP_EOL . '- available: %s' . PHP_EOL,
+    print(sprintf(
+        '- total: %s' . PHP_EOL . '- available: %s' . PHP_EOL,
         $balance->getTotal()->getAmount(),
         $balance->getAvailable()->getAmount()
     ));

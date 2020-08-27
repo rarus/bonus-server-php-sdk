@@ -1,9 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Users\Transport\Role\Organization;
 
-use \Rarus\BonusServer\Cards;
+use Rarus\BonusServer\Cards;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -152,7 +153,7 @@ class TransportTest extends TestCase
         $this->userTransport->importNewUsers($newUserCollection);
         foreach ($newUserCollection as $newUser) {
             $addedUser = $this->userTransport->getByUserId($newUser->getUserId());
-            $this->assertEquals($addedUser->getPhone(), $newUser->getPhone());
+            $this->assertEquals($addedUser->getEmail(), $newUser->getEmail());
         }
     }
 

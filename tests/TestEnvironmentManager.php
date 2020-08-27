@@ -1,13 +1,11 @@
 <?php
 
-use \Monolog\Logger;
+declare(strict_types=1);
 
-use \GuzzleHttp\{
-    HandlerStack,
-    Middleware,
-    MessageFormatter
-};
-
+use Monolog\Logger;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\MessageFormatter;
 use Monolog\Processor\IntrospectionProcessor;
 use Monolog\Processor\MemoryPeakUsageProcessor;
 use Monolog\Processor\MemoryUsageProcessor;
@@ -82,9 +80,9 @@ class TestEnvironmentManager
         if (null === $log) {
             $log = new Logger('rarus-bonus-service');
             $log->pushProcessor(new MemoryUsageProcessor());
-            $log->pushProcessor(new MemoryUsageProcessor);
-            $log->pushProcessor(new MemoryPeakUsageProcessor);
-            $log->pushProcessor(new IntrospectionProcessor);
+            $log->pushProcessor(new MemoryUsageProcessor());
+            $log->pushProcessor(new MemoryPeakUsageProcessor());
+            $log->pushProcessor(new IntrospectionProcessor());
             $log->pushProcessor(new UidProcessor());
 
             $log->pushHandler(new \Monolog\Handler\StreamHandler(__DIR__ . '/logs/' . self::LOG_FILE, Logger::DEBUG));

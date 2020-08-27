@@ -1,18 +1,19 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/init.php';
 require_once '..' . '/tests/DemoDataGenerator.php';
 
-use \Rarus\BonusServer\Cards;
-use \Rarus\BonusServer\Users;
-use \Rarus\BonusServer\Shops;
+use Rarus\BonusServer\Cards;
+use Rarus\BonusServer\Users;
+use Rarus\BonusServer\Shops;
 use Rarus\BonusServer\Discounts;
-use \Rarus\BonusServer\Shops\DTO\ShopCollection;
-use \Rarus\BonusServer\Transactions;
-use \Rarus\BonusServer\Transactions\DTO\Points\Transactions\TransactionCollection;
-use \Rarus\BonusServer\Transactions\DTO\SalesHistory\HistoryItemCollection;
-use \Rarus\BonusServer\Transactions\DTO\Document\DocumentId;
+use Rarus\BonusServer\Shops\DTO\ShopCollection;
+use Rarus\BonusServer\Transactions;
+use Rarus\BonusServer\Transactions\DTO\Points\Transactions\TransactionCollection;
+use Rarus\BonusServer\Transactions\DTO\SalesHistory\HistoryItemCollection;
+use Rarus\BonusServer\Transactions\DTO\Document\DocumentId;
 
 print('рассчёт бонусов на указанную дату' . PHP_EOL);
 
@@ -39,7 +40,8 @@ $shop = $shopCollection->current();
 $card = $orgCardsTransport->getByCardId(new Cards\DTO\CardId('e0a84c5e-bf66-4100-98ba-858bb66c0ce5'));
 
 // табличная часть транзакции
-$chequeRowCollection = new Transactions\DTO\ChequeRows\ChequeRowCollection();;
+$chequeRowCollection = new Transactions\DTO\ChequeRows\ChequeRowCollection();
+
 $chequeRowCollection->attach((new Transactions\DTO\ChequeRows\ChequeRow())
     ->setLineNumber(1)
     ->setArticleId(new \Rarus\BonusServer\Articles\DTO\ArticleId('ART-11111'))

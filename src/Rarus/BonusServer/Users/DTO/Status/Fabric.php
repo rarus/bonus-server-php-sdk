@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Users\DTO\Status;
@@ -17,12 +18,9 @@ class Fabric
      */
     public static function initFromServerResponse(array $arUser): UserStatus
     {
-        $userStatus = (new UserStatus())
+        return (new UserStatus())
             ->setIsConfirmed((bool)$arUser['confirmed'])
-            ->setIsBlocked((bool)$arUser['is_locked'])
-            ->setBlockedDescription((string)$arUser['blockeddescription']);
-
-        return $userStatus;
+            ->setIsBlocked((bool)$arUser['is_locked']);
     }
 
     /**
@@ -30,10 +28,8 @@ class Fabric
      */
     public static function initDefaultStatusForNewUser(): UserStatus
     {
-        $userStatus = (new UserStatus())
-            ->setIsConfirmed(false)
+        return (new UserStatus())
+            ->setIsConfirmed(true)
             ->setIsBlocked(false);
-
-        return $userStatus;
     }
 }

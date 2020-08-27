@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Cards\DTO\Level;
@@ -23,7 +24,7 @@ class LevelCollection extends \SplObjectStorage
     {
         $this->rewind();
         $minLevelOrder = null;
-        $minLevel = null;
+        $minLevel = $this->current();
 
         while ($this->valid()) {
             $object = $this->current();

@@ -1,14 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Transactions\Transport\Role\User\Transport;
 
 use PHPUnit\Framework\TestCase;
-use \Rarus\BonusServer\Cards;
-use \Rarus\BonusServer\Shops;
-use \Rarus\BonusServer\Users;
-use \Rarus\BonusServer\Transactions;
-use \Rarus\BonusServer\Auth;
+use Rarus\BonusServer\Cards;
+use Rarus\BonusServer\Shops;
+use Rarus\BonusServer\Users;
+use Rarus\BonusServer\Transactions;
+use Rarus\BonusServer\Auth;
 
 /**
  * Class TransportTest
@@ -72,7 +73,8 @@ class TransportTest extends TestCase
 
         // конструируем транзакции
         // табличная часть транзакции
-        $chequeRowCollection = new Transactions\DTO\ChequeRows\ChequeRowCollection();;
+        $chequeRowCollection = new Transactions\DTO\ChequeRows\ChequeRowCollection();
+        ;
         $chequeRowCollection->attach((new Transactions\DTO\ChequeRows\ChequeRow())
             ->setLineNumber(1)
             ->setArticleId(new \Rarus\BonusServer\Articles\DTO\ArticleId('ART-11111'))

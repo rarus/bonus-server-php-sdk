@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Cards\DTO\AccountStatement;
@@ -6,7 +7,6 @@ namespace Rarus\BonusServer\Cards\DTO\AccountStatement;
 use Money\Currency;
 use Money\Parser\DecimalMoneyParser;
 use Money\Currencies\ISOCurrencies;
-
 use Rarus\BonusServer;
 
 /**
@@ -27,13 +27,25 @@ class Fabric
     public static function initFromServerResponse(Currency $currency, array $arAccountStatement, \DateTimeZone $dateTimeZone): AccountStatement
     {
         $trxAmount = new BonusServer\Cards\DTO\TransactionAmount\TransactionAmountCollection();
-        foreach ((array)$arAccountStatement['last_transactions'] as $arTrx) {
-            $trxAmount->attach(BonusServer\Cards\DTO\TransactionAmount\Fabric::initFromServerResponse($currency, $arTrx, $dateTimeZone));
+        if (key_exists('last_transactions', $arAccountStatement)) {
+            foreach ((array)$arAccountStatement['last_transactions'] as $arTrx) {
+                $trxAmount->attach(BonusServer\Cards\DTO\TransactionAmount\Fabric::initFromServerResponse(
+                    $currency,
+                    $arTrx,
+                    $dateTimeZone
+                ));
+            }
         }
 
         $points = new BonusServer\Transactions\DTO\Points\PointCollection();
-        foreach ((array)$arAccountStatement['bonusactive'] as $arPoint) {
-            $points->attach(BonusServer\Transactions\DTO\Points\Fabric::initPointFromServerResponse($currency, $arPoint, $dateTimeZone));
+        if (key_exists('bonusactive', $arAccountStatement)) {
+            foreach ((array)$arAccountStatement['bonusactive'] as $arPoint) {
+                $points->attach(BonusServer\Transactions\DTO\Points\Fabric::initPointFromServerResponse(
+                    $currency,
+                    $arPoint,
+                    $dateTimeZone
+                ));
+            }
         }
         $points->rewind();
 

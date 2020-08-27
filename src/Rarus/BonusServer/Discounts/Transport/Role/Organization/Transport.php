@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Discounts\Transport\Role\Organization;
 
 use Rarus\BonusServer\Discounts;
 use Rarus\BonusServer;
-
 use Fig\Http\Message\RequestMethodInterface;
 
 /**

@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Transactions\Transport\Role\Organization;
 
 use Rarus\BonusServer;
-
 use Psr\Log\LoggerInterface;
 use Money\Currency;
 
@@ -27,5 +27,3 @@ class Fabric
         return new Transport($apiClient, $defaultCurrency, $log);
     }
 }
-
-

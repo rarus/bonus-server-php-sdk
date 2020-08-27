@@ -1,16 +1,17 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/init.php';
 
-use \Rarus\BonusServer\Cards;
-use \Rarus\BonusServer\Users;
-use \Rarus\BonusServer\Shops;
-use \Rarus\BonusServer\Shops\DTO\ShopCollection;
-use \Rarus\BonusServer\Transactions;
-use \Rarus\BonusServer\Transactions\DTO\Points\Transactions\TransactionCollection;
-use \Rarus\BonusServer\Transactions\DTO\SalesHistory\HistoryItemCollection;
-use \Rarus\BonusServer\Transactions\DTO\Document\DocumentId;
+use Rarus\BonusServer\Cards;
+use Rarus\BonusServer\Users;
+use Rarus\BonusServer\Shops;
+use Rarus\BonusServer\Shops\DTO\ShopCollection;
+use Rarus\BonusServer\Transactions;
+use Rarus\BonusServer\Transactions\DTO\Points\Transactions\TransactionCollection;
+use Rarus\BonusServer\Transactions\DTO\SalesHistory\HistoryItemCollection;
+use Rarus\BonusServer\Transactions\DTO\Document\DocumentId;
 
 print('вывод истории операций в ЛК клиента' . PHP_EOL);
 
@@ -71,7 +72,8 @@ function showTransactionsList(TransactionCollection $transactionCollection, Hist
 {
     print('                GUID                 |         timestamp        |  тип  |баллы в копейках| баллы будут доступны до | Id магазина | документ покупки | стоимость ' . PHP_EOL);
     foreach ($transactionCollection as $trx) {
-        print(sprintf('%s | %s | %s |    %s    | %s | %s | %s | %s ' . PHP_EOL,
+        print(sprintf(
+            '%s | %s | %s |    %s    | %s | %s | %s | %s ' . PHP_EOL,
             $trx->getRowNumber(),
             $trx->getTime()->format(\DATE_ATOM),
             $trx->getType()->getCode(),

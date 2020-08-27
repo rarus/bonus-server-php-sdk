@@ -1,9 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Shops\Formatters;
 
-use \Rarus\BonusServer\Shops;
+use Rarus\BonusServer\Shops;
 
 /**
  * Class Schedule

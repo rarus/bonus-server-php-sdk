@@ -1,12 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Cards\Transport\Role\Organization;
 
 use Money\Money;
 use PHPUnit\Framework\TestCase;
-use \Rarus\BonusServer\Cards;
-use \Rarus\BonusServer\Shops;
+use Rarus\BonusServer\Cards;
+use Rarus\BonusServer\Shops;
 use Rarus\BonusServer\Exceptions\ApiClientException;
 use Rarus\BonusServer\Transport\DTO\Pagination;
 
@@ -121,8 +122,9 @@ class TransportTest extends TestCase
         $initialBalance = new Money(1234567, \TestEnvironmentManager::getDefaultCurrency());
 
         $card = $this->cardTransport->addNewCard($newCard, $initialBalance);
+        $activatedCard = $this->cardTransport->activate($card);
 
-        $accountStatement = $this->cardTransport->getAccountStatement($card);
+        $accountStatement = $this->cardTransport->getAccountStatement($activatedCard);
         // карта создана
         $this::assertEquals($newCard->getCode(), $card->getCode());
         // баланс по карте установлен
@@ -141,12 +143,12 @@ class TransportTest extends TestCase
         $accumulationAmount = new Money(1234567, \TestEnvironmentManager::getDefaultCurrency());
 
         $card = $this->cardTransport->addNewCard($newCard);
-        $card = $this->cardTransport->activate($card);
+        $activatedCard = $this->cardTransport->activate($card);
 
         // устанавливаем на ней нужную сумму накоплений по транзакциям
-        $this->cardTransport->setAccumulationAmount($card, $accumulationAmount);
+        $this->cardTransport->setAccumulationAmount($activatedCard, $accumulationAmount);
 
-        $updatedCard = $this->cardTransport->getByCardId($card->getCardId());
+        $updatedCard = $this->cardTransport->getByCardId($activatedCard->getCardId());
 
         $this::assertEquals($accumulationAmount->getAmount(), $updatedCard->getAccumSaleAmount()->getAmount());
     }
@@ -185,6 +187,7 @@ class TransportTest extends TestCase
         $initialBalance = new Money(1234500, \TestEnvironmentManager::getDefaultCurrency());
 
         $card = $this->cardTransport->addNewCard($newCard, $initialBalance);
+        $this->cardTransport->activate($card);
 
         $accountStatement = $this->cardTransport->getAccountStatement($card);
         // карта создана
@@ -225,7 +228,8 @@ class TransportTest extends TestCase
         $newCard = Cards\DTO\Fabric::createNewInstance(
             'php-unit-test-card',
             (string)random_int(1000000, 100000000),
-            \TestEnvironmentManager::getDefaultCurrency());
+            \TestEnvironmentManager::getDefaultCurrency()
+        );
         $card = $this->cardTransport->addNewCard($newCard);
 
         $cardClone = $this->cardTransport->getByCardId($card->getCardId());
@@ -242,7 +246,8 @@ class TransportTest extends TestCase
         $newCard = Cards\DTO\Fabric::createNewInstance(
             'php-unit-test-card',
             (string)random_int(1000000, 100000000),
-            \TestEnvironmentManager::getDefaultCurrency());
+            \TestEnvironmentManager::getDefaultCurrency()
+        );
         $card = $this->cardTransport->addNewCard($newCard);
 
         $activatedCard = $this->cardTransport->activate($card);
@@ -259,7 +264,8 @@ class TransportTest extends TestCase
         $newCard = Cards\DTO\Fabric::createNewInstance(
             'php-unit-test-card',
             (string)random_int(1000000, 100000000),
-            \TestEnvironmentManager::getDefaultCurrency());
+            \TestEnvironmentManager::getDefaultCurrency()
+        );
         $card = $this->cardTransport->addNewCard($newCard);
 
         $deactivatedCard = $this->cardTransport->deactivate($card);
@@ -277,7 +283,8 @@ class TransportTest extends TestCase
         $newCard = Cards\DTO\Fabric::createNewInstance(
             'php-unit-test-card',
             (string)random_int(1000000, 100000000),
-            \TestEnvironmentManager::getDefaultCurrency());
+            \TestEnvironmentManager::getDefaultCurrency()
+        );
         $card = $this->cardTransport->addNewCard($newCard);
 
         $card->setName('new-card-name');
@@ -297,7 +304,8 @@ class TransportTest extends TestCase
         $newCard = Cards\DTO\Fabric::createNewInstance(
             'php-unit-test-card',
             $barcode,
-            \TestEnvironmentManager::getDefaultCurrency());
+            \TestEnvironmentManager::getDefaultCurrency()
+        );
         $card = $this->cardTransport->addNewCard($newCard);
         $this->cardTransport->delete($card);
 
@@ -319,7 +327,8 @@ class TransportTest extends TestCase
         $newCard = Cards\DTO\Fabric::createNewInstance(
             'php-unit-test-card',
             (string)random_int(1000000, 100000000),
-            \TestEnvironmentManager::getDefaultCurrency());
+            \TestEnvironmentManager::getDefaultCurrency()
+        );
         $card = $this->cardTransport->addNewCard($newCard);
 
         $blockedCard = $this->cardTransport->block($card, 'причина блокировки');
@@ -339,7 +348,8 @@ class TransportTest extends TestCase
         $newCard = Cards\DTO\Fabric::createNewInstance(
             'php-unit-test-card',
             (string)random_int(1000000, 100000000),
-            \TestEnvironmentManager::getDefaultCurrency());
+            \TestEnvironmentManager::getDefaultCurrency()
+        );
         $card = $this->cardTransport->addNewCard($newCard);
 
         $blockedCard = $this->cardTransport->block($card, 'причина блокировки');
@@ -375,7 +385,7 @@ class TransportTest extends TestCase
     {
         $cardLevels = $this->cardTransport->getCardLevelList();
 
-        $this::assertGreaterThan(-1, $cardLevels);
+        $this::assertGreaterThan(-1, $cardLevels->count());
     }
 
     /**
@@ -430,7 +440,8 @@ class TransportTest extends TestCase
         $newCard = Cards\DTO\Fabric::createNewInstance(
             'php-unit-test-card',
             (string)random_int(1000000, 100000000),
-            \TestEnvironmentManager::getDefaultCurrency());
+            \TestEnvironmentManager::getDefaultCurrency()
+        );
         $card = $this->cardTransport->addNewCard($newCard);
 
         $cardFilter = new Cards\DTO\CardFilter();
@@ -450,7 +461,8 @@ class TransportTest extends TestCase
         $newCard = Cards\DTO\Fabric::createNewInstance(
             'php-unit-test-card',
             (string)random_int(1000000, 100000000),
-            \TestEnvironmentManager::getDefaultCurrency());
+            \TestEnvironmentManager::getDefaultCurrency()
+        );
         $card = $this->cardTransport->addNewCard($newCard);
 
         $filteredCard = $this->cardTransport->getByBarcode($card->getBarcode());
@@ -496,6 +508,5 @@ class TransportTest extends TestCase
             \TestEnvironmentManager::getDefaultCurrency(),
             \TestEnvironmentManager::getMonologInstance()
         );
-
     }
 }

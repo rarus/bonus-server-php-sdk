@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Discounts\DTO;
 
 use Money\Currency;
-
 use Rarus\BonusServer\Discounts;
 
 /**

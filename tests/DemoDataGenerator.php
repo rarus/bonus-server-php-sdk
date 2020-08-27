@@ -1,11 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
-use \Rarus\BonusServer\Users;
-use \Rarus\BonusServer\Cards;
-use \Rarus\BonusServer\Shops;
-use \Rarus\BonusServer\Discounts;
-use \Rarus\BonusServer\Transactions;
+use Rarus\BonusServer\Users;
+use Rarus\BonusServer\Cards;
+use Rarus\BonusServer\Shops;
+use Rarus\BonusServer\Discounts;
+use Rarus\BonusServer\Transactions;
 
 /**
  * генератор тестовых демо-данных для использования в тестах
@@ -21,8 +22,10 @@ class DemoDataGenerator
      * @return Discounts\DTO\Document
      * @throws Exception
      */
-    public static function createNewDiscountDocument(Shops\DTO\Shop $shop, Cards\DTO\Card $card): \Rarus\BonusServer\Discounts\DTO\Document
-    {
+    public static function createNewDiscountDocument(
+        Shops\DTO\Shop $shop,
+        Cards\DTO\Card $card
+    ): \Rarus\BonusServer\Discounts\DTO\Document {
         $discountDocument = new Discounts\DTO\Document();
         $discountDocument
             ->setShopId($shop->getShopId())
@@ -39,22 +42,28 @@ class DemoDataGenerator
      * @return Transactions\DTO\ChequeRows\ChequeRowCollection
      * @throws Exception
      */
-    public static function createChequeRows(int $rowCount, \Money\Currency $defaultCurrency): Transactions\DTO\ChequeRows\ChequeRowCollection
-    {
+    public static function createChequeRows(
+        int $rowCount,
+        \Money\Currency $defaultCurrency
+    ): Transactions\DTO\ChequeRows\ChequeRowCollection {
         $chequeRowCollection = new Transactions\DTO\ChequeRows\ChequeRowCollection();
 
         for ($i = 0; $i < $rowCount; $i++) {
             $productCnt = \random_int(1, 20);
             $productPrice = \random_int(50000, 10000000);
 
-            $chequeRowCollection->attach((new Transactions\DTO\ChequeRows\ChequeRow())
-                ->setLineNumber($i + 1)
-                ->setArticleId(new \Rarus\BonusServer\Articles\DTO\ArticleId(sprintf('ART-[%s]-%s,', $i, md5((string)$i))))
-                ->setName(sprintf('товар № %s', $i + 1))
-                ->setQuantity($productCnt)
-                ->setPrice(new \Money\Money($productPrice, $defaultCurrency))
-                ->setSum(new \Money\Money($productCnt * $productPrice, $defaultCurrency))
-                ->setDiscount(new \Money\Money(\random_int(1000, 100000), $defaultCurrency)));
+            $chequeRowCollection->attach(
+                (new Transactions\DTO\ChequeRows\ChequeRow())
+                    ->setLineNumber($i + 1)
+                    ->setArticleId(
+                        new \Rarus\BonusServer\Articles\DTO\ArticleId(sprintf('ART-[%s]-%s,', $i, md5((string)$i)))
+                    )
+                    ->setName(sprintf('товар № %s', $i + 1))
+                    ->setQuantity($productCnt)
+                    ->setPrice(new \Money\Money($productPrice, $defaultCurrency))
+                    ->setSum(new \Money\Money($productCnt * $productPrice, $defaultCurrency))
+                    ->setDiscount(new \Money\Money(\random_int(1000, 100000), $defaultCurrency))
+            );
         }
 
         return $chequeRowCollection;
@@ -74,7 +83,8 @@ class DemoDataGenerator
                 Cards\DTO\Fabric::createNewInstance(
                     'php-unit-test-card #' . $i,
                     (string)random_int(1000000, 100000000),
-                    \TestEnvironmentManager::getDefaultCurrency())
+                    \TestEnvironmentManager::getDefaultCurrency()
+                )
             );
         }
 
@@ -106,7 +116,8 @@ class DemoDataGenerator
         return Cards\DTO\Fabric::createNewInstance(
             'php-unit-test-card' . $cardPrefix,
             (string)$cardPrefix,
-            \TestEnvironmentManager::getDefaultCurrency());
+            \TestEnvironmentManager::getDefaultCurrency()
+        );
     }
 
     /**
@@ -120,7 +131,12 @@ class DemoDataGenerator
         $newUsers = new Users\DTO\UserCollection();
 
         for ($i = 0; $i < $usersCount; $i++) {
-            $newUsers->attach(self::createNewUserWithUserUidAndPassword('userID' . (string)rand(0, PHP_INT_MAX), 'userPass' . (string)rand(0, PHP_INT_MAX)));
+            $newUsers->attach(
+                self::createNewUserWithUserUidAndPassword(
+                    'userID' . (string)rand(0, PHP_INT_MAX),
+                    'userPass' . (string)rand(0, PHP_INT_MAX)
+                )
+            );
         }
 
         return $newUsers;
@@ -133,8 +149,10 @@ class DemoDataGenerator
      * @return Users\DTO\User
      * @throws Exception
      */
-    public static function createNewUserWithUserUidAndPassword(string $userUid, string $userPasswordHash): \Rarus\BonusServer\Users\DTO\User
-    {
+    public static function createNewUserWithUserUidAndPassword(
+        string $userUid,
+        string $userPasswordHash
+    ): \Rarus\BonusServer\Users\DTO\User {
         $userUUID = random_int(0, PHP_INT_MAX);
 
         return Users\DTO\Fabric::createNewInstance(
@@ -247,16 +265,26 @@ class DemoDataGenerator
      * @return Transactions\DTO\Sale
      * @throws Exception
      */
-    public static function createNewSaleTransaction(Cards\DTO\Card $card, Shops\DTO\Shop $shop, \Money\Currency $defaultCurrency): Transactions\DTO\Sale
-    {
+    public static function createNewSaleTransaction(
+        Cards\DTO\Card $card,
+        Shops\DTO\Shop $shop,
+        \Money\Currency $defaultCurrency
+    ): Transactions\DTO\Sale {
         $saleTransaction = new Transactions\DTO\Sale();
         $saleTransaction
             ->setCardId($card->getCardId())
             ->setShopId($shop->getShopId())
             ->setAuthorName('Кассир Иванов')
             ->setDescription(sprintf('Продажа по документу Чек№%s', \random_int(1, 5000)))
-            ->setDocument(Transactions\DTO\Document\Fabric::createNewInstance((string)random_int(1000000, 100000000), 0))
-            ->setCashRegister(\Rarus\BonusServer\Transactions\DTO\CashRegister\Fabric::createNewInstance((string)random_int(1000000, 100000000), 'касса 1'))
+            ->setDocument(
+                Transactions\DTO\Document\Fabric::createNewInstance((string)random_int(1000000, 100000000), 0)
+            )
+            ->setCashRegister(
+                \Rarus\BonusServer\Transactions\DTO\CashRegister\Fabric::createNewInstance(
+                    (string)random_int(1000000, 100000000),
+                    'касса 1'
+                )
+            )
             ->setChequeNumber((string)random_int(1000000, 100000000))
             ->setBonusPayment(0)
             ->setChequeRows(self::createChequeRows(\random_int(2, 20), $defaultCurrency));
@@ -269,19 +297,29 @@ class DemoDataGenerator
      * @param Shops\DTO\Shop  $shop
      * @param \Money\Currency $defaultCurrency
      *
-     * @return Transactions\DTO\Sale
+     * @return Transactions\DTO\Refund
      * @throws Exception
      */
-    public static function createNewRefundTransaction(Cards\DTO\Card $card, Shops\DTO\Shop $shop, \Money\Currency $defaultCurrency): Transactions\DTO\Sale
-    {
+    public static function createNewRefundTransaction(
+        Cards\DTO\Card $card,
+        Shops\DTO\Shop $shop,
+        \Money\Currency $defaultCurrency
+    ): Transactions\DTO\Refund {
         $saleTransaction = new Transactions\DTO\Refund();
         $saleTransaction
             ->setCardId($card->getCardId())
             ->setShopId($shop->getShopId())
             ->setAuthorName('Кассир Иванов')
             ->setDescription(sprintf('возврат по документу Чек№%s', \random_int(1, 5000)))
-            ->setDocument(Transactions\DTO\Document\Fabric::createNewInstance((string)random_int(1000000, 100000000), 0))
-            ->setCashRegister(\Rarus\BonusServer\Transactions\DTO\CashRegister\Fabric::createNewInstance((string)random_int(1000000, 100000000), 'касса 1'))
+            ->setDocument(
+                Transactions\DTO\Document\Fabric::createNewInstance((string)random_int(1000000, 100000000), 0)
+            )
+            ->setCashRegister(
+                \Rarus\BonusServer\Transactions\DTO\CashRegister\Fabric::createNewInstance(
+                    (string)random_int(1000000, 100000000),
+                    'касса 1'
+                )
+            )
             ->setChequeNumber((string)random_int(1000000, 100000000))
             ->setRefundBonus(10)
             ->setChequeRows(self::createChequeRows(\random_int(2, 20), $defaultCurrency));
@@ -290,7 +328,7 @@ class DemoDataGenerator
     }
 
     /**
-     * @return Shops\DTO\Shop
+     * @return Shops\DTO\Shop,
      * @throws Exception
      */
     public static function createNewShop(): Shops\DTO\Shop

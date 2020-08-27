@@ -1,9 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Users\DTO;
 
-use \Rarus\BonusServer\Users;
+use Rarus\BonusServer\Users;
 use Rarus\BonusServer\Util\DateTimeParser;
 
 /**
@@ -31,7 +32,7 @@ class Fabric
             ->setStatus(Users\DTO\Status\Fabric::initFromServerResponse($arUser))
             ->setImageUrl($arUser['image'])
             ->setEmail($arUser['email']);
-        if ($arUser['gender'] !== '') {
+        if ($arUser['gender'] !== 'none') {
             $user->setGender(Users\DTO\Gender\Fabric::initFromServerResponse($arUser['gender']));
         }
         if ($arUser['birthdate'] !== 0) {

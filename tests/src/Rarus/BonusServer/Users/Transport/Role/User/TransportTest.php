@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Users\Transport\Role\User;
@@ -51,7 +52,7 @@ class TransportTest extends TestCase
         $userUserRoleTransport = Users\Transport\Role\User\Fabric::getInstance($apiClient, \TestEnvironmentManager::getDefaultCurrency(), \TestEnvironmentManager::getMonologInstance());
         $user = $userUserRoleTransport->current();
 
-        $this->assertEquals($user->getPhone(), $newUser->getPhone());
+        $this->assertEquals($user->getEmail(), $newUser->getEmail());
     }
 
     /**

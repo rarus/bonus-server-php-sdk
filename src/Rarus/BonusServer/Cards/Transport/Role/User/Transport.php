@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Cards\Transport\Role\User;
@@ -62,7 +63,8 @@ class Transport extends BonusServer\Transport\AbstractTransport
         ]);
 
         $requestResult = $this->apiClient->executeApiRequest(
-            sprintf('/user/card/%s/balance_info?last_transactions=%s',
+            sprintf(
+                '/user/card/%s/balance_info?last_transactions=%s',
                 $card->getCardId()->getId(),
                 $lastTransactionsCount
             ),

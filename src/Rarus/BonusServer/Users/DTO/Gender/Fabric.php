@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Users\DTO\Gender;
@@ -23,7 +24,7 @@ class Fabric
                 return new Female();
                 break;
             default:
-                throw new ApiClientException(sprintf('неизвестный пол пользователя [%s]', $genderCode));
+                return new None();
                 break;
         }
     }

@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Transactions\Transport\Role\User;
 
 use Rarus\BonusServer;
-
 use Psr\Log\LoggerInterface;
 use Money\Currency;
 

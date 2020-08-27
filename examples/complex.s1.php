@@ -1,9 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/init.php';
 
-use \Rarus\BonusServer\Cards;
+use Rarus\BonusServer\Cards;
 
 print('сложный сценарий: активация карты из внешней ситсемы' . PHP_EOL);
 
@@ -62,7 +63,7 @@ $cardFilter->setBarcode(new Cards\DTO\Barcode\Barcode($userInputCardBarcode));
 print('card filter: ' . Cards\Formatters\CardFilter::toUrlArguments($cardFilter) . PHP_EOL);
 $cardsCollection = $cardsTransport->getByFilter($cardFilter);
 // 5. Получаем массив карт, если такая карта в системе зарегистрирована, запоминаем её данные.
-print ('cards found: ' . $cardsCollection->count() . PHP_EOL);
+print('cards found: ' . $cardsCollection->count() . PHP_EOL);
 $cardsCollection->rewind();
 $card = $cardsCollection->current();
 

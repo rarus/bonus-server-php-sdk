@@ -1,9 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/init.php';
 
-use \Rarus\BonusServer\Cards;
+use Rarus\BonusServer\Cards;
 
 $newUser = \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
     'grishi-' . random_int(0, PHP_INT_MAX),

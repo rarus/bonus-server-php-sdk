@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Discounts\DTO\DiscountItems;
@@ -7,7 +8,6 @@ use Money\Currency;
 use Money\Money;
 use Money\Currencies\ISOCurrencies;
 use Money\Parser\DecimalMoneyParser;
-
 use Rarus\BonusServer\Discounts\DTO\DiscountId;
 use Rarus\BonusServer\Segments\DTO\SegmentId;
 

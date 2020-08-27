@@ -1,9 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/init.php';
 
-use \Rarus\BonusServer\Cards;
+use Rarus\BonusServer\Cards;
 
 $cardsTransport = Cards\Transport\Role\Organization\Fabric::getInstance($apiClient, new \Money\Currency('RUB'), $log);
 $cardLevels = $cardsTransport->getCardLevelList();

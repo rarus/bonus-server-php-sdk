@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 require_once __DIR__ . '/init.php';
 
 use Rarus\BonusServer\Transactions;
@@ -57,7 +59,8 @@ print(sprintf('сard user id: %s' . PHP_EOL, $card->getUserId() !== null ? $card
 // конструируем транзакцию
 
 // табличная часть транзакции
-$chequeRowCollection = new Transactions\DTO\ChequeRows\ChequeRowCollection();;
+$chequeRowCollection = new Transactions\DTO\ChequeRows\ChequeRowCollection();
+
 $chequeRowCollection->attach((new Transactions\DTO\ChequeRows\ChequeRow())
     ->setLineNumber(1)
     ->setArticleId(new \Rarus\BonusServer\Articles\DTO\ArticleId('ART-11111'))
@@ -129,7 +132,8 @@ foreach ($cards as $card) {
     print('--- transactions' . PHP_EOL);
     $history = $transactionsRoleUser->getSalesHistory($card);
     foreach ($history as $item) {
-        print (sprintf('trx id [%s] with sum [%s] on shop name [%s]' . PHP_EOL,
+        print(sprintf(
+            'trx id [%s] with sum [%s] on shop name [%s]' . PHP_EOL,
             $item->getId(),
             $item->getChequeSum()->getAmount(),
             $item->getShopName()

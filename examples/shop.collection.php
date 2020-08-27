@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 require_once __DIR__ . '/init.php';
 
 use Rarus\BonusServer\Shops;
@@ -11,8 +13,10 @@ $shopTransport = Shops\Transport\Role\Organization\Fabric::getInstance($apiClien
 $shops = $shopTransport->list();
 // показываем список магазинов
 foreach ($shops as $shop) {
-    print(sprintf('%s | %s ' . PHP_EOL,
+    print(sprintf(
+        '%s | %s ' . PHP_EOL,
         $shop->getShopId()->getId(),
-        $shop->getName())
+        $shop->getName()
+    )
     );
 }

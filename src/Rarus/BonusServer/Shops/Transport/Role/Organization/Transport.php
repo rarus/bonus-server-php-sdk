@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Shops\Transport\Role\Organization;
@@ -87,7 +88,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
         ]);
 
         $requestResult = $this->apiClient->executeApiRequest(
-            sprintf('/organization/shop/%s', $shopId->getId()),
+            sprintf('/organization/shop/%s?schedules=true', $shopId->getId()),
             RequestMethodInterface::METHOD_GET
         );
 

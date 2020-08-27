@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rarus\BonusServer\Cards\DTO\Status;
@@ -19,9 +20,11 @@ class Fabric
     {
         $cardStatus = (new CardStatus())
             ->setIsActive((bool)$arCard['active'])
-            ->setIsBlocked((bool)$arCard['blocked'])
-            ->setBlockedDescription((string)$arCard['blockeddescription']);
+            ->setIsBlocked((bool)$arCard['blocked']);
 
+        if (key_exists('blockeddescription', $arCard)) {
+            $cardStatus->setBlockedDescription((string)$arCard['blockeddescription']);
+        }
         if ($arCard['date_active'] !== 0) {
             $cardStatus->setDateActivate(DateTimeParser::parseTimestampFromServerResponse((string)$arCard['date_active'], $dateTimeZone));
         }

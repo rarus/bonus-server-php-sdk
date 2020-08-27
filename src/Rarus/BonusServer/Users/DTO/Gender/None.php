@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace Rarus\BonusServer\Users\DTO\Gender;
 
 /**
- * Class Male
+ * Class None
  *
  * @package Rarus\BonusServer\Users\DTO\Gender
  */
-class Male extends Gender
+class None extends Gender
 {
     /**
      * Male constructor.
      */
     public function __construct()
     {
-        $this->setCode('male');
+        $this->setCode('none');
     }
 }
