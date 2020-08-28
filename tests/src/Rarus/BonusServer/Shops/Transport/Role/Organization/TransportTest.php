@@ -72,6 +72,32 @@ class TransportTest extends TestCase
     }
 
     /**
+     * @throws \Rarus\BonusServer\Exceptions\ApiClientException
+     * @throws \Rarus\BonusServer\Exceptions\NetworkException
+     * @throws \Rarus\BonusServer\Exceptions\UnknownException
+     */
+    public function testUpdateScheduleMethod(): void
+    {
+        $newShop = Shops\DTO\Fabric::createNewInstance('new-integration-test-shop');
+        $shop = $this->shopTransport->add($newShop);
+
+        $scheduleCollection = new Shops\DTO\ScheduleCollection();
+        $schedule = (new Shops\DTO\Schedule())
+            ->setDayStart(1)
+            ->setDayEnd(7)
+            ->setTimeStart(123234)
+            ->setTimeEnd(323234)
+            ->setIsOpen(true)
+        ;
+        $scheduleCollection->attach($schedule);
+        $shop->setSchedule($scheduleCollection);
+
+        $updatedShop = $this->shopTransport->update($shop);
+
+        $this->assertGreaterThan(0, $updatedShop->getSchedule()->count());
+    }
+
+    /**
      * @covers \Rarus\BonusServer\Shops\Transport\Role\Organization\Transport::delete()
      *
      * @throws \Rarus\BonusServer\Exceptions\ApiClientException

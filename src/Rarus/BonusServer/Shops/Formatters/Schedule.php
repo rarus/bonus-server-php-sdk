@@ -21,11 +21,11 @@ class Schedule
     public static function toArray(Shops\DTO\Schedule $schedule): array
     {
         return [
-            'day_start' => $schedule->getDayStart(),
-            'day_end' => $schedule->getDayEnd(),
+            'day_start'  => $schedule->getDayStart(),
+            'day_end'    => $schedule->getDayEnd(),
             'time_start' => $schedule->getTimeStart(),
-            'time_end' => $schedule->getTimeEnd(),
-            'is_open' => $schedule->isOpen() ? 'true' : 'false',
+            'time_end'   => $schedule->getTimeEnd(),
+            'status'     => $schedule->isOpen() ? 'open' : 'closed',
         ];
     }
 }
