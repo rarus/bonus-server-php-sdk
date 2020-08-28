@@ -78,7 +78,7 @@ final class Shop
     /**
      * @return int
      */
-    public function getTimezoneOffset(): int
+    public function getTimezoneOffset(): ?int
     {
         return $this->timezoneOffset;
     }
