@@ -182,6 +182,11 @@ class Transport extends BonusServer\Transport\AbstractTransport
             BonusServer\Shops\Formatters\Shop::toArrayForUpdateShop($shop)
         );
 
+        // обновление режима работы магазина
+        if ($shop->getSchedule()->count()) {
+            $this->updateSchedule($shop);
+        }
+
         // вычитываем магазин
         $updatedShop = $this->getById($shop->getShopId());
 
@@ -191,5 +196,32 @@ class Transport extends BonusServer\Transport\AbstractTransport
         ]);
 
         return $updatedShop;
+    }
+
+
+    /**
+     * @param BonusServer\Shops\DTO\Shop $shop
+     *
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function updateSchedule(BonusServer\Shops\DTO\Shop $shop): void
+    {
+        $this->log->debug('rarus.bonus.server.shop.transport.updateSchedule.start', [
+            'id' => $shop->getShopId()->getId(),
+        ]);
+
+        if (!$shop->getSchedule()->count()) {
+            return;
+        }
+
+        $this->apiClient->executeApiRequest(
+            '/organization/shop/schedule',
+            RequestMethodInterface::METHOD_POST,
+            BonusServer\Shops\Formatters\Shop::toArrayForUpdateSchedule($shop)
+        );
+
+        $this->log->debug('rarus.bonus.server.shop.transport.updateSchedule.finish');
     }
 }

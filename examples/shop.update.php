@@ -16,6 +16,18 @@ var_dump(Shops\Formatters\Shop::toArray($shop));
 
 $shop->setName('Поменяли имя магазину');
 
+// изменение расписания
+$scheduleCollection = new Shops\DTO\ScheduleCollection();
+$schedule = (new Shops\DTO\Schedule())
+    ->setDayStart(1)
+    ->setDayEnd(5)
+    ->setTimeStart(123234)
+    ->setTimeEnd(323234)
+    ->setIsOpen(true)
+;
+$scheduleCollection->attach($schedule);
+$shop->setSchedule($scheduleCollection);
+
 $updatedShop = $shopTransport->update($shop);
 
 var_dump(Shops\Formatters\Shop::toArray($updatedShop));

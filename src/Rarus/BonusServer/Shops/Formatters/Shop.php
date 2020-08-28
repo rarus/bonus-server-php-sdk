@@ -14,7 +14,7 @@ use Rarus\BonusServer\Shops;
 class Shop
 {
     /**
-     * @param \Rarus\BonusServer\Shops\DTO\Shop
+     * @param Shops\DTO\Shop $shop
      *
      * @return array
      */
@@ -33,7 +33,7 @@ class Shop
             'address' => $shop->getAddress(),
             'phone' => $shop->getPhone(),
             'time_zone' => $shop->getTimezoneOffset(),
-            'is_deleted' => $shop->isDeleted(),
+            'deleted' => $shop->isDeleted(),
             'exclude_articles' => $shop->getExcludeArticles(),
             'schedule' => $arSchedule,
         ];
@@ -77,6 +77,26 @@ class Shop
             'phone' => $shop->getPhone() ?? '',
             'time_zone' => $shop->getTimezoneOffset() ?? 0,
             'exclude_articles' => $shop->getExcludeArticles() ?? '',
+        ];
+    }
+
+    /**
+     * набор полей для обновления информации режима работы магазина
+     *
+     * @param Shops\DTO\Shop $shop
+     *
+     * @return array
+     */
+    public static function toArrayForUpdateSchedule(Shops\DTO\Shop $shop): array
+    {
+        $arSchedule = [];
+        foreach ($shop->getSchedule() as $schedule) {
+            $arSchedule[] = Schedule::toArray($schedule);
+        }
+
+        return [
+            'id'       => $shop->getShopId()->getId(),
+            'schedule' => $arSchedule
         ];
     }
 }
