@@ -15,7 +15,12 @@ $card = $cardsTransport->addNewCard($newCard);
 print('barcode: ' . $card->getBarcode()->getCode() . PHP_EOL);
 
 $cardFilter = new Cards\DTO\CardFilter();
-$cardFilter->setBarcode($card->getBarcode());
+//$cardFilter->setBarcode($card->getBarcode());
+
+// Фильтр для поиска по подобным значениям наименования, штрихового кода, магнитного кода, телефона или emailа
+//$cardFilter->setSearchValue('314');
+
+$cardFilter->setBlocked();
 
 print('card filter: ' . Cards\Formatters\CardFilter::toUrlArguments($cardFilter) . PHP_EOL);
 

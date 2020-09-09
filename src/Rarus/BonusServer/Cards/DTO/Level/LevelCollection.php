@@ -40,4 +40,30 @@ class LevelCollection extends \SplObjectStorage
 
         return $minLevel;
     }
+
+    /**
+     * получение последнего уровня
+     *
+     * @return Level
+     */
+    public function getLastLevel(): Level
+    {
+        $this->rewind();
+        $maxLevelOrder = null;
+        $maxLevel = $this->current();
+
+        while ($this->valid()) {
+            $object = $this->current();
+            if ($maxLevelOrder === null) {
+                $maxLevelOrder = $object->getOrder();
+            }
+            if ($maxLevelOrder < $object->getOrder()) {
+                $maxLevel = $object;
+                $maxLevelOrder = $object->getOrder();
+            }
+            $this->next();
+        }
+
+        return $maxLevel;
+    }
 }

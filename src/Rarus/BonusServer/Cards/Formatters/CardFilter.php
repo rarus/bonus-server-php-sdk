@@ -36,6 +36,18 @@ class CardFilter
         if ($cardFilter->getPhone() !== '') {
             $arFilter['phone'] = $cardFilter->getPhone();
         }
+        if ($cardFilter->getActive()) {
+            $arFilter['active'] = $cardFilter->getActive();
+        }
+        if ($cardFilter->getBlocked()) {
+            $arFilter['blocked'] = $cardFilter->getBlocked();
+        }
+        if ($cardFilter->getUserId()) {
+            $arFilter['user_id'] = $cardFilter->getUserId();
+        }
+        if ($cardFilter->getSearchValue() !== '') {
+            $arFilter['card_filter'] = $cardFilter->getSearchValue();
+        }
 
         return http_build_query($arFilter);
     }

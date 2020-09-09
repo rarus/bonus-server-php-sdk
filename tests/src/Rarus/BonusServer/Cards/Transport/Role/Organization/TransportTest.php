@@ -317,6 +317,32 @@ class TransportTest extends TestCase
     }
 
     /**
+     * замена карты
+     * @throws ApiClientException
+     * @throws \Rarus\BonusServer\Exceptions\NetworkException
+     * @throws \Rarus\BonusServer\Exceptions\UnknownException
+     */
+    public function testReplacementMethod(): void
+    {
+        // создаем пользователя
+        $user = $this->userTransport->addNewUser(\DemoDataGenerator::createNewUser());
+        // получаем список карт (на сервисе включена автопривязка карты)
+        $userCards = $this->cardTransport->getByUser($user);
+        // получаем первую карту
+        $card = $userCards->current();
+        // создаём карту с дефолтным уровнем
+        $newCard = $this->cardTransport->addNewCard(\DemoDataGenerator::createNewCard());
+        // активируем карту
+        $activatedNewCard = $this->cardTransport->activate($newCard);
+        // производим замену карты
+        $this->cardTransport->replacement($card, $activatedNewCard);
+        // получаем список карт по пользователя
+        $userUpdatedCards = $this->cardTransport->getByUser($user);
+
+        $this->assertEquals($card->getCardId(), $userUpdatedCards->current()->getCardId());
+    }
+
+    /**
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::addNewCard()
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::block()
@@ -430,6 +456,37 @@ class TransportTest extends TestCase
         $levelUpResult = $this->cardTransport->levelUp($card);
         // если всё ок, то функция вернёт null
         $this::assertNull($levelUpResult);
+    }
+
+    /**
+     * понижение уровня
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::addNewCard()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
+     * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::levelUp()
+     */
+    public function testCanLevelDownWithFailureResultMethod(): void
+    {
+        // получаем список уровней карт
+        $cardLevels = $this->cardTransport->getCardLevelList();
+        $this::assertGreaterThan(2, $cardLevels->count(), 'для корректной работы теста должно быть минимум два уровня карт');
+
+        // создаём карту с последним уровнем
+        $card = $this->cardTransport->addNewCard(\DemoDataGenerator::createNewCardWithCardLevel($cardLevels->getLastLevel()->getLevelId()));
+        $card->setAccumSaleAmount(new Money(140000, \TestEnvironmentManager::getDefaultCurrency()));
+        $card = $this->cardTransport->update($card);
+
+        // активируем её
+        $activatedCard = $this->cardTransport->activate($card);
+
+        $this->assertEquals($cardLevels->getLastLevel()->getLevelId(), $card->getCardLevelId());
+
+        //проверяем можно ли понизить уровень
+        $isCardCanLevelDown = $this->cardTransport->isCardCanLevelDown($activatedCard);
+        $this->assertTrue($isCardCanLevelDown);
+
+        //пробуем понизить её уровень
+        $levelDownResult = $this->cardTransport->levelDown($activatedCard);
+        $this::assertTrue($levelDownResult);
     }
 
     /**

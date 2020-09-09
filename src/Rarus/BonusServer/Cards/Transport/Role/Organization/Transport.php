@@ -384,6 +384,36 @@ class Transport extends BonusServer\Transport\AbstractTransport
     }
 
     /**
+     * замена карты
+     * @param BonusServer\Cards\DTO\Card $oldCard
+     * @param BonusServer\Cards\DTO\Card $newCard
+     *
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function replacement(BonusServer\Cards\DTO\Card $oldCard, BonusServer\Cards\DTO\Card $newCard): void
+    {
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.replacement.start', [
+            'oldCardId' => $oldCard->getCardId()->getId(),
+            'newCardId' => $newCard->getCardId()->getId(),
+        ]);
+
+        $requestResult = $this->apiClient->executeApiRequest(
+            '/organization/card/replacement',
+            RequestMethodInterface::METHOD_POST,
+            [
+                'old_card_id' => $oldCard->getCardId()->getId(),
+                'new_card_id' => $newCard->getCardId()->getId()
+            ]
+        );
+
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.replacement.finish', [
+            'cardId' => $newCard->getCardId()->getId(),
+        ]);
+    }
+
+    /**
      * Блокировка карты
      * Заблокированные карты полностью недоступны для начисления и списания бонусов до момента разблокировки.
      *
@@ -578,6 +608,87 @@ class Transport extends BonusServer\Transport\AbstractTransport
     }
 
     /**
+     * можно ли понизить уровень карты
+     *
+     * @param BonusServer\Cards\DTO\Card $card
+     *
+     * @return bool
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function isCardCanLevelDown(BonusServer\Cards\DTO\Card $card): bool
+    {
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.isCardCanLevelDown.start', [
+            'cardId' => $card->getCardId()->getId(),
+        ]);
+
+        $requestResult = $this->apiClient->executeApiRequest(
+            sprintf('/organization/card/%s/leveldown', $card->getCardId()->getId()),
+            RequestMethodInterface::METHOD_POST,
+            [
+                'check' => true,
+            ]
+        );
+
+        $isCardCanLevelDown = false;
+        if (array_key_exists('next_level_down', $requestResult)) {
+            $downLevel = \Rarus\BonusServer\Cards\DTO\Level\Fabric::initLevelDescriptionFromServerResponse($requestResult['next_level_down'], $this->getDefaultCurrency());
+            $isCardCanLevelDown = true;
+        }
+
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.isCardCanLevelDown.finish', [
+            'cardId' => $card->getCardId()->getId(),
+            'isCardCanLevelDown' => $isCardCanLevelDown,
+        ]);
+
+        return $isCardCanLevelDown;
+    }
+
+    /**
+     * понижение уровня карты
+     *
+     * @param BonusServer\Cards\DTO\Card $card
+     *
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     *
+     * @return false
+     */
+    public function levelDown(BonusServer\Cards\DTO\Card $card): bool
+    {
+        $this->log->debug('rarus.bonus.server.cards.transport.organization.levelDown.start', [
+            'cardId' => $card->getCardId()->getId(),
+            'cardLevelId' => $card->getCardLevelId()->getId(),
+        ]);
+
+        $requestResult = $this->apiClient->executeApiRequest(
+            sprintf('/organization/card/%s/leveldown', $card->getCardId()->getId()),
+            RequestMethodInterface::METHOD_POST,
+            [
+                'check' => false,
+            ]
+        );
+
+        if (array_key_exists('level_down', $requestResult)) {
+            // уровень карты успешно понижен
+            $this->log->info('rarus.bonus.server.cards.transport.organization.levelDown.success', [
+                'result' => $requestResult,
+            ]);
+
+            return true;
+        }
+
+        // уровень карты не понижен
+        $this->log->warning('rarus.bonus.server.cards.transport.organization.levelDown.failure', [
+            'result' => $requestResult,
+        ]);
+
+        return false;
+    }
+
+    /**
      * @param BonusServer\Cards\DTO\Barcode\Barcode $cardBarcode
      *
      * @return BonusServer\Cards\DTO\Card
@@ -728,4 +839,5 @@ class Transport extends BonusServer\Transport\AbstractTransport
 
         return $updatedCard;
     }
+
 }
