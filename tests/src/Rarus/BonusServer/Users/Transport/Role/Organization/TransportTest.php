@@ -57,7 +57,7 @@ class TransportTest extends TestCase
         $newUser = \DemoDataGenerator::createNewUser();
         // пробуем его добавить
         $user = $this->userTransport->addNewUser($newUser);
-        $this->assertEquals('grishi@rarus.ru', $user->getEmail());
+        $this->assertEquals('ivlean@rarus.ru', $user->getEmail());
         $this->assertEquals($newUser->getBirthdate()->format('d.m.Y H:i:s'), $user->getBirthdate()->format('d.m.Y H:i:s'));
     }
 
@@ -155,6 +155,15 @@ class TransportTest extends TestCase
             $addedUser = $this->userTransport->getByUserId($newUser->getUserId());
             $this->assertEquals($addedUser->getEmail(), $newUser->getEmail());
         }
+    }
+
+    public function testUpdateMethod(): void
+    {
+        $newUser = \DemoDataGenerator::createNewUserWithoutBirthday();
+        $user = $this->userTransport->addNewUser($newUser);
+        $user->setName('Updated user name');
+        $updateUser = $this->userTransport->update($user);
+        $this->assertEquals($user->getName(), 'Updated user name');
     }
 
     /**

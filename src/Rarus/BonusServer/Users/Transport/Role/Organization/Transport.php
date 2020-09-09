@@ -147,4 +147,40 @@ class Transport extends BonusServer\Transport\AbstractTransport
 
         $this->log->debug('rarus.bonus.server.users.transport.importNewUsers.finish');
     }
+
+    /**
+     * обновление пользователя
+     * @param BonusServer\Users\DTO\User $user
+     *
+     * @return BonusServer\Users\DTO\User
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function update(BonusServer\Users\DTO\User $user): BonusServer\Users\DTO\User
+    {
+        $this->log->debug('rarus.bonus.server.users.transport.organization.update.start', [
+            'id' => $user->getUserId()->getId(),
+            'login' => $user->getLogin(),
+            'name' => $user->getName(),
+            'phone' => $user->getPhone(),
+        ]);
+
+        $requestResult = $this->apiClient->executeApiRequest(
+            sprintf('/organization/user/%s', $user->getUserId()->getId()),
+            RequestMethodInterface::METHOD_POST,
+            BonusServer\Users\Formatters\User::toArrayForUpdateUser($user)
+        );
+
+        $updatedUser = $this->getByUserId($user->getUserId());
+
+        $this->log->debug('rarus.bonus.server.users.transport.organization.update.finish', [
+            'id' => $user->getUserId()->getId(),
+            'login' => $user->getLogin(),
+            'name' => $user->getName(),
+            'phone' => $user->getPhone(),
+        ]);
+
+        return $updatedUser;
+    }
 }
