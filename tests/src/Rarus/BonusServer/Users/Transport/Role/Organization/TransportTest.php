@@ -6,6 +6,9 @@ namespace Rarus\BonusServer\Users\Transport\Role\Organization;
 
 use Rarus\BonusServer\Cards;
 use PHPUnit\Framework\TestCase;
+use Rarus\BonusServer\Exceptions\ApiClientException;
+use Rarus\BonusServer\Exceptions\NetworkException;
+use Rarus\BonusServer\Exceptions\UnknownException;
 
 /**
  * Class TransportTest
@@ -162,8 +165,26 @@ class TransportTest extends TestCase
         $newUser = \DemoDataGenerator::createNewUserWithoutBirthday();
         $user = $this->userTransport->addNewUser($newUser);
         $user->setName('Updated user name');
-        $updateUser = $this->userTransport->update($user);
-        $this->assertEquals($user->getName(), 'Updated user name');
+        $updatedUser = $this->userTransport->update($user);
+        $this->assertEquals($updatedUser->getName(), 'Updated user name');
+    }
+
+    public function testDeleteMethod(): void
+    {
+        $newUser = \DemoDataGenerator::createNewUserWithoutBirthday();
+        $user = $this->userTransport->addNewUser($newUser);
+        $this->userTransport->delete($user);
+
+        $emptyResult = null;
+
+        try {
+            $emptyResult = $this->userTransport->getByUserId($user->getUserId());
+        } catch (NetworkException $e) {
+        } catch (ApiClientException $e) {
+        } catch (UnknownException $e) {
+        }
+
+        $this->assertNull($emptyResult);
     }
 
     /**

@@ -183,4 +183,28 @@ class Transport extends BonusServer\Transport\AbstractTransport
 
         return $updatedUser;
     }
+
+    /**
+     * удаление пользователя
+     * @param BonusServer\Users\DTO\User $user
+     *
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function delete(BonusServer\Users\DTO\User $user): void
+    {
+        $this->log->debug('rarus.bonus.server.users.transport.organization.delete.start', [
+            'userId' => $user->getUserId()->getId(),
+        ]);
+
+        $requestResult = $this->apiClient->executeApiRequest(
+            sprintf('/organization/user/%s/delete', $user->getUserId()->getId()),
+            RequestMethodInterface::METHOD_POST
+        );
+
+        $this->log->debug('rarus.bonus.server.users.transport.organization.delete.finish', [
+            'userId' => $user->getUserId()->getId(),
+        ]);
+    }
 }
