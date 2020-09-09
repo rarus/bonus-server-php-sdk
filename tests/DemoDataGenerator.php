@@ -177,10 +177,10 @@ class DemoDataGenerator
         $userUUID = random_int(0, PHP_INT_MAX);
 
         return \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
-            'grishi-' . $userUUID,
-            'Михаил Гришин | ' . $userUUID,
-            '+7978 888 22 22',
-            'grishi@rarus.ru',
+            'ivlean-' . $userUUID,
+            'Ивлев Андрей | ' . $userUUID,
+            '+7900 000 00 00',
+            'ivlean@rarus.ru',
             Users\DTO\Gender\Fabric::getMale(),
             new DateTime('27.08.2018 00:00:00', \TestEnvironmentManager::getDefaultTimezone())
         );

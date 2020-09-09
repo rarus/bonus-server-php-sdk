@@ -317,6 +317,32 @@ class TransportTest extends TestCase
     }
 
     /**
+     * замена карты
+     * @throws ApiClientException
+     * @throws \Rarus\BonusServer\Exceptions\NetworkException
+     * @throws \Rarus\BonusServer\Exceptions\UnknownException
+     */
+    public function testReplacementMethod(): void
+    {
+        // создаем пользователя
+        $user = $this->userTransport->addNewUser(\DemoDataGenerator::createNewUser());
+        // получаем список карт (на сервисе включена автопривязка карты)
+        $userCards = $this->cardTransport->getByUser($user);
+        // получаем первую карту
+        $card = $userCards->current();
+        // создаём карту с дефолтным уровнем
+        $newCard = $this->cardTransport->addNewCard(\DemoDataGenerator::createNewCard());
+        // активируем карту
+        $activatedNewCard = $this->cardTransport->activate($newCard);
+        // производим замену карты
+        $this->cardTransport->replacement($card, $activatedNewCard);
+        // получаем список карт по пользователя
+        $userUpdatedCards = $this->cardTransport->getByUser($user);
+
+        $this->assertEquals($card->getCardId(), $userUpdatedCards->current()->getCardId());
+    }
+
+    /**
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::addNewCard()
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::getByCardId()
      * @covers \Rarus\BonusServer\Cards\Transport\Role\Organization\Transport::block()
