@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rarus\BonusServer\Cards\DTO;
 
 use Rarus\BonusServer\Cards\DTO\Barcode\Barcode;
+use Rarus\BonusServer\Users\DTO\UserId;
 
 /**
  * Class CardFilter для фильтрации карт
@@ -13,6 +14,10 @@ use Rarus\BonusServer\Cards\DTO\Barcode\Barcode;
  */
 class CardFilter
 {
+    /**
+     * @var UserId
+     */
+    protected $userId;
     /**
      * @var Barcode|null
      *
@@ -34,6 +39,34 @@ class CardFilter
      * @var string|null
      */
     protected $phone;
+    /**
+     * @var null|bool
+     */
+    protected $active;
+    /**
+     * @var null|bool
+     */
+    protected $blocked;
+
+    /**
+     * @return string|null
+     */
+    public function getSearchValue(): ?string
+    {
+        return $this->searchValue;
+    }
+
+    /**
+     * @param string|null $searchValue
+     */
+    public function setSearchValue(?string $searchValue): void
+    {
+        $this->searchValue = $searchValue;
+    }
+    /**
+     * @var null|string
+     */
+    protected $searchValue;
 
     /**
      * @return null|Barcode
@@ -133,5 +166,51 @@ class CardFilter
         $this->phone = $phone;
 
         return $this;
+    }
+
+    /**
+     * @return UserId
+     */
+    public function getUserId(): ?UserId
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param UserId $userId
+     */
+    public function setUserId(UserId $userId): void
+    {
+        $this->userId = $userId;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    /**
+     */
+    public function setActive(): void
+    {
+        $this->active = true;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getBlocked(): ?bool
+    {
+        return $this->blocked;
+    }
+
+    /**
+     */
+    public function setBlocked(): void
+    {
+        $this->blocked = true;
     }
 }
