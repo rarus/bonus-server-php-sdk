@@ -55,6 +55,10 @@ final class User
      * @var string|null SHA1 хэш пароля пользователя
      */
     private $passwordHash;
+    /**
+     * @var bool|null
+     */
+    private $receiveNotifications;
 
     /**
      * @return null|string
@@ -254,5 +258,18 @@ final class User
         $this->imageUrl = $imageUrl;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isReceiveNotifications(): ?bool
+    {
+        return $this->receiveNotifications;
+    }
+
+    public function setReceiveNotifications(): void
+    {
+        $this->receiveNotifications = true;
     }
 }

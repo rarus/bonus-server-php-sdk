@@ -6,6 +6,11 @@ namespace Rarus\BonusServer\Users\Transport\Role\Organization;
 
 use Rarus\BonusServer\Cards;
 use PHPUnit\Framework\TestCase;
+use Rarus\BonusServer\Exceptions\ApiClientException;
+use Rarus\BonusServer\Exceptions\NetworkException;
+use Rarus\BonusServer\Exceptions\UnknownException;
+use Rarus\BonusServer\Transport\DTO\Pagination;
+use Rarus\BonusServer\Users\DTO\UserFilter;
 
 /**
  * Class TransportTest
@@ -57,7 +62,7 @@ class TransportTest extends TestCase
         $newUser = \DemoDataGenerator::createNewUser();
         // пробуем его добавить
         $user = $this->userTransport->addNewUser($newUser);
-        $this->assertEquals('grishi@rarus.ru', $user->getEmail());
+        $this->assertEquals('ivlean@rarus.ru', $user->getEmail());
         $this->assertEquals($newUser->getBirthdate()->format('d.m.Y H:i:s'), $user->getBirthdate()->format('d.m.Y H:i:s'));
     }
 
@@ -155,6 +160,51 @@ class TransportTest extends TestCase
             $addedUser = $this->userTransport->getByUserId($newUser->getUserId());
             $this->assertEquals($addedUser->getEmail(), $newUser->getEmail());
         }
+    }
+
+    public function testUpdateMethod(): void
+    {
+        $newUser = \DemoDataGenerator::createNewUserWithoutBirthday();
+        $user = $this->userTransport->addNewUser($newUser);
+        $user->setName('Updated user name');
+        $updatedUser = $this->userTransport->update($user);
+        $this->assertEquals($updatedUser->getName(), 'Updated user name');
+    }
+
+    public function testDeleteMethod(): void
+    {
+        $newUser = \DemoDataGenerator::createNewUserWithoutBirthday();
+        $user = $this->userTransport->addNewUser($newUser);
+        $this->userTransport->delete($user);
+
+        $emptyResult = null;
+
+        try {
+            $emptyResult = $this->userTransport->getByUserId($user->getUserId());
+        } catch (NetworkException $e) {
+        } catch (ApiClientException $e) {
+        } catch (UnknownException $e) {
+        }
+
+        $this->assertNull($emptyResult);
+    }
+
+    public function testListMethod(): void
+    {
+        $userUUID = random_int(0, PHP_INT_MAX);
+        $newUser = \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
+            'ivlean-' . $userUUID,
+            'Ивлев Андрей | ' . $userUUID,
+            '+7 900 000 00 00',
+            'ivlean@rarus.ru'
+        );
+        $this->userTransport->addNewUser($newUser);
+
+        $userFilter = new UserFilter();
+        $userFilter->setLogin('ivlean-' . $userUUID);
+        $users = $this->userTransport->list($userFilter, new Pagination());
+
+        $this->assertEquals(1, $users->getPagination()->getResultItemsCount());
     }
 
     /**

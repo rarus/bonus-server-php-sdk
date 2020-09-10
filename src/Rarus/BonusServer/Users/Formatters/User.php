@@ -30,11 +30,40 @@ class User
             'birthday' => $user->getBirthdate() === null ? null : $user->getBirthdate()->format(\DateTime::ATOM),
             'gender' => $user->getGender() === null ? null : $user->getGender()->getCode(),
             'imageUrl' => $user->getImageUrl(),
+            'recieve_notifications' => $user->isReceiveNotifications(),
             'status' => [
                 'confirmed' => (int)$user->getStatus()->isConfirmed(),
                 'is_locked' => (int)$user->getStatus()->isBlocked(),
             ],
         ];
+    }
+
+    /**
+     * @param BonusServer\Users\DTO\User $user
+     *
+     * @return array
+     */
+    public static function toArrayForUpdateUser(BonusServer\Users\DTO\User $user): array
+    {
+        $arUpdatedUser = [
+            'login' => $user->getLogin(),
+            'name' => $user->getName(),
+            'email' => $user->getEmail(),
+            'phone' => $user->getPhone(),
+            'gender' => $user->getGender() === null ? null : $user->getGender()->getCode(),
+            'recieve_notifications' => (int)$user->isReceiveNotifications(),
+            'confirmed' => (int)$user->getStatus()->isConfirmed(),
+            'is_locked' => (int)$user->getStatus()->isBlocked(),
+        ];
+
+        if ($user->getBirthdate() !== null) {
+            $utcBirthday = new \DateTime($user->getBirthdate()->format('d.m.Y H:i:s'), new \DateTimeZone('UTC'));
+            $arUpdatedUser['birthdate'] = BonusServer\Util\DateTimeParser::convertToServerFormatTimestamp($utcBirthday);
+        } else {
+            $arUpdatedUser['birthdate'] = 0;
+        }
+
+        return $arUpdatedUser;
     }
 
     /**
@@ -52,6 +81,7 @@ class User
             'birthday' => $newUser->getBirthdate() === null ? null : $newUser->getBirthdate()->format(\DateTime::ATOM),
             'gender' => $newUser->getGender() === null ? null : $newUser->getGender()->getCode(),
             'imageUrl' => $newUser->getImageUrl(),
+            'recieve_notifications' => (int)$newUser->isReceiveNotifications(),
         ];
     }
 
@@ -69,6 +99,7 @@ class User
             'phone' => $newUser->getPhone(),
             'email' => $newUser->getEmail(),
             'gender' => $newUser->getGender() === null ? '' : $newUser->getGender()->getCode(),
+            'recieve_notifications' => (int)$newUser->isReceiveNotifications(),
         ];
         if ($newUser->getBirthdate() !== null) {
             $utcBirthday = new \DateTime($newUser->getBirthdate()->format('d.m.Y H:i:s'), new \DateTimeZone('UTC'));
@@ -98,6 +129,7 @@ class User
             'confirmed' => (int)$newUser->getStatus()->isConfirmed(),
             'is_locked' => (int)$newUser->getStatus()->isBlocked(),
             'password' => $newUser->getPasswordHash() ?? '',
+            'recieve_notifications' => (int)$newUser->isReceiveNotifications(),
         ];
         if ($newUser->getBirthdate() !== null) {
             $gmtOffsetInSeconds = $dateTimeZone->getOffset(new \DateTime('now', $dateTimeZone));

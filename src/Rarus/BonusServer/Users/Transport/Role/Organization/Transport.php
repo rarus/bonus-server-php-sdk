@@ -147,4 +147,106 @@ class Transport extends BonusServer\Transport\AbstractTransport
 
         $this->log->debug('rarus.bonus.server.users.transport.importNewUsers.finish');
     }
+
+    /**
+     * @param BonusServer\Users\DTO\UserFilter|null     $userFilter
+     * @param BonusServer\Transport\DTO\Pagination|null $pagination
+     *
+     * @return BonusServer\Users\Transport\DTO\PaginationResponse
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function list(BonusServer\Users\DTO\UserFilter $userFilter, BonusServer\Transport\DTO\Pagination $pagination): BonusServer\Users\Transport\DTO\PaginationResponse
+    {
+        $this->log->debug('rarus.bonus.server.list.transport.organization.list.start', [
+            'pageSize' => $pagination->getPageSize(),
+            'pageNumber' => $pagination->getPageNumber(),
+        ]);
+
+        $requestResult = $this->apiClient->executeApiRequest(
+            sprintf(
+                '/organization/user/?%s%s',
+                BonusServer\Users\Formatters\UserFilter::toUrlArguments($userFilter),
+                BonusServer\Transport\Formatters\Pagination::toRequestUri($pagination)
+            ),
+            RequestMethodInterface::METHOD_GET
+        );
+
+        $userCollection = new BonusServer\Users\DTO\UserCollection();
+        foreach ((array)$requestResult['users'] as $user) {
+            $userCollection->attach(BonusServer\Users\DTO\Fabric::initUserFromServerResponse($user, $this->apiClient->getTimezone()));
+        }
+
+        $paginationResponse = new BonusServer\Users\Transport\DTO\PaginationResponse(
+            $userCollection,
+            BonusServer\Transport\DTO\Fabric::initPaginationFromServerResponse((array)$requestResult['pagination'])
+        );
+
+        $this->log->debug('rarus.bonus.server.list.transport.organization.list.finish', [
+            'itemsCount' => $userCollection->count(),
+        ]);
+
+        return $paginationResponse;
+    }
+
+    /**
+     * обновление пользователя
+     * @param BonusServer\Users\DTO\User $user
+     *
+     * @return BonusServer\Users\DTO\User
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function update(BonusServer\Users\DTO\User $user): BonusServer\Users\DTO\User
+    {
+        $this->log->debug('rarus.bonus.server.users.transport.organization.update.start', [
+            'id' => $user->getUserId()->getId(),
+            'login' => $user->getLogin(),
+            'name' => $user->getName(),
+            'phone' => $user->getPhone(),
+        ]);
+
+        $requestResult = $this->apiClient->executeApiRequest(
+            sprintf('/organization/user/%s', $user->getUserId()->getId()),
+            RequestMethodInterface::METHOD_POST,
+            BonusServer\Users\Formatters\User::toArrayForUpdateUser($user)
+        );
+
+        $updatedUser = $this->getByUserId($user->getUserId());
+
+        $this->log->debug('rarus.bonus.server.users.transport.organization.update.finish', [
+            'id' => $user->getUserId()->getId(),
+            'login' => $user->getLogin(),
+            'name' => $user->getName(),
+            'phone' => $user->getPhone(),
+        ]);
+
+        return $updatedUser;
+    }
+
+    /**
+     * удаление пользователя
+     * @param BonusServer\Users\DTO\User $user
+     *
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function delete(BonusServer\Users\DTO\User $user): void
+    {
+        $this->log->debug('rarus.bonus.server.users.transport.organization.delete.start', [
+            'userId' => $user->getUserId()->getId(),
+        ]);
+
+        $requestResult = $this->apiClient->executeApiRequest(
+            sprintf('/organization/user/%s/delete', $user->getUserId()->getId()),
+            RequestMethodInterface::METHOD_POST
+        );
+
+        $this->log->debug('rarus.bonus.server.users.transport.organization.delete.finish', [
+            'userId' => $user->getUserId()->getId(),
+        ]);
+    }
 }
