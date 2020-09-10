@@ -149,6 +149,48 @@ class Transport extends BonusServer\Transport\AbstractTransport
     }
 
     /**
+     * @param BonusServer\Users\DTO\UserFilter|null     $userFilter
+     * @param BonusServer\Transport\DTO\Pagination|null $pagination
+     *
+     * @return BonusServer\Users\Transport\DTO\PaginationResponse
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function list(BonusServer\Users\DTO\UserFilter $userFilter, BonusServer\Transport\DTO\Pagination $pagination): BonusServer\Users\Transport\DTO\PaginationResponse
+    {
+        $this->log->debug('rarus.bonus.server.list.transport.organization.list.start', [
+            'pageSize' => $pagination->getPageSize(),
+            'pageNumber' => $pagination->getPageNumber(),
+        ]);
+
+        $requestResult = $this->apiClient->executeApiRequest(
+            sprintf(
+                '/organization/user/?%s%s',
+                BonusServer\Users\Formatters\UserFilter::toUrlArguments($userFilter),
+                BonusServer\Transport\Formatters\Pagination::toRequestUri($pagination)
+            ),
+            RequestMethodInterface::METHOD_GET
+        );
+
+        $userCollection = new BonusServer\Users\DTO\UserCollection();
+        foreach ((array)$requestResult['users'] as $user) {
+            $userCollection->attach(BonusServer\Users\DTO\Fabric::initUserFromServerResponse($user, $this->apiClient->getTimezone()));
+        }
+
+        $paginationResponse = new BonusServer\Users\Transport\DTO\PaginationResponse(
+            $userCollection,
+            BonusServer\Transport\DTO\Fabric::initPaginationFromServerResponse((array)$requestResult['pagination'])
+        );
+
+        $this->log->debug('rarus.bonus.server.list.transport.organization.list.finish', [
+            'itemsCount' => $userCollection->count(),
+        ]);
+
+        return $paginationResponse;
+    }
+
+    /**
      * обновление пользователя
      * @param BonusServer\Users\DTO\User $user
      *

@@ -9,6 +9,8 @@ use PHPUnit\Framework\TestCase;
 use Rarus\BonusServer\Exceptions\ApiClientException;
 use Rarus\BonusServer\Exceptions\NetworkException;
 use Rarus\BonusServer\Exceptions\UnknownException;
+use Rarus\BonusServer\Transport\DTO\Pagination;
+use Rarus\BonusServer\Users\DTO\UserFilter;
 
 /**
  * Class TransportTest
@@ -185,6 +187,24 @@ class TransportTest extends TestCase
         }
 
         $this->assertNull($emptyResult);
+    }
+
+    public function testListMethod(): void
+    {
+        $userUUID = random_int(0, PHP_INT_MAX);
+        $newUser = \Rarus\BonusServer\Users\DTO\Fabric::createNewInstance(
+            'ivlean-' . $userUUID,
+            'Ивлев Андрей | ' . $userUUID,
+            '+7 900 000 00 00',
+            'ivlean@rarus.ru'
+        );
+        $this->userTransport->addNewUser($newUser);
+
+        $userFilter = new UserFilter();
+        $userFilter->setLogin('ivlean-' . $userUUID);
+        $users = $this->userTransport->list($userFilter, new Pagination());
+
+        $this->assertEquals(1, $users->getPagination()->getResultItemsCount());
     }
 
     /**
