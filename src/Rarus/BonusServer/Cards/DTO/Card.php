@@ -112,6 +112,10 @@ final class Card
      * @var CardStatus
      */
     private $cardStatus;
+    /**
+     * @var int
+     */
+    private $balance;
 
     /**
      * @return LevelId|null
@@ -178,7 +182,7 @@ final class Card
      */
     public function getCardId(): CardId
     {
-        return $this->cardId;
+        return $this->cardId ?? new CardId();
     }
 
     /**
@@ -254,9 +258,9 @@ final class Card
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -274,9 +278,9 @@ final class Card
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -354,9 +358,9 @@ final class Card
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getReferralLinkId(): string
+    public function getReferralLinkId(): ?string
     {
         return $this->referralLinkId;
     }
@@ -374,9 +378,9 @@ final class Card
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
-    public function getDateFirstCheck(): \DateTime
+    public function getDateFirstCheck(): ?\DateTime
     {
         return $this->dateFirstCheck;
     }
@@ -529,6 +533,24 @@ final class Card
     public function setImageUri(string $imageUri): Card
     {
         $this->imageUri = $imageUri;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getBalance(): ?int
+    {
+        return $this->balance;
+    }
+
+    /**
+     * @param int $balance
+     */
+    public function setBalance(int $balance): Card
+    {
+        $this->balance = $balance;
 
         return $this;
     }
