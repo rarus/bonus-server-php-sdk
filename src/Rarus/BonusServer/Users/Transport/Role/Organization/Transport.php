@@ -116,13 +116,16 @@ class Transport extends BonusServer\Transport\AbstractTransport
     /**
      * пакетная загрузка пользователей, требование - уникальный логин, если найдены дубли, то они игнорируются
      *
-     * @param BonusServer\Users\DTO\UserCollection $usersCollection - ограничение в 500 штук пользователей
+     * @param BonusServer\Users\DTO\UserCollection   $usersCollection - ограничение в 500 штук пользователей
+     *
+     * @param BonusServer\Cards\DTO\UniqueField|null $uniqueField
+     * @param bool                                   $duplicatesUpdate
      *
      * @throws BonusServer\Exceptions\ApiClientException
      * @throws BonusServer\Exceptions\NetworkException
      * @throws BonusServer\Exceptions\UnknownException
      */
-    public function importNewUsers(BonusServer\Users\DTO\UserCollection $usersCollection): void
+    public function importNewUsers(BonusServer\Users\DTO\UserCollection $usersCollection, ?BonusServer\Cards\DTO\UniqueField $uniqueField = null, bool $duplicatesUpdate = false): void
     {
         $this->log->debug('rarus.bonus.server.users.transport.importNewUsers.start', [
             'usersCount' => $usersCollection->count(),
@@ -136,18 +139,24 @@ class Transport extends BonusServer\Transport\AbstractTransport
             $arNewUsers[] = BonusServer\Users\Formatters\User::toArrayForImportNewUser($user, $this->apiClient->getTimezone());
         }
 
+        if (!$uniqueField) {
+            $uniqueField = BonusServer\Cards\DTO\UniqueField::setId();
+        }
+
+        $body = [
+            'unique_field' => $uniqueField->getCode(),
+            'duplicates'   => $duplicatesUpdate ? 'update' : 'ignore',
+            'users'        => $arNewUsers,
+        ];
+
         $this->apiClient->executeApiRequest(
-            '/organization/user/upload',
+            '/organization/cardsandusers/upload',
             RequestMethodInterface::METHOD_POST,
-            [
-                'duplicates' => 'ignore',
-                'users' => $arNewUsers,
-            ]
+            $body
         );
 
         $this->log->debug('rarus.bonus.server.users.transport.importNewUsers.finish');
     }
-
     /**
      * @param BonusServer\Users\DTO\UserFilter|null     $userFilter
      * @param BonusServer\Transport\DTO\Pagination|null $pagination

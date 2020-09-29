@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rarus\BonusServer\Users\DTO;
 
+use Rarus\BonusServer\Cards\DTO\CardCollection;
 use Rarus\BonusServer\Users\DTO\Gender\Gender;
 
 /**
@@ -59,6 +60,10 @@ final class User
      * @var bool|null
      */
     private $receiveNotifications;
+    /**
+     * @var CardCollection
+     */
+    private $cardCollection;
 
     /**
      * @return null|string
@@ -271,5 +276,25 @@ final class User
     public function setReceiveNotifications(): void
     {
         $this->receiveNotifications = true;
+    }
+
+    /**
+     * @return CardCollection
+     */
+    public function getCardCollection(): CardCollection
+    {
+        return $this->cardCollection ?? new CardCollection();
+    }
+
+    /**
+     * @param CardCollection $cardCollection
+     *
+     * @return User
+     */
+    public function setCardCollection(CardCollection $cardCollection): User
+    {
+        $this->cardCollection = $cardCollection;
+
+        return $this;
     }
 }

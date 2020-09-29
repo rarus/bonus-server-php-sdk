@@ -87,4 +87,31 @@ class Card
                 (int)$card->getAccumSaleAmount()->getAmount() : 0,
         ];
     }
+
+    /**
+     * @param BonusServer\Cards\DTO\Card $card
+     *
+     * @return array
+     */
+    public static function toArrayForImportUsersAndCards(BonusServer\Cards\DTO\Card $card): array
+    {
+        return [
+            'row_number'            => 0,
+            'id'                    => $card->getCardId()->getId(),
+            'parent_id'             => $card->getParentId() !== null ? $card->getParentId()->getId() : null,
+            'name'                  => $card->getName() ?? '',
+            'code'                  => $card->getCode(),
+            'barcode'               => $card->getBarcode()->getCode(),
+            'description'           => $card->getDescription() ?? '',
+            'active'                => $card->getCardStatus()->isActive(),
+            'blocked'               => $card->getCardStatus()->isBlocked(),
+            'blockeddescription'    => $card->getCardStatus()->getBlockedDescription(),
+            'balance'               => $card->getBalance(),
+            'mastercard_id'         => $card->getMastercardId(),
+            'referallink_id'        => $card->getReferralLinkId(),
+            'firstchequedate'       => $card->getDateFirstCheck() ? $card->getDateFirstCheck()->getTimestamp() : null,
+            'date_last_transaction' => $card->getDateLastTransaction() !== null ?
+                $card->getDateLastTransaction()->getTimestamp() : null,
+        ];
+    }
 }

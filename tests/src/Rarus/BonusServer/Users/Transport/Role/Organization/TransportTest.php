@@ -11,6 +11,7 @@ use Rarus\BonusServer\Exceptions\NetworkException;
 use Rarus\BonusServer\Exceptions\UnknownException;
 use Rarus\BonusServer\Transport\DTO\Pagination;
 use Rarus\BonusServer\Users\DTO\UserFilter;
+use Rarus\BonusServer\Users\DTO\UserId;
 
 /**
  * Class TransportTest
@@ -156,6 +157,36 @@ class TransportTest extends TestCase
     {
         $newUserCollection = \DemoDataGenerator::createNewUserWithUserUidAndPasswordCollection(5);
         $this->userTransport->importNewUsers($newUserCollection);
+        foreach ($newUserCollection as $newUser) {
+            $addedUser = $this->userTransport->getByUserId($newUser->getUserId());
+            $this->assertEquals($addedUser->getEmail(), $newUser->getEmail());
+        }
+    }
+
+    /**
+     * @throws ApiClientException
+     * @throws NetworkException
+     * @throws UnknownException
+     */
+    public function testImportNewUsersAndCards(): void
+    {
+        $newUserCollection = \DemoDataGenerator::createNewUserWithUserUidAndPasswordCollection(1);
+        foreach ($newUserCollection as $user) {
+            $card = Cards\DTO\Fabric::createNewInstance(
+                md5('1'),
+                (string)random_int(1000000, 100000000),
+                new \Money\Currency('RUB')
+            )->setCardId(new Cards\DTO\CardId());
+            $newUserCardCollection = new Cards\DTO\CardCollection();
+            $newUserCardCollection->attach($card);
+
+            $user->setUserId(new UserId(md5('Login')));
+            $user->setLogin('Login');
+            $user->setPhone('79000000001');
+            $user->setName('testImportNewUsersAndCards8');
+            $user->setCardCollection($newUserCardCollection);
+        }
+        $this->userTransport->importNewUsers($newUserCollection, Cards\DTO\UniqueField::setCode(), true);
         foreach ($newUserCollection as $newUser) {
             $addedUser = $this->userTransport->getByUserId($newUser->getUserId());
             $this->assertEquals($addedUser->getEmail(), $newUser->getEmail());

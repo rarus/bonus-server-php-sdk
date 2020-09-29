@@ -139,6 +139,14 @@ class User
             $arNewUser['birthdate'] = 0;
         }
 
+        if ($newUser->getCardCollection()->count()) {
+            $arCards = [];
+            foreach ($newUser->getCardCollection() as $card) {
+                $arCards[] = BonusServer\Cards\Formatters\Card::toArrayForImportUsersAndCards($card);
+            }
+            $arNewUser['cards'] = $arCards;
+        }
+
         return $arNewUser;
     }
 }
