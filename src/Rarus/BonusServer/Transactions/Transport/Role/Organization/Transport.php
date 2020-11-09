@@ -222,4 +222,42 @@ class Transport extends BonusServer\Transport\AbstractTransport
 
         return $finalScore;
     }
+
+    /**
+     * @param BonusServer\Transactions\DTO\Manual $manual
+     *
+     * @return BonusServer\Transactions\DTO\Document\Document
+     * @throws BonusServer\Exceptions\ApiClientException
+     * @throws BonusServer\Exceptions\NetworkException
+     * @throws BonusServer\Exceptions\UnknownException
+     */
+    public function addManualTransaction(BonusServer\Transactions\DTO\Manual $manual): BonusServer\Transactions\DTO\Document\Document
+    {
+        $this->log->debug(
+            'rarus.bonus.server.transactions.transport.addManualTransaction.start',
+            [
+                'cardId' => $manual->getCardId()->getId(),
+                'shopId' => $manual->getShopId()->getId(),
+                'sum'    => $manual->getSum(),
+                'doc_id' => $manual->getDocument()->getId(),
+            ]
+        );
+
+        $requestResult = $this->apiClient->executeApiRequest(
+            '/organization/transaction/add',
+            RequestMethodInterface::METHOD_POST,
+            BonusServer\Transactions\Formatters\Manual::toArray($manual)
+        );
+
+        $document = BonusServer\Transactions\DTO\Document\Fabric::createNewInstance($requestResult['id'], 0);
+
+        $this->log->debug(
+            'rarus.bonus.server.transactions.transport.addManualTransaction.end',
+            [
+                'id' => $document->getId(),
+            ]
+        );
+
+        return $document;
+    }
 }

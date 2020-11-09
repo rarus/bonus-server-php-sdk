@@ -263,6 +263,41 @@ class TransportTest extends TestCase
     }
 
     /**
+     * @throws \Rarus\BonusServer\Exceptions\ApiClientException
+     * @throws \Rarus\BonusServer\Exceptions\NetworkException
+     * @throws \Rarus\BonusServer\Exceptions\UnknownException
+     */
+    public function testAddManualTransaction(): void
+    {
+        $newCard = Cards\DTO\Fabric::createNewInstance((string)random_int(1000000, 100000000), (string)random_int(1000000, 100000000), new \Money\Currency('RUB'));
+        $card = $this->cardTransport->addNewCard($newCard);
+        $card = $this->cardTransport->activate($card);
+
+        $newShop = Shops\DTO\Fabric::createNewInstance('Новый магазин');
+        $shop = $this->shopTransport->add($newShop);
+
+        $authorName = 'Кассир Иванов Иван Иванович';
+        $documentExternal = Transactions\DTO\Document\Fabric::createNewInstance((string)random_int(1000000, 100000000), 0);
+        $cashRegister = \Rarus\BonusServer\Transactions\DTO\CashRegister\Fabric::createNewInstance((string)random_int(1000000, 100000000), 'касса 1');
+
+        $manualTransaction = new Transactions\DTO\Manual(
+            $card->getCardId(),
+            new \DateTime(),
+            Transactions\DTO\Type\Fabric::initFromServerResponse('refund'),
+            100,
+            $authorName,
+            $documentExternal,
+            $shop->getShopId()
+        );
+
+        $manualTransaction->setCashRegister($cashRegister);
+
+        $document = $this->transactionTransport->addManualTransaction($manualTransaction);
+
+        $this->assertNotEmpty($document);
+    }
+
+    /**
      * @throws \Exception
      */
     protected function setUp(): void
