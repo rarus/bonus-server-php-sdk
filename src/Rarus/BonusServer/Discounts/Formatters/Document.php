@@ -38,6 +38,10 @@ class Document
             $arResult['card_barcode'] = $discountDocument->getCard()->getBarcode()->getCode();
         }
 
+        if ($discountDocument->getCouponId()) {
+            $arResult['coupon'] = $discountDocument->getCouponId()->getId();
+        }
+
         return $arResult;
     }
 }
