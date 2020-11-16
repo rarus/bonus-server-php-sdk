@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rarus\BonusServer\Discounts\DTO;
 
 use Rarus\BonusServer\Cards\DTO\Card;
+use Rarus\BonusServer\Coupons\DTO\CouponId;
 use Rarus\BonusServer\Shops\DTO\ShopId;
 use Rarus\BonusServer\Transactions\DTO\ChequeRows\ChequeRowCollection;
 
@@ -27,6 +28,10 @@ final class Document
      * @var ChequeRowCollection
      */
     private $chequeRows;
+    /**
+     * @var CouponId|null
+     */
+    private $couponId;
 
     /**
      * @return null|Card
@@ -87,4 +92,21 @@ final class Document
 
         return $this;
     }
+
+    /**
+     * @return CouponId|null
+     */
+    public function getCouponId(): ?CouponId
+    {
+        return $this->couponId;
+    }
+
+    /**
+     * @param CouponId|null $couponId
+     */
+    public function setCouponId(?CouponId $couponId): void
+    {
+        $this->couponId = $couponId;
+    }
+
 }

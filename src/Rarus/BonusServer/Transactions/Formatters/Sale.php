@@ -26,21 +26,20 @@ class Sale
             $arChequeItems[] = ChequeRow::toArray($chequeRow);
         }
 
-        $arTrx = [
+        return [
             'operation_type' => 'sale',
-            'card_id' => $saleTrx->getCardId()->getId(),
-            'shop_id' => $saleTrx->getShopId()->getId(),
-            'doc_id' => $saleTrx->getDocument()->getId(),
-            'doc_type' => $saleTrx->getDocument()->getExternalId(),
-            'kkm_id' => $saleTrx->getCashRegister()->getId(),
-            'kkm_name' => $saleTrx->getCashRegister()->getName(),
-            'cheque_number' => $saleTrx->getChequeNumber(),
-            'author' => $saleTrx->getAuthorName(),
-            'description' => $saleTrx->getDescription(),
-            'bonus_payment' => $saleTrx->getBonusPayment(),
-            'cheque_items' => $arChequeItems,
+            'card_id'        => $saleTrx->getCardId()->getId(),
+            'shop_id'        => $saleTrx->getShopId()->getId(),
+            'doc_id'         => $saleTrx->getDocument()->getId(),
+            'doc_type'       => $saleTrx->getDocument()->getExternalId(),
+            'kkm_id'         => $saleTrx->getCashRegister()->getId(),
+            'kkm_name'       => $saleTrx->getCashRegister()->getName(),
+            'cheque_number'  => $saleTrx->getChequeNumber(),
+            'author'         => $saleTrx->getAuthorName(),
+            'description'    => $saleTrx->getDescription(),
+            'bonus_payment'  => $saleTrx->getBonusPayment(),
+            'cheque_items'   => $arChequeItems,
+            'coupon'         => $saleTrx->getCouponId() ? $saleTrx->getCouponId()->getId() : ''
         ];
-
-        return $arTrx;
     }
 }

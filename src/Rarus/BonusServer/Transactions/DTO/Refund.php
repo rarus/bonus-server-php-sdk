@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rarus\BonusServer\Transactions\DTO;
 
 use Rarus\BonusServer\Cards\DTO\CardId;
+use Rarus\BonusServer\Coupons\DTO\CouponId;
 use Rarus\BonusServer\Shops\DTO\ShopId;
 use Rarus\BonusServer\Transactions\DTO\CashRegister\CashRegister;
 use Rarus\BonusServer\Transactions\DTO\Document\Document;
@@ -158,6 +159,17 @@ final class Refund extends AbstractTransaction
     public function setChequeRows(ChequeRowCollection $chequeRows): Refund
     {
         $this->chequeRows = $chequeRows;
+
+        return $this;
+    }
+
+    /**
+     * @param CouponId $couponId
+     * @return Sale
+     */
+    public function setCouponId(CouponId $couponId): Refund
+    {
+        $this->couponId = $couponId;
 
         return $this;
     }
