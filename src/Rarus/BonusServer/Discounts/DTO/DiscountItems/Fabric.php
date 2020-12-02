@@ -34,7 +34,7 @@ class Fabric
             ->setLineNumber((int)$discountItem['line_number'])
             ->setDiscountId(new DiscountId((string)$discountItem['discount_id']))
             ->setTypeId((int)$discountItem['discount_type'])
-            ->setSum($moneyParser->parse((string)$discountItem['discount_summ'], $currency->getCode()))
+            ->setSum(new Money((int)$discountItem['discount_summ'], $currency))
             ->setName((string)$discountItem['discount_name'])
             ->setValue((int)$discountItem['discount_value']);
 
