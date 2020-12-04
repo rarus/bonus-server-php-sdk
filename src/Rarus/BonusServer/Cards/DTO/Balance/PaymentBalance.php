@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Rarus\BonusServer\Cards\DTO\Balance;
 
 use Money\Money;
+use Rarus\BonusServer\Articles\DTO\ArticleCollection;
 use Rarus\BonusServer\Cards\DTO\CardId;
 use Rarus\BonusServer\Cards\DTO\Level\LevelId;
+use Rarus\BonusServer\Cards\DTO\PaymentDistribution\PaymentDistributionCollection;
 
 /**
  * Class PaymentBalance
@@ -31,6 +33,14 @@ final class PaymentBalance
      * @var CardId
      */
     private $mastercardId;
+    /**
+     * @var ArticleCollection
+     */
+    private $excludedArticleId;
+    /**
+     * @var PaymentDistributionCollection
+     */
+    private $paymentDistributionCollection;
 
     /**
      * @return Money
@@ -111,4 +121,43 @@ final class PaymentBalance
 
         return $this;
     }
+
+    /**
+     * @return ArticleCollection
+     */
+    public function getExcludedArticleId(): ArticleCollection
+    {
+        return $this->excludedArticleId;
+    }
+
+    /**
+     * @param ArticleCollection $excludedArticleId
+     *
+     * @return PaymentBalance
+     */
+    public function setExcludedArticleId(ArticleCollection $excludedArticleId): PaymentBalance
+    {
+        $this->excludedArticleId = $excludedArticleId;
+
+        return $this;
+    }
+
+    /**
+     * @return PaymentDistributionCollection
+     */
+    public function getPaymentDistributionCollection(): PaymentDistributionCollection
+    {
+        return $this->paymentDistributionCollection;
+    }
+
+    /**
+     * @param PaymentDistributionCollection $paymentDistributionCollection
+     */
+    public function setPaymentDistributionCollection(PaymentDistributionCollection $paymentDistributionCollection): PaymentBalance
+    {
+        $this->paymentDistributionCollection = $paymentDistributionCollection;
+
+        return $this;
+    }
+
 }
