@@ -6,6 +6,7 @@ namespace Rarus\BonusServer\Transactions\DTO;
 
 use Rarus\BonusServer\Cards\DTO\CardId;
 use Rarus\BonusServer\Coupons\DTO\CouponId;
+use Rarus\BonusServer\Discounts\DTO\DiscountItems\DiscountItemCollection;
 use Rarus\BonusServer\Shops\DTO\ShopId;
 use Rarus\BonusServer\Transactions\DTO\CashRegister\CashRegister;
 use Rarus\BonusServer\Transactions\DTO\ChequeRows\ChequeRowCollection;
@@ -59,6 +60,10 @@ abstract class AbstractTransaction
      * @var CouponId
      */
     protected $couponId;
+    /**
+     * @var DiscountItemCollection
+     */
+    protected $discountItemCollection;
 
     /**
      * @return string
@@ -138,6 +143,22 @@ abstract class AbstractTransaction
     public function getCouponId(): ?CouponId
     {
         return $this->couponId;
+    }
+
+    /**
+     * @return DiscountItemCollection
+     */
+    public function getDiscountItemCollection(): DiscountItemCollection
+    {
+        return $this->discountItemCollection;
+    }
+
+    /**
+     * @param DiscountItemCollection $discountItemCollection
+     */
+    public function setDiscountItemCollection(DiscountItemCollection $discountItemCollection): void
+    {
+        $this->discountItemCollection = $discountItemCollection;
     }
 
 }

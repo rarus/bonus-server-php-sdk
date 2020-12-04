@@ -22,12 +22,19 @@ class Transport extends BonusServer\Transport\AbstractTransport
      * @param BonusServer\Cards\DTO\Card                                       $card
      * @param null|BonusServer\Transactions\DTO\ChequeRows\ChequeRowCollection $chequeRowCollection
      *
+     * @param int|null                                                         $bonusPayment
+     *
      * @return BonusServer\Cards\DTO\Balance\PaymentBalance
      * @throws BonusServer\Exceptions\ApiClientException
      * @throws BonusServer\Exceptions\NetworkException
      * @throws BonusServer\Exceptions\UnknownException
      */
-    public function getPaymentBalance(BonusServer\Shops\DTO\ShopId $shopId, BonusServer\Cards\DTO\Card $card, ?BonusServer\Transactions\DTO\ChequeRows\ChequeRowCollection $chequeRowCollection = null): BonusServer\Cards\DTO\Balance\PaymentBalance
+    public function getPaymentBalance(
+        BonusServer\Shops\DTO\ShopId $shopId,
+        BonusServer\Cards\DTO\Card $card,
+        ?BonusServer\Transactions\DTO\ChequeRows\ChequeRowCollection $chequeRowCollection = null,
+        ?int $bonusPayment = null
+    ): BonusServer\Cards\DTO\Balance\PaymentBalance
     {
         $this->log->debug('rarus.bonus.server.cards.transport.organization.getPaymentBalance.start', [
             'shopId' => $shopId->getId(),
@@ -51,6 +58,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
                 'card_barcode' => $card->getBarcode()->getCode(),
                 'shop_id' => $shopId->getId(),
                 'cheque_items' => $arChequeRows,
+                'bonus_payment' => $bonusPayment
             ]
         );
 
