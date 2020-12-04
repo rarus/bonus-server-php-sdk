@@ -41,8 +41,8 @@ class DateTimeParser
         $microseconds = substr($timestampStr, \strlen($timestampStr) - 3);
         $timestampStr = substr($timestampStr, 0, -3) . '.' . $microseconds;
 
-        $timestamp = \DateTime::createFromFormat('U.u', $timestampStr, new \DateTimeZone('UTC'));
-        $timestamp->setTimezone(new \DateTimeZone('UTC'));
+        $timestamp = \DateTime::createFromFormat('U.u', $timestampStr, $dateTimeZone);
+        $timestamp->setTimezone($dateTimeZone);
 
         if (false === $timestamp) {
             throw new ApiClientException(sprintf('ошибка при разборе поля время в ответе сервера [%s]', $timestampStr));
