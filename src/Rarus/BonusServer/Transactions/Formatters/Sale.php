@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rarus\BonusServer\Transactions\Formatters;
 
+use Rarus\BonusServer\Discounts\Formatters\DiscountRow;
 use Rarus\BonusServer\Transactions;
 
 /**
@@ -26,8 +27,15 @@ class Sale
             $arChequeItems[] = ChequeRow::toArray($chequeRow);
         }
 
+        $arChequeBonus = [];
+
+        foreach ($saleTrx->getDiscountItemCollection() as $discountItem) {
+            $arChequeBonus[] = DiscountRow::toArray($discountItem);
+        }
+
         return [
             'operation_type' => 'sale',
+            'level_up'       => true,
             'card_id'        => $saleTrx->getCardId()->getId(),
             'shop_id'        => $saleTrx->getShopId()->getId(),
             'doc_id'         => $saleTrx->getDocument()->getId(),
@@ -39,6 +47,7 @@ class Sale
             'description'    => $saleTrx->getDescription(),
             'bonus_payment'  => $saleTrx->getBonusPayment(),
             'cheque_items'   => $arChequeItems,
+            'cheque_bonus'   => $arChequeBonus,
             'coupon'         => $saleTrx->getCouponId() ? $saleTrx->getCouponId()->getId() : ''
         ];
     }
