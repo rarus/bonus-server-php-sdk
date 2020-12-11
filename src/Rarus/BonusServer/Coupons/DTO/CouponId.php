@@ -20,7 +20,7 @@ class CouponId
     /**
      * CouponId constructor.
      *
-     * @param string|null $id
+     * @param string $id
      */
     public function __construct(string $id)
     {

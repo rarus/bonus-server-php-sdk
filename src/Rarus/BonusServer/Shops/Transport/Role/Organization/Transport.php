@@ -216,6 +216,8 @@ class Transport extends BonusServer\Transport\AbstractTransport
             return;
         }
 
+        $body = BonusServer\Shops\Formatters\Shop::toArrayForUpdateSchedule($shop);
+
         $this->apiClient->executeApiRequest(
             '/organization/shop/schedule',
             RequestMethodInterface::METHOD_POST,

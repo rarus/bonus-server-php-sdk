@@ -79,7 +79,7 @@ final class Point
     }
 
     /**
-     * @param \DateTime|null $activeFrom
+     * @param \DateTime $activeFrom
      *
      * @return Point
      */
@@ -99,7 +99,7 @@ final class Point
     }
 
     /**
-     * @param \DateTime|null $activeTo
+     * @param \DateTime $activeTo
      *
      * @return Point
      */

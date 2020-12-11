@@ -29,8 +29,10 @@ class Sale
 
         $arChequeBonus = [];
 
-        foreach ($saleTrx->getDiscountItemCollection() as $discountItem) {
-            $arChequeBonus[] = DiscountRow::toArray($discountItem);
+        if ($saleTrx->getDiscountItemCollection()) {
+            foreach ($saleTrx->getDiscountItemCollection() as $discountItem) {
+                $arChequeBonus[] = DiscountRow::toArray($discountItem);
+            }
         }
 
         return [

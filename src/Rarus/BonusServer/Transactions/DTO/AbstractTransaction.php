@@ -61,7 +61,7 @@ abstract class AbstractTransaction
      */
     protected $couponId;
     /**
-     * @var DiscountItemCollection
+     * @var DiscountItemCollection|null
      */
     protected $discountItemCollection;
 
@@ -146,9 +146,9 @@ abstract class AbstractTransaction
     }
 
     /**
-     * @return DiscountItemCollection
+     * @return DiscountItemCollection|null
      */
-    public function getDiscountItemCollection(): DiscountItemCollection
+    public function getDiscountItemCollection(): ?DiscountItemCollection
     {
         return $this->discountItemCollection;
     }

@@ -34,11 +34,11 @@ final class PaymentBalance
      */
     private $mastercardId;
     /**
-     * @var ArticleCollection
+     * @var ArticleCollection|null
      */
     private $excludedArticleId;
     /**
-     * @var PaymentDistributionCollection
+     * @var PaymentDistributionCollection|null
      */
     private $paymentDistributionCollection;
 
@@ -123,9 +123,9 @@ final class PaymentBalance
     }
 
     /**
-     * @return ArticleCollection
+     * @return ArticleCollection|null
      */
-    public function getExcludedArticleId(): ArticleCollection
+    public function getExcludedArticleId(): ?ArticleCollection
     {
         return $this->excludedArticleId;
     }
@@ -133,9 +133,9 @@ final class PaymentBalance
     /**
      * @param ArticleCollection $excludedArticleId
      *
-     * @return PaymentBalance
+     * @return PaymentBalance|null
      */
-    public function setExcludedArticleId(ArticleCollection $excludedArticleId): PaymentBalance
+    public function setExcludedArticleId(ArticleCollection $excludedArticleId): ?PaymentBalance
     {
         $this->excludedArticleId = $excludedArticleId;
 
@@ -143,9 +143,9 @@ final class PaymentBalance
     }
 
     /**
-     * @return PaymentDistributionCollection
+     * @return PaymentDistributionCollection|null
      */
-    public function getPaymentDistributionCollection(): PaymentDistributionCollection
+    public function getPaymentDistributionCollection(): ?PaymentDistributionCollection
     {
         return $this->paymentDistributionCollection;
     }

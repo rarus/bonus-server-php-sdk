@@ -662,7 +662,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
      * @throws BonusServer\Exceptions\NetworkException
      * @throws BonusServer\Exceptions\UnknownException
      *
-     * @return false
+     * @return bool
      */
     public function levelDown(BonusServer\Cards\DTO\Card $card): bool
     {
