@@ -158,8 +158,8 @@ class Transport extends BonusServer\Transport\AbstractTransport
         $this->log->debug('rarus.bonus.server.users.transport.importNewUsers.finish');
     }
     /**
-     * @param BonusServer\Users\DTO\UserFilter|null     $userFilter
-     * @param BonusServer\Transport\DTO\Pagination|null $pagination
+     * @param BonusServer\Users\DTO\UserFilter     $userFilter
+     * @param BonusServer\Transport\DTO\Pagination $pagination
      *
      * @return BonusServer\Users\Transport\DTO\PaginationResponse
      * @throws BonusServer\Exceptions\ApiClientException

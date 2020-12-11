@@ -38,7 +38,7 @@ class Transport extends AbstractTransport
         );
 
         $requestResult = $this->apiClient->executeApiRequest(
-            sprintf('/organization/coupon/%s?full_info=%s', $couponId->getId(), $fullInfo),
+            sprintf('/organization/coupon/%s?full_info=%s', $couponId->getId(), (string)$fullInfo),
             RequestMethodInterface::METHOD_GET
         );
 

@@ -80,7 +80,7 @@ final class Manual
     /**
      * [Необязательный]. Дней до активации баллов. Если не передан берется из настроек организации
      *
-     * @var int|null;
+     * @var int|null
      */
     private $activationPeriod;
     /**

@@ -165,7 +165,8 @@ final class Refund extends AbstractTransaction
 
     /**
      * @param CouponId $couponId
-     * @return Sale
+     *
+     * @return Refund
      */
     public function setCouponId(CouponId $couponId): Refund
     {

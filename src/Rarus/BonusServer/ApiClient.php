@@ -26,7 +26,7 @@ class ApiClient
     /**
      * @var string user agent
      */
-    protected const API_USER_AGENT = 'rarus.bonus.server';
+    protected const API_USER_AGENT = 'RARUS.BONUS.SERVER';
 
     /**
      * @var GuzzleHttp\ClientInterface
@@ -227,7 +227,7 @@ class ApiClient
                 'Cache-Control' => 'no-cache',
                 'Content-type' => 'application/json; charset=utf-8',
                 'X-ENVIRONMENT-PHP-VERSION' => \PHP_VERSION,
-                'X-ENVIRONMENT-SDK-VERSION' => \strtolower(self::API_USER_AGENT . '-v' . self::SDK_VERSION),
+                'X-ENVIRONMENT-SDK-VERSION' => self::API_USER_AGENT . '-V' . self::SDK_VERSION,
             ],
         ];
 
@@ -317,14 +317,14 @@ class ApiClient
                     'message' => $exception->getMessage(),
                 ]
             );
-            throw new BonusServer\Exceptions\NetworkException($exception->getMessage(), $exception->getCode());
+            throw new BonusServer\Exceptions\NetworkException($exception->getMessage(), (int)$exception->getCode());
         } catch (\Throwable $unhandledException) {
             // произошла неизвестная ошибка
             $this->log->error(
                 'rarus.bonus.server.apiClient.unknown.error',
                 [
                     'type' => \get_class($unhandledException),
-                    'code' => $unhandledException->getCode(),
+                    'code' => (int)$unhandledException->getCode(),
                     'message' => $unhandledException->getMessage(),
                     'trace' => $unhandledException->getTrace(),
                 ]
@@ -332,7 +332,7 @@ class ApiClient
 
             throw new BonusServer\Exceptions\UnknownException(
                 'неизвестная ошибка: ' . $unhandledException->getMessage(),
-                $unhandledException->getCode()
+                (int)$unhandledException->getCode()
             );
         }
 

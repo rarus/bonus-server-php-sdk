@@ -28,8 +28,7 @@ class Card
             'barcode' => $card->getBarcode()->getCode(),
             'description' => $card->getDescription(),
             'last_transaction' => $card->getLastTransaction(),
-            'accum_sale_amount' => $card->getAccumSaleAmount() !== null ?
-                $card->getAccumSaleAmount()->getAmount() : null,
+            'accum_sale_amount' => $card->getAccumSaleAmount()->getAmount(),
             'date_last_transaction' => $card->getDateLastTransaction() !== null ?
                 $card->getDateLastTransaction()->format(\DATE_ATOM) : null,
             'userId' => $card->getUserId() !== null ?
@@ -83,8 +82,7 @@ class Card
             'phone' => $card->getPhone() ?? '',
             'email' => $card->getEmail() ?? '',
             'external_card' => $card->getExternalCardId() ?? 0,
-            'accum_sale_amount' => $card->getAccumSaleAmount() !== null ?
-                (int)$card->getAccumSaleAmount()->getAmount() : 0,
+            'accum_sale_amount' => (int)$card->getAccumSaleAmount()->getAmount(),
         ];
     }
 
