@@ -8,6 +8,7 @@ use Rarus\BonusServer\Cards\DTO\Card;
 use Rarus\BonusServer\Coupons\DTO\CouponId;
 use Rarus\BonusServer\Shops\DTO\ShopId;
 use Rarus\BonusServer\Transactions\DTO\ChequeRows\ChequeRowCollection;
+use Rarus\BonusServer\Transactions\DTO\PaymentTypes\PaymentTypeCollection;
 
 /**
  * Class Document
@@ -32,6 +33,14 @@ final class Document
      * @var CouponId|null
      */
     private $couponId;
+    /**
+     * @var \Rarus\BonusServer\Transactions\DTO\PaymentTypes\PaymentTypeCollection|null
+     */
+    private $paymentTypeCollection;
+    /**
+     * @var \Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection|null
+     */
+    private $certPaymentCollection;
 
     /**
      * @return null|Card
@@ -107,6 +116,44 @@ final class Document
     public function setCouponId(?CouponId $couponId): void
     {
         $this->couponId = $couponId;
+    }
+
+    /**
+     * @return \Rarus\BonusServer\Transactions\DTO\PaymentTypes\PaymentTypeCollection
+     */
+    public function getPaymentTypeCollection(): ?PaymentTypeCollection
+    {
+        return $this->paymentTypeCollection;
+    }
+
+    /**
+     * @param \Rarus\BonusServer\Transactions\DTO\PaymentTypes\PaymentTypeCollection $paymentTypeCollection
+     */
+    public function setPaymentTypeCollection(
+        PaymentTypeCollection $paymentTypeCollection
+    ): Document {
+        $this->paymentTypeCollection = $paymentTypeCollection;
+
+        return $this;
+    }
+
+    /**
+     * @return \Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection|null
+     */
+    public function getCertPaymentCollection(): ?\Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection
+    {
+        return $this->certPaymentCollection;
+    }
+
+    /**
+     * @param \Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection|null $certPaymentCollection
+     */
+    public function setCertPaymentCollection(
+        ?\Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection $certPaymentCollection
+    ): Document {
+        $this->certPaymentCollection = $certPaymentCollection;
+
+        return $this;
     }
 
 }

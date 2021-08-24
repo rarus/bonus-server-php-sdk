@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Rarus\BonusServer\Discounts\Transport\Role\Organization\Transport;
 
+use Money\Money;
 use PHPUnit\Framework\TestCase;
 use Rarus\BonusServer\Cards;
+use Rarus\BonusServer\Certificates\DTO\CertificateId;
 use Rarus\BonusServer\Shops;
 use Rarus\BonusServer\Users;
 use Rarus\BonusServer\Transactions;
@@ -68,9 +70,23 @@ class TransportTest extends TestCase
 
         // табличная часть транзакции
         $discountDocument = new Discounts\DTO\Document();
+
+        // Оплата сертификатом
+        $paymentTypeCollection = new Transactions\DTO\PaymentTypes\PaymentTypeCollection();
+        $paymentType = Transactions\DTO\PaymentTypes\Fabric::getCertificate()->setSum(new Money(1000, \TestEnvironmentManager::getDefaultCurrency()));
+        $paymentTypeCollection->attach($paymentType);
+
+        // Данные по сертификату
+        $certificatePaymentCollection = new Transactions\DTO\CertPayments\CertPaymentCollection();
+        $certificatePayment = new Transactions\DTO\CertPayments\CertPayment();
+        $certificatePayment->setLineNumber(1)->setCertificateId(new CertificateId('CERT-1000'))->setSum(new Money(1000, \TestEnvironmentManager::getDefaultCurrency()));
+        $certificatePaymentCollection->attach($certificatePayment);
+
         $discountDocument
             ->setShopId($shop->getShopId())
             ->setCard($card)
+            ->setPaymentTypeCollection($paymentTypeCollection)
+            ->setCertPaymentCollection($certificatePaymentCollection)
             ->setChequeRows(\DemoDataGenerator::createChequeRows(random_int(1, 20), \TestEnvironmentManager::getDefaultCurrency()));
 
         $estimate = $this->discountTransport->calculateDiscounts($discountDocument);

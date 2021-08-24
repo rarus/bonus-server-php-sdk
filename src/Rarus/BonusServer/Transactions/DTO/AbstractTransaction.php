@@ -11,6 +11,7 @@ use Rarus\BonusServer\Shops\DTO\ShopId;
 use Rarus\BonusServer\Transactions\DTO\CashRegister\CashRegister;
 use Rarus\BonusServer\Transactions\DTO\ChequeRows\ChequeRowCollection;
 use Rarus\BonusServer\Transactions\DTO\Document\Document;
+use Rarus\BonusServer\Transactions\DTO\PaymentTypes\PaymentTypeCollection;
 use Rarus\BonusServer\Transactions\DTO\Type\Type;
 
 /**
@@ -64,6 +65,14 @@ abstract class AbstractTransaction
      * @var DiscountItemCollection|null
      */
     protected $discountItemCollection;
+    /**
+     * @var \Rarus\BonusServer\Transactions\DTO\PaymentTypes\PaymentTypeCollection|null
+     */
+    protected $paymentTypeCollection;
+    /**
+     * @var \Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection|null
+     */
+    protected $certPaymentCollection;
 
     /**
      * @return string
@@ -160,5 +169,37 @@ abstract class AbstractTransaction
     {
         $this->discountItemCollection = $discountItemCollection;
     }
+    /**
+     * @return \Rarus\BonusServer\Transactions\DTO\PaymentTypes\PaymentTypeCollection
+     */
+    public function getPaymentTypeCollection(): ?PaymentTypeCollection
+    {
+        return $this->paymentTypeCollection;
+    }
 
+    /**
+     * @param \Rarus\BonusServer\Transactions\DTO\PaymentTypes\PaymentTypeCollection $paymentTypeCollection
+     */
+    public function setPaymentTypeCollection(
+        PaymentTypeCollection $paymentTypeCollection
+    ): void {
+        $this->paymentTypeCollection = $paymentTypeCollection;
+    }
+
+    /**
+     * @return \Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection|null
+     */
+    public function getCertPaymentCollection(): ?\Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection
+    {
+        return $this->certPaymentCollection;
+    }
+
+    /**
+     * @param \Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection|null $certPaymentCollection
+     */
+    public function setCertPaymentCollection(
+        ?\Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection $certPaymentCollection
+    ): void {
+        $this->certPaymentCollection = $certPaymentCollection;
+    }
 }
