@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Rarus\BonusServer\Discounts\Formatters;
 
 use Rarus\BonusServer\Discounts;
+use Rarus\BonusServer\Transactions\Formatters\CertPayment;
 use Rarus\BonusServer\Transactions\Formatters\ChequeRow;
+use Rarus\BonusServer\Transactions\Formatters\PaymentType;
 
 /**
  * Class Document
@@ -27,9 +29,25 @@ class Document
             $arChequeItems[] = ChequeRow::toArray($chequeRow);
         }
 
+        $arPaymentTypes = [];
+        if ($discountDocument->getPaymentTypeCollection()) {
+            foreach ($discountDocument->getPaymentTypeCollection() as $paymentType) {
+                $arPaymentTypes[] = PaymentType::toArray($paymentType);
+            }
+        }
+
+        $arCertPayments = [];
+        if ($discountDocument->getCertPaymentCollection()) {
+            foreach ($discountDocument->getCertPaymentCollection() as $certPayment) {
+                $arCertPayments[] = CertPayment::toArray($certPayment);
+            }
+        }
+
         $arResult = [
             'shop_id' => $discountDocument->getShopId()->getId(),
             'cheque_items' => $arChequeItems,
+            'payment_types' => $arPaymentTypes,
+            'cert_payments' => $arCertPayments,
         ];
 
         if ($discountDocument->getCard() !== null) {

@@ -35,6 +35,20 @@ class Sale
             }
         }
 
+        $arPaymentTypes = [];
+        if ($saleTrx->getPaymentTypeCollection()) {
+            foreach ($saleTrx->getPaymentTypeCollection() as $paymentType) {
+                $arPaymentTypes[] = PaymentType::toArray($paymentType);
+            }
+        }
+
+        $arCertPayments = [];
+        if ($saleTrx->getCertPaymentCollection()) {
+            foreach ($saleTrx->getCertPaymentCollection() as $certPayment) {
+                $arCertPayments[] = CertPayment::toArray($certPayment);
+            }
+        }
+
         return [
             'operation_type' => 'sale',
             'level_up'       => true,
@@ -50,7 +64,9 @@ class Sale
             'bonus_payment'  => $saleTrx->getBonusPayment(),
             'cheque_items'   => $arChequeItems,
             'cheque_bonus'   => $arChequeBonus,
-            'coupon'         => $saleTrx->getCouponId() ? $saleTrx->getCouponId()->getId() : ''
+            'coupon'         => $saleTrx->getCouponId() ? $saleTrx->getCouponId()->getId() : '',
+            'payment_types'  => $arPaymentTypes,
+            'cert_payments'  => $arCertPayments,
         ];
     }
 }
