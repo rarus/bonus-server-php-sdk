@@ -33,6 +33,14 @@ class UserFilter
      * @var string|null
      */
     protected $login;
+    /**
+     * @var string|null
+     */
+    protected $email;
+    /**
+     * @var string|null
+     */
+    protected $phone;
 
     /**
      * @return Gender
@@ -106,5 +114,37 @@ class UserFilter
     public function setLogin(string $login): void
     {
         $this->login = $login;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string|null $email
+     */
+    public function setEmail(?string $email): void
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @param string|null $phone
+     */
+    public function setPhone(?string $phone): void
+    {
+        $this->phone = $phone;
     }
 }

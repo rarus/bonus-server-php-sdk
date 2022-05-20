@@ -36,6 +36,12 @@ class UserFilter
         if ($UserFilter->getLogin() !== '') {
             $arFilter['login'] = $UserFilter->getLogin();
         }
+        if ($UserFilter->getEmail() !== '') {
+            $arFilter['email'] = $UserFilter->getEmail();
+        }
+        if ($UserFilter->getPhone() !== '') {
+            $arFilter['phone'] = $UserFilter->getPhone();
+        }
 
         return http_build_query($arFilter);
     }
