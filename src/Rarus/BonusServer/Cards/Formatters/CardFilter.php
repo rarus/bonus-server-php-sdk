@@ -43,7 +43,7 @@ class CardFilter
             $arFilter['blocked'] = $cardFilter->getBlocked();
         }
         if ($cardFilter->getUserId()) {
-            $arFilter['user_id'] = $cardFilter->getUserId();
+            $arFilter['user_id'] = $cardFilter->getUserId()->getId();
         }
         if ($cardFilter->getSearchValue() !== '') {
             $arFilter['card_filter'] = $cardFilter->getSearchValue();
