@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Rarus\BonusServer\Transactions\DTO\Operations;
 
 use Money\Currency;
-use Money\Money;
 use Rarus\BonusServer\Shops\DTO\ShopId;
 use Rarus\BonusServer\Transactions;
+use Rarus\BonusServer\Util\MoneyParser;
 
 /**
  * Class Fabric
@@ -36,9 +36,9 @@ class Fabric
             ->setShopId(new ShopId($arResponse['shop_id']))
             ->setShopName((string)$arResponse['shop_name'])
             ->setShopAddress((string)$arResponse['shop_address'])
-            ->setChequeSum(new Money($arResponse['check_sum'], $currency))
-            ->setBonusAccrued(new Money($arResponse['bonus_accured'], $currency))
-            ->setBonusCanceled(new Money($arResponse['bonus_canceled'], $currency))
+            ->setChequeSum(MoneyParser::parseFloat($arResponse['check_sum'], $currency))
+            ->setBonusAccrued(MoneyParser::parseFloat($arResponse['bonus_accured'], $currency))
+            ->setBonusCanceled(MoneyParser::parseFloat($arResponse['bonus_canceled'], $currency))
             ->setCashRegisterName((string)$arResponse['cashbox'])
             ->setChequeNumber((string)$arResponse['check_number']);
 
