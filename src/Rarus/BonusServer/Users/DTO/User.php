@@ -21,7 +21,7 @@ final class User
      */
     private $userId;
     /**
-     * @var string|null Логин пользоватля
+     * @var string|null Логин пользователя
      */
     private $login;
     /**
@@ -45,7 +45,7 @@ final class User
      */
     private $gender;
     /**
-     * @var string Ссылка изображению польовтеля
+     * @var string Ссылка изображению пользователя
      */
     private $imageUrl;
     /**
@@ -61,7 +61,7 @@ final class User
      */
     private $receiveNotifications;
     /**
-     * @var CardCollection
+     * @var CardCollection | null
      */
     private $cardCollection;
 

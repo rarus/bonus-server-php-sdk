@@ -43,7 +43,7 @@ class Article
      */
     private $deleted;
     /**
-     * @var ArticlePropertyCollection
+     * @var ArticlePropertyCollection|null
      */
     private $propertyCollection;
     /**
@@ -114,6 +114,8 @@ class Article
 
     /**
      * @param string $description
+     *
+     * @return \Rarus\BonusServer\Articles\DTO\Article
      */
     public function setDescription(string $description): Article
     {
@@ -132,6 +134,8 @@ class Article
 
     /**
      * @param bool $isGroup
+     *
+     * @return \Rarus\BonusServer\Articles\DTO\Article
      */
     public function setIsGroup(bool $isGroup): Article
     {
@@ -150,6 +154,8 @@ class Article
 
     /**
      * @param bool $uploadMobile
+     *
+     * @return \Rarus\BonusServer\Articles\DTO\Article
      */
     public function setUploadMobile(bool $uploadMobile): Article
     {
@@ -168,6 +174,8 @@ class Article
 
     /**
      * @param bool $deleted
+     *
+     * @return \Rarus\BonusServer\Articles\DTO\Article
      */
     public function setDeleted(bool $deleted): Article
     {
@@ -186,6 +194,8 @@ class Article
 
     /**
      * @param ArticlePropertyCollection $propertyCollection
+     *
+     * @return \Rarus\BonusServer\Articles\DTO\Article
      */
     public function setPropertyCollection(ArticlePropertyCollection $propertyCollection): Article
     {
