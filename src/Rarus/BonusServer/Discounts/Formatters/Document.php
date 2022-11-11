@@ -60,6 +60,10 @@ class Document
             $arResult['coupon'] = $discountDocument->getCouponId()->getId();
         }
 
+        if (!empty($discountDocument->getBonusPayment())) {
+            $arResult['bonus_payment'] = $discountDocument->getBonusPayment();
+        }
+
         return $arResult;
     }
 }

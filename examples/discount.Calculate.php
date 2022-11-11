@@ -32,6 +32,7 @@ $discountDocument = new Discounts\DTO\Document();
 $discountDocument
     ->setShopId($shop->getShopId())
     ->setCard($card)
+    ->setBonusPayment(10)
     ->setChequeRows(DemoDataGenerator::createChequeRows(random_int(1, 20), new \Money\Currency('RUB')));
 
 print('документ для предрасчёта скидок:' . PHP_EOL);

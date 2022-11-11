@@ -7,6 +7,7 @@ namespace Rarus\BonusServer\Discounts\DTO;
 use Rarus\BonusServer\Cards\DTO\Card;
 use Rarus\BonusServer\Coupons\DTO\CouponId;
 use Rarus\BonusServer\Shops\DTO\ShopId;
+use Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection;
 use Rarus\BonusServer\Transactions\DTO\ChequeRows\ChequeRowCollection;
 use Rarus\BonusServer\Transactions\DTO\PaymentTypes\PaymentTypeCollection;
 
@@ -33,6 +34,10 @@ final class Document
      * @var CouponId|null
      */
     private $couponId;
+    /**
+     * @var int|null
+     */
+    private $bonusPayment;
     /**
      * @var \Rarus\BonusServer\Transactions\DTO\PaymentTypes\PaymentTypeCollection|null
      */
@@ -140,20 +145,40 @@ final class Document
     /**
      * @return \Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection|null
      */
-    public function getCertPaymentCollection(): ?\Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection
+    public function getCertPaymentCollection(): ?CertPaymentCollection
     {
         return $this->certPaymentCollection;
     }
 
     /**
      * @param \Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection|null $certPaymentCollection
+     *
+     * @return \Rarus\BonusServer\Discounts\DTO\Document
      */
     public function setCertPaymentCollection(
-        ?\Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection $certPaymentCollection
+        ?CertPaymentCollection $certPaymentCollection
     ): Document {
         $this->certPaymentCollection = $certPaymentCollection;
 
         return $this;
     }
 
+    /**
+     * @param int|null $bonusPayment
+     *
+     * @return Document
+     */
+    public function setBonusPayment(?int $bonusPayment): Document
+    {
+        $this->bonusPayment = $bonusPayment;
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getBonusPayment(): ?int
+    {
+        return $this->bonusPayment;
+    }
 }
