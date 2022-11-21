@@ -36,6 +36,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
                 RequestMethodInterface::METHOD_POST,
                 Discounts\Formatters\Document::toArray($discountDocument)
             );
+
             $estimate = Discounts\DTO\Fabric::initEstimateFromServerResponse($this->getDefaultCurrency(), $requestResult);
             $this->log->debug('rarus.bonus.server.Discounts.transport.calculateDiscounts.finish', [
                 'documentItemsCount' => $estimate->getDocumentItems()->count(),
@@ -52,7 +53,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
     }
 
     /**
-     * Метод вызывается для рассчёта скидки на товар для вывода на витрине. При вызове выполняется расчет суммовых и подарочных скидок.
+     * Метод вызывается для расчёта скидки на товар для вывода на витрине. При вызове выполняется расчет суммовых и подарочных скидок.
      * Метод возвращает список примененных к строкам чека скидок и рассчитанный документ, производится рассчёт бонусных скидок
      *
      * @param Discounts\DTO\Document $discountDocument

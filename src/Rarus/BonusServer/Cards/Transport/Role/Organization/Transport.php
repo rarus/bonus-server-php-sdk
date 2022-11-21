@@ -23,23 +23,27 @@ class Transport extends BonusServer\Transport\AbstractTransport
      * @param null|BonusServer\Transactions\DTO\ChequeRows\ChequeRowCollection $chequeRowCollection
      *
      * @param int|null                                                         $bonusPayment
+     * @param \Rarus\BonusServer\Coupons\DTO\CouponId|null                     $couponId
      *
      * @return BonusServer\Cards\DTO\Balance\PaymentBalance
-     * @throws BonusServer\Exceptions\ApiClientException
-     * @throws BonusServer\Exceptions\NetworkException
-     * @throws BonusServer\Exceptions\UnknownException
+     * @throws \Rarus\BonusServer\Exceptions\ApiClientException
+     * @throws \Rarus\BonusServer\Exceptions\NetworkException
+     * @throws \Rarus\BonusServer\Exceptions\UnknownException
      */
     public function getPaymentBalance(
         BonusServer\Shops\DTO\ShopId $shopId,
         BonusServer\Cards\DTO\Card $card,
         ?BonusServer\Transactions\DTO\ChequeRows\ChequeRowCollection $chequeRowCollection = null,
-        ?int $bonusPayment = null
+        ?int $bonusPayment = null,
+        ?BonusServer\Coupons\DTO\CouponId $couponId = null
     ): BonusServer\Cards\DTO\Balance\PaymentBalance
     {
         $this->log->debug('rarus.bonus.server.cards.transport.organization.getPaymentBalance.start', [
             'shopId' => $shopId->getId(),
             'cardId' => $card->getCardId()->getId(),
             'cardBarcode' => $card->getBarcode()->getCode(),
+            'bonusPayment' => $bonusPayment,
+            'coupon' => $couponId ? $couponId->getId() : '',
         ]);
 
         // есть ли табличная часть чека?
@@ -58,7 +62,8 @@ class Transport extends BonusServer\Transport\AbstractTransport
                 'card_barcode' => $card->getBarcode()->getCode(),
                 'shop_id' => $shopId->getId(),
                 'cheque_items' => $arChequeRows,
-                'bonus_payment' => $bonusPayment
+                'bonus_payment' => $bonusPayment,
+                'coupon' => $couponId ? $couponId->getId(): null
             ]
         );
 

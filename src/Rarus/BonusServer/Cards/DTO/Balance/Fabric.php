@@ -51,11 +51,7 @@ class Fabric
             ->setCardLevelId(new LevelId((string)$arPaymentBalance['card_level_id']))
             ->setAvailableBalance($moneyParser->parse((string)$arPaymentBalance['balance_available'], $currency->getCode()));
 
-        if ($arPaymentBalance['max_payment'] === 0) {
-            $paymentBalance->setPaymentBalance($paymentBalance->getAvailableBalance());
-        } else {
-            $paymentBalance->setPaymentBalance($moneyParser->parse((string)$arPaymentBalance['max_payment'], $currency->getCode()));
-        }
+        $paymentBalance->setPaymentBalance($moneyParser->parse((string)$arPaymentBalance['max_payment'], $currency->getCode()));
 
         if ($arPaymentBalance['master_card_id'] !== '') {
             $paymentBalance->setMastercardId(new Cards\DTO\CardId((string)$arPaymentBalance['master_card_id']));
