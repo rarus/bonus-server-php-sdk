@@ -63,7 +63,7 @@ class TransportTest extends TestCase
         $newUser = \DemoDataGenerator::createNewUser();
         // пробуем его добавить
         $user = $this->userTransport->addNewUser($newUser);
-        $this->assertEquals('ivlean@rarus.ru', $user->getEmail());
+        $this->assertEquals($newUser->getEmail(), $user->getEmail());
         $this->assertEquals($newUser->getBirthdate()->format('d.m.Y H:i:s'), $user->getBirthdate()->format('d.m.Y H:i:s'));
     }
 
@@ -180,9 +180,6 @@ class TransportTest extends TestCase
             $newUserCardCollection = new Cards\DTO\CardCollection();
             $newUserCardCollection->attach($card);
 
-            $user->setUserId(new UserId(md5('Login')));
-            $user->setLogin('Login');
-            $user->setPhone('79000000001');
             $user->setName('testImportNewUsersAndCards8');
             $user->setCardCollection($newUserCardCollection);
         }
@@ -227,7 +224,7 @@ class TransportTest extends TestCase
             'ivlean-' . $userUUID,
             'Ивлев Андрей | ' . $userUUID,
             '+7 900 000 00 00',
-            'ivlean@rarus.ru'
+            sprintf('ivlean-%s@rarus.ru', $userUUID)
         );
         $this->userTransport->addNewUser($newUser);
 

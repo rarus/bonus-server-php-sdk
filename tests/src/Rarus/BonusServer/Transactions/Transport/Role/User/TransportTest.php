@@ -52,19 +52,7 @@ class TransportTest extends TestCase
         $userPassword = sha1('12345');
         $userUid = 'grishi-uid-' . random_int(0, PHP_INT_MAX);
         $newUsersCollection = new Users\DTO\UserCollection();
-        $newUsersCollection->attach(
-            Users\DTO\Fabric::createNewInstance(
-                $userUid,
-                'Михаил Гришин (импорт)',
-                '+7978 888 22 22',
-                'grishi@rarus.ru',
-                null,
-                null,
-                $userPassword,
-                new Users\DTO\UserId($userUid),
-                Users\DTO\Status\Fabric::initDefaultStatusForNewUser()
-            )
-        );
+        $newUsersCollection->attach(\DemoDataGenerator::createNewUserWithUserUidAndPassword($userUid, $userPassword));
         $this->userTransport->importNewUsers($newUsersCollection);
 
         // привязываем карту к пользователю

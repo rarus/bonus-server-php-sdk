@@ -1,4 +1,4 @@
-# rarus-bonus-server-php-sdk [![Build Status](https://travis-ci.org/rarus/bonus-server-php-sdk.svg?branch=master)](https://travis-ci.org/rarus/bonus-server-php-sdk)
+# rarus-bonus-server-php-sdk
 # Архитектура
 * Библиотека предоставляет сущности бонусного сервера в виде объектов.
 * Обмен данными по сети осуществляется через транспорты, для каждой сущности он свой.

@@ -159,7 +159,7 @@ class DemoDataGenerator
             $userUid,
             'Михаил Гришин | ' . $userUUID,
             '+79788882222',
-            'grishi@rarus.ru',
+            "grishi-$userUUID@rarus.ru",
             null,
             null,
             $userPasswordHash,
@@ -180,7 +180,7 @@ class DemoDataGenerator
             'ivlean-' . $userUUID,
             'Ивлев Андрей | ' . $userUUID,
             '+7900 000 00 00',
-            'ivlean@rarus.ru',
+            sprintf('ivlean-%s@rarus.ru', $userUUID),
             Users\DTO\Gender\Fabric::getMale(),
             new DateTime('27.08.2018 00:00:00', \TestEnvironmentManager::getDefaultTimezone())
         );
@@ -198,7 +198,7 @@ class DemoDataGenerator
             'grishi-' . $userUUID,
             'Михаил Гришин | ' . $userUUID,
             '+7978 888 22 22',
-            'grishi@rarus.ru',
+            "grishi-$userUUID@rarus.ru",
             Users\DTO\Gender\Fabric::getMale(),
             new DateTime('06.08.1995 00:00:00', \TestEnvironmentManager::getDefaultTimezone())
         );
@@ -216,7 +216,7 @@ class DemoDataGenerator
             'grishi-' . $userUUID,
             'Михаил Гришин | ' . $userUUID,
             '+7978 888 22 22',
-            'grishi@rarus.ru',
+            "grishi-$userUUID@rarus.ru",
             Users\DTO\Gender\Fabric::getMale(),
             new DateTime('now', \TestEnvironmentManager::getDefaultTimezone())
         );
@@ -234,7 +234,7 @@ class DemoDataGenerator
             'grishi-' . $userUUID,
             'Михаил Гришин | ' . $userUUID,
             '+7978 888 22 22',
-            'grishi@rarus.ru',
+            "grishi-$userUUID@rarus.ru",
             Users\DTO\Gender\Fabric::getMale(),
             new DateTime('06.01.1995 00:00:00', \TestEnvironmentManager::getDefaultTimezone())
         );
@@ -252,7 +252,7 @@ class DemoDataGenerator
             'grishi-' . $userUUID,
             'Михаил Гришин | ' . $userUUID,
             '+7978 888 22 22',
-            'grishi@rarus.ru',
+            "grishi-$userUUID@rarus.ru",
             Users\DTO\Gender\Fabric::getMale()
         );
     }

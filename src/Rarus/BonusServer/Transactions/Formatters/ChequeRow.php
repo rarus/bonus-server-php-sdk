@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rarus\BonusServer\Transactions\Formatters;
 
 use Rarus\BonusServer\Transactions;
+use Rarus\BonusServer\Util\MoneyParser;
 
 /**
  * Class ChequeRow
@@ -25,9 +26,9 @@ class ChequeRow
             'article' => $chequeRow->getArticleId()->getId(),
             'name' => $chequeRow->getName(),
             'quantity' => $chequeRow->getQuantity(),
-            'price' => (int)$chequeRow->getPrice()->getAmount(),
-            'summ' => (int)$chequeRow->getSum()->getAmount(),
-            'discount_summ' => (int)$chequeRow->getDiscount()->getAmount(),
+            'price' => (float)MoneyParser::convertMoneyToString($chequeRow->getPrice()),
+            'summ' => (float)MoneyParser::convertMoneyToString($chequeRow->getSum()),
+            'discount_summ' => (float)MoneyParser::convertMoneyToString($chequeRow->getDiscount()),
         ];
     }
 }
