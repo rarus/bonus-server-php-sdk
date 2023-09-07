@@ -8,7 +8,11 @@ use Money\Money;
 use PHPUnit\Framework\TestCase;
 use Rarus\BonusServer\Cards;
 use Rarus\BonusServer\Certificates\DTO\CertificateId;
+use Rarus\BonusServer\Exceptions\ApiClientException;
+use Rarus\BonusServer\Exceptions\NetworkException;
+use Rarus\BonusServer\Exceptions\UnknownException;
 use Rarus\BonusServer\Shops;
+use Rarus\BonusServer\Transport\DTO\Pagination;
 use Rarus\BonusServer\Users;
 use Rarus\BonusServer\Transactions;
 use Rarus\BonusServer\Discounts;
@@ -99,6 +103,34 @@ class TransportTest extends TestCase
         }
 
         $this->shopTransport->delete($shop);
+    }
+
+    public function testGetByFilter(): void
+    {
+        $discountFilter = new Discounts\DTO\DiscountFilter();
+
+        $pagination = new Pagination();
+        $discounts = $this->discountTransport->getByFilter($discountFilter, $pagination);
+
+        $this->assertGreaterThan(-1, $discounts->getDiscountCollection()->count());
+    }
+
+    /**
+     * @throws ApiClientException
+     * @throws UnknownException
+     * @throws NetworkException
+     */
+    public function testGetById(): void
+    {
+        $discountFilter = new Discounts\DTO\DiscountFilter();
+
+        $pagination = new Pagination();
+        $discounts = $this->discountTransport->getByFilter($discountFilter, $pagination);
+
+        $discountId = $discounts->getDiscountCollection()->current()->getId();
+        $discount = $this->discountTransport->getById(new Discounts\DTO\DiscountId($discountId), true);
+
+        $this->assertEquals($discountId, $discount->getId());
     }
 
     /**
