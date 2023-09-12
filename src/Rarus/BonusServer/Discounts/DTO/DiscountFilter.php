@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rarus\BonusServer\Discounts\DTO;
 
+use DateTime;
 use Rarus\BonusServer\Shops\DTO\ShopId;
 
 final class DiscountFilter
@@ -13,11 +14,11 @@ final class DiscountFilter
      */
     private $groupId;
     /**
-     * @var \DateTime|null
+     * @var DateTime|null
      */
     private $dateFrom;
     /**
-     * @var \DateTime|null
+     * @var DateTime|null
      */
     private $dateTo;
     /**
@@ -68,17 +69,17 @@ final class DiscountFilter
     }
 
     /**
-     * @return \DateTime|null
+     * @return DateTime|null
      */
-    public function getDateFrom(): ?\DateTime
+    public function getDateFrom(): ?DateTime
     {
         return $this->dateFrom;
     }
 
     /**
-     * @param \DateTime|null $dateFrom
+     * @param DateTime|null $dateFrom
      */
-    public function setDateFrom(?\DateTime $dateFrom): self
+    public function setDateFrom(?DateTime $dateFrom): self
     {
         $this->dateFrom = $dateFrom;
 
@@ -86,17 +87,17 @@ final class DiscountFilter
     }
 
     /**
-     * @return \DateTime|null
+     * @return DateTime|null
      */
-    public function getDateTo(): ?\DateTime
+    public function getDateTo(): ?DateTime
     {
         return $this->dateTo;
     }
 
     /**
-     * @param \DateTime|null $dateTo
+     * @param DateTime|null $dateTo
      */
-    public function setDateTo(?\DateTime $dateTo): self
+    public function setDateTo(?DateTime $dateTo): self
     {
         $this->dateTo = $dateTo;
 
@@ -104,7 +105,7 @@ final class DiscountFilter
     }
 
     /**
-     * @return bool|null
+     * @return ShopId|null
      */
     public function getShopId(): ?ShopId
     {

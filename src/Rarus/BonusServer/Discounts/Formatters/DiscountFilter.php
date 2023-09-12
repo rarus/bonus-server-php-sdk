@@ -42,9 +42,7 @@ final class DiscountFilter
             $arFilter['function'] = $discountFilter->getFunction();
         }
 
-        if (!empty($discountFilter->getUploadToBitrix())) {
-            $arFilter['upload_to_bitrix24'] = $discountFilter->getUploadToBitrix() ? 'true' : 'false';
-        }
+        $arFilter['upload_to_bitrix24'] = $discountFilter->getUploadToBitrix() ? 'true' : 'false';
 
         if (!empty($discountFilter->getIsManual())) {
             $arFilter['ismanual'] = $discountFilter->getIsManual();
