@@ -21,6 +21,10 @@ class Article
     /**
      * @var string
      */
+    private $article;
+    /**
+     * @var string
+     */
     private $name;
     /**
      * @var ArticleId Идентификатор родительской группы. Если не передан - ассортимент создается в корне дерева
@@ -234,4 +238,21 @@ class Article
         return $this->image;
     }
 
+    /**
+     * @return string
+     */
+    public function getArticle(): string
+    {
+        return $this->article;
+    }
+
+    /**
+     * @param string $article
+     * @return Article
+     */
+    public function setArticle(string $article): Article
+    {
+        $this->article = $article;
+        return $this;
+    }
 }

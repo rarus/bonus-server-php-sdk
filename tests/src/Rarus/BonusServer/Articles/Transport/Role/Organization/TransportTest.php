@@ -10,15 +10,15 @@ use Rarus\BonusServer\Articles\DTO\Article;
 use Rarus\BonusServer\Articles\DTO\ArticleCollection;
 use Rarus\BonusServer\Articles\DTO\ArticleFilter;
 use Rarus\BonusServer\Articles\DTO\ArticleId;
+use Rarus\BonusServer\Articles\DTO\ArticleSegmentFilter;
 use Rarus\BonusServer\Articles\DTO\Property\ArticleProperty;
 use Rarus\BonusServer\Articles\DTO\Property\ArticlePropertyCollection;
 use Rarus\BonusServer\Articles\DTO\Property\ArticlePropertyId;
+use Rarus\BonusServer\Articles\DTO\ArticleSegmentFilterProperty;
 use Rarus\BonusServer\Articles\Transport\Role\Organization\Fabric;
 use Rarus\BonusServer\Exceptions\ApiClientException;
 use Rarus\BonusServer\Exceptions\NetworkException;
 use Rarus\BonusServer\Exceptions\UnknownException;
-use Rarus\BonusServer\Segments\DTO\Segment;
-use Rarus\BonusServer\Transactions\DTO\Products\ProductRowCollection;
 use Rarus\BonusServer\Transport\DTO\Pagination;
 
 /**
@@ -124,6 +124,21 @@ class TransportTest extends TestCase
         $articleCollection = $this->articleTransport->list($articleFilter, new Pagination());
 
         $this->assertGreaterThanOrEqual(2, $articleCollection->getPagination()->getResultItemsCount());
+    }
+
+    /**
+     * @throws ApiClientException
+     * @throws NetworkException
+     * @throws UnknownException
+     */
+    public function testGetAssortmentSegment(): void
+    {
+        $filter = new ArticleSegmentFilter();
+        $propertyValue = new ArticleSegmentFilterProperty(null, (string)20, '=');
+        $filter->setParentIdHierarchy($propertyValue);
+
+        $assortment = $this->articleTransport->getBySegmentFilter($filter, new Pagination());
+        $this->assertGreaterThan(-1, $assortment->getArticleCollection()->count());
     }
 
     /**
