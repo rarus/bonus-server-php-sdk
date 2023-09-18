@@ -42,8 +42,13 @@ final class DiscountCondition
     /** @var int */
     private $sort;
 
-    /** @var string */
+    /** @var string|null */
     private $assortment_group_id;
+
+    /**
+     * @var array|null
+     */
+    private $hours;
 
     /**
      * @return int
@@ -262,22 +267,38 @@ final class DiscountCondition
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getAssortmentGroupId(): string
+    public function getAssortmentGroupId(): ?string
     {
         return $this->assortment_group_id;
     }
 
     /**
-     * @param string $assortment_group_id
+     * @param string|null $assortment_group_id
      * @return DiscountCondition
      */
-    public function setAssortmentGroupId(string $assortment_group_id): DiscountCondition
+    public function setAssortmentGroupId(?string $assortment_group_id): DiscountCondition
     {
         $this->assortment_group_id = $assortment_group_id;
         return $this;
     }
 
+    /**
+     * @return array|null
+     */
+    public function getHours(): ?array
+    {
+        return $this->hours;
+    }
 
+    /**
+     * @param array|null $hours
+     * @return DiscountCondition
+     */
+    public function setHours(?array $hours): DiscountCondition
+    {
+        $this->hours = $hours;
+        return $this;
+    }
 }

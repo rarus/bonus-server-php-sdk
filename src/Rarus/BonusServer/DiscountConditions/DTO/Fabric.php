@@ -16,7 +16,9 @@ final class Fabric
 
         foreach ($data as $key => $value) {
             $setterMethod = 'set' . ucfirst(Utils::snakeToCamel($key));
-
+            if ($key === '1..7') {
+                $setterMethod = 'setHours';
+            }
             if (method_exists($dto, $setterMethod)) {
                 try {
                     $dto->$setterMethod($value);
