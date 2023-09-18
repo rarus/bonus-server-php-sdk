@@ -161,12 +161,14 @@ class Transport extends AbstractTransport
         $requestResult = $this->apiClient->executeApiRequest(
             '/organization/assortment_segment/get_assortment',
             RequestMethodInterface::METHOD_POST,
-            [
-                'filter_full' => [\Rarus\BonusServer\Articles\Formatters\ArticleFilter::toArrayArticleSegmentFilter($assortmentSegmentFilter)],
-                'page' => $pagination->getPageNumber(),
-                'per_page' => $pagination->getPageSize(),
-                'calculate_count' => true,
-            ]
+            array_merge(
+                \Rarus\BonusServer\Articles\Formatters\ArticleFilter::toArrayArticleSegmentFilter($assortmentSegmentFilter),
+                [
+                    'page' => $pagination->getPageNumber(),
+                    'per_page' => $pagination->getPageSize(),
+                    'calculate_count' => true,
+                ]
+            )
         );
 
         $articleCollection = new ArticleCollection();

@@ -45,10 +45,13 @@ class ArticleFilter
 
     public static function toArrayArticleSegmentFilter(ArticleSegmentFilter $assortmentSegmentFilter): array
     {
-        $arFilter = [];
+        $arFilter = [
+            'filter_full' => null,
+        ];
+        $arFullFilter = [];
 
         if (!empty($assortmentSegmentFilter->getPropertyValue())) {
-            $arFilter['property_value'] = [
+            $arFullFilter['property_value'] = [
                 'id' => $assortmentSegmentFilter->getPropertyValue()->getId() ?? '',
                 'value' => $assortmentSegmentFilter->getPropertyValue()->getValue(),
                 'operator' => $assortmentSegmentFilter->getPropertyValue()->getOperator(),
@@ -56,31 +59,47 @@ class ArticleFilter
         }
 
         if (!empty($assortmentSegmentFilter->getParentId())) {
-            $arFilter['parent_id'] = [
+            $arFullFilter['parent_id'] = [
                 'value' => $assortmentSegmentFilter->getParentId()->getValue(),
                 'operator' => $assortmentSegmentFilter->getParentId()->getOperator(),
             ];
         }
 
         if (!empty($assortmentSegmentFilter->getParentIdHierarchy())) {
-            $arFilter['parent_id_hierarchy'] = [
+            $arFullFilter['parent_id_hierarchy'] = [
                 'value' => $assortmentSegmentFilter->getParentIdHierarchy()->getValue(),
                 'operator' => $assortmentSegmentFilter->getParentIdHierarchy()->getOperator(),
             ];
         }
 
         if (!empty($assortmentSegmentFilter->getIncludedInSegment())) {
-            $arFilter['included_in_segment'] = [
+            $arFullFilter['included_in_segment'] = [
                 'value' => $assortmentSegmentFilter->getIncludedInSegment()->getValue(),
                 'operator' => $assortmentSegmentFilter->getIncludedInSegment()->getOperator(),
             ];
         }
 
         if (!empty($assortmentSegmentFilter->getExcludedInSegment())) {
-            $arFilter['excluded_in_segment'] = [
+            $arFullFilter['excluded_in_segment'] = [
                 'value' => $assortmentSegmentFilter->getExcludedInSegment()->getValue(),
                 'operator' => $assortmentSegmentFilter->getExcludedInSegment()->getOperator(),
             ];
+        }
+
+        if (!empty($arFullFilter)) {
+            $arFilter['filter_full'] = [$arFullFilter];
+        }
+
+        if (!empty($assortmentSegmentFilter->getIncludedInSegmentItems())) {
+            $arFilter['included_in_segment_items'] = $assortmentSegmentFilter->getIncludedInSegmentItems();
+        }
+
+        if (!empty($assortmentSegmentFilter->getExcludedInSegmentItems())) {
+            $arFilter['excluded_in_segment_items'] = $assortmentSegmentFilter->getExcludedInSegmentItems();
+        }
+
+        if (!empty($assortmentSegmentFilter->getParentIdHierarchyItems())) {
+            $arFilter['parent_id_hierarchy_items'] = $assortmentSegmentFilter->getParentIdHierarchyItems();
         }
 
         return $arFilter;

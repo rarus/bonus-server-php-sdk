@@ -135,7 +135,8 @@ class TransportTest extends TestCase
     {
         $filter = new ArticleSegmentFilter();
         $propertyValue = new ArticleSegmentFilterProperty(null, (string)20, '=');
-        $filter->setParentIdHierarchy($propertyValue);
+//        $filter->setParentIdHierarchy($propertyValue);
+        $filter->setParentIdHierarchyItems(['20']);
 
         $assortment = $this->articleTransport->getBySegmentFilter($filter, new Pagination());
         $this->assertGreaterThan(-1, $assortment->getArticleCollection()->count());

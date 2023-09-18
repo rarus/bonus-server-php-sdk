@@ -32,6 +32,19 @@ final class ArticleSegmentFilter
     private $excluded_in_segment;
 
     /**
+     * @var array | null
+     */
+    private $included_in_segment_items;
+    /**
+     * @var array | null
+     */
+    private $excluded_in_segment_items;
+    /**
+     * @var array | null
+     */
+    private $parent_id_hierarchy_items;
+
+    /**
      * @return ArticleSegmentFilterProperty|null
      */
     public function getPropertyValue(): ?ArticleSegmentFilterProperty
@@ -121,4 +134,57 @@ final class ArticleSegmentFilter
         return $this;
     }
 
+    /**
+     * @return array|null
+     */
+    public function getIncludedInSegmentItems(): ?array
+    {
+        return $this->included_in_segment_items;
+    }
+
+    /**
+     * @param array|null $included_in_segment_items
+     * @return ArticleSegmentFilter
+     */
+    public function setIncludedInSegmentItems(?array $included_in_segment_items): ArticleSegmentFilter
+    {
+        $this->included_in_segment_items = $included_in_segment_items;
+        return $this;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getExcludedInSegmentItems(): ?array
+    {
+        return $this->excluded_in_segment_items;
+    }
+
+    /**
+     * @param array|null $excluded_in_segment_items
+     * @return ArticleSegmentFilter
+     */
+    public function setExcludedInSegmentItems(?array $excluded_in_segment_items): ArticleSegmentFilter
+    {
+        $this->excluded_in_segment_items = $excluded_in_segment_items;
+        return $this;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getParentIdHierarchyItems(): ?array
+    {
+        return $this->parent_id_hierarchy_items;
+    }
+
+    /**
+     * @param array|null $parent_id_hierarchy_items
+     * @return ArticleSegmentFilter
+     */
+    public function setParentIdHierarchyItems(?array $parent_id_hierarchy_items): ArticleSegmentFilter
+    {
+        $this->parent_id_hierarchy_items = $parent_id_hierarchy_items;
+        return $this;
+    }
 }
