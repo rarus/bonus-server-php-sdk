@@ -26,27 +26,15 @@ final class DiscountFilter
             $arFilter['shop_id'] = $discountFilter->getShopId();
         }
 
-        if (!empty($discountFilter->getShowDeleted())) {
-            $arFilter['showdeleted'] = $discountFilter->getShowDeleted();
-        }
-
-        if (!empty($discountFilter->getShopAll())) {
-            $arFilter['shop_all'] = $discountFilter->getShopAll();
-        }
-
-        if (!empty($discountFilter->getShopAll())) {
-            $arFilter['full_info'] = $discountFilter->getShopAll();
-        }
-
         if (!empty($discountFilter->getFunction())) {
             $arFilter['function'] = $discountFilter->getFunction();
         }
 
+        $arFilter['showdeleted'] = $discountFilter->getShowDeleted() ? 'true' : 'false';
+        $arFilter['shop_all'] = $discountFilter->getShopAll() ? 'true' : 'false';
+        $arFilter['full_info'] = $discountFilter->getFullInfo() ? 'true' : 'false';
         $arFilter['upload_to_bitrix24'] = $discountFilter->getUploadToBitrix() ? 'true' : 'false';
-
-        if (!empty($discountFilter->getIsManual())) {
-            $arFilter['ismanual'] = $discountFilter->getIsManual();
-        }
+        $arFilter['ismanual'] = $discountFilter->getIsManual() ? 'true' : 'false';
 
         return http_build_query($arFilter);
     }

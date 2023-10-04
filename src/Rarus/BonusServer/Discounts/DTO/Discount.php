@@ -108,13 +108,13 @@ final class Discount
     /** @var bool */
     public $ismanual;
 
-    /** @var array */
+    /** @var array | null */
     public $exclude_article_items;
 
-    /** @var array */
+    /** @var array | null */
     public $include_article_items;
 
-    /** @var array */
+    /** @var array | null */
     public $discount_shops;
 
     /**
@@ -730,54 +730,54 @@ final class Discount
     }
 
     /**
-     * @return array
+     * @return array|null
      */
-    public function getExcludeArticleItems(): array
+    public function getExcludeArticleItems(): ?array
     {
         return $this->exclude_article_items;
     }
 
     /**
-     * @param array $exclude_article_items
+     * @param array|null $exclude_article_items
      * @return Discount
      */
-    public function setExcludeArticleItems(array $exclude_article_items): Discount
+    public function setExcludeArticleItems(?array $exclude_article_items): Discount
     {
         $this->exclude_article_items = $exclude_article_items;
         return $this;
     }
 
     /**
-     * @return array
+     * @return array|null
      */
-    public function getIncludeArticleItems(): array
+    public function getIncludeArticleItems(): ?array
     {
         return $this->include_article_items;
     }
 
     /**
-     * @param array $include_article_items
+     * @param array|null $include_article_items
      * @return Discount
      */
-    public function setIncludeArticleItems(array $include_article_items): Discount
+    public function setIncludeArticleItems(?array $include_article_items): Discount
     {
         $this->include_article_items = $include_article_items;
         return $this;
     }
 
     /**
-     * @return array
+     * @return array|null
      */
-    public function getDiscountShops(): array
+    public function getDiscountShops(): ?array
     {
         return $this->discount_shops;
     }
 
     /**
-     * @param array $discount_shops
+     * @param array|null $discount_shops
      * @return Discount
      */
-    public function setDiscountShops(array $discount_shops): Discount
+    public function setDiscountShops(?array $discount_shops): Discount
     {
         $this->discount_shops = $discount_shops;
         return $this;
