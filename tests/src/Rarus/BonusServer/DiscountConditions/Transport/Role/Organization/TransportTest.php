@@ -44,7 +44,7 @@ class TransportTest extends TestCase
     /**
      * @throws Exception
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->discountTransport = Fabric::getInstance(
             TestEnvironmentManager::getInstanceForRoleOrganization(),

@@ -92,7 +92,7 @@ class TransportTest extends TestCase
     /**
      * @throws \Exception
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->promotionTransport = Fabric::getInstance(
             \TestEnvironmentManager::getInstanceForRoleOrganization(),
