@@ -1,15 +1,15 @@
 <?php
 
-namespace src\Rarus\BonusServer\Certificates\Transport\Role\Organization;
+namespace Rarus\BonusServer\Tests\Certificates\Transport\Role\Organization;
 
 use Money\Money;
+use PHPUnit\Framework\TestCase;
 use Rarus\BonusServer\Certificates\DTO\Certificate;
 use Rarus\BonusServer\Certificates\DTO\CertificateGroup;
 use Rarus\BonusServer\Certificates\DTO\CertificateGroupId;
 use Rarus\BonusServer\Certificates\DTO\CertificateId;
 use Rarus\BonusServer\Certificates\Transport\Role\Organization\Fabric;
 use Rarus\BonusServer\Certificates\Transport\Role\Organization\Transport;
-use PHPUnit\Framework\TestCase;
 use Rarus\BonusServer\Transactions\DTO\CertPayments\CertPayment;
 use Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection;
 use Rarus\BonusServer\Transport\DTO\Pagination;

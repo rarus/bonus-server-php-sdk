@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Rarus\BonusServer\Users\Transport\Role\User;
+namespace Rarus\BonusServer\Tests\Users\Transport\Role\User;
 
 use PHPUnit\Framework\TestCase;
-use Rarus\BonusServer\Users;
 use Rarus\BonusServer\Auth;
+use Rarus\BonusServer\Users;
 
 /**
  * Class TransportTest

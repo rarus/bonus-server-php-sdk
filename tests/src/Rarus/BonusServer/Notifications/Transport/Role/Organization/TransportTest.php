@@ -3,22 +3,16 @@
 declare(strict_types=1);
 
 
-namespace src\Rarus\BonusServer\Notifications\Transport\Role\Organization;
+namespace Rarus\BonusServer\Tests\Notifications\Transport\Role\Organization;
 
 use PHPUnit\Framework\TestCase;
-
-
-use Rarus\BonusServer\Articles\Transport\Role\Organization\Fabric;
-use Rarus\BonusServer\Exceptions\ApiClientException;
-use Rarus\BonusServer\Exceptions\NetworkException;
-use Rarus\BonusServer\Exceptions\UnknownException;
 use Rarus\BonusServer\Notifications\DTO\NewNotification;
-use Rarus\BonusServer\Notifications\DTO\NotificationUserFilter;
 use Rarus\BonusServer\Notifications\DTO\NotificationId;
 use Rarus\BonusServer\Notifications\DTO\NotificationOrganizationFilter;
 use Rarus\BonusServer\Transport\DTO\Pagination;
 use Rarus\BonusServer\Users\DTO\UserCollection;
 use Rarus\BonusServer\Users\DTO\UserId;
+
 
 /**
  * Class TransportTest

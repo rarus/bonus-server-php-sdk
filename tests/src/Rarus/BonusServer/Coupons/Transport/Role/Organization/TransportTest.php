@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 
-namespace src\Rarus\BonusServer\Coupons\Transport\Role\Organization;
+namespace Rarus\BonusServer\Tests\Coupons\Transport\Role\Organization;
 
 use PHPUnit\Framework\TestCase;
-use Rarus\BonusServer\Coupons\Transport\Role\Organization\Fabric;
 use Rarus\BonusServer\Coupons\DTO\CouponId;
+use Rarus\BonusServer\Coupons\Transport\Role\Organization\Fabric;
 use Rarus\BonusServer\Exceptions\ApiClientException;
 use Rarus\BonusServer\Exceptions\NetworkException;
 use Rarus\BonusServer\Exceptions\UnknownException;

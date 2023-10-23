@@ -23,19 +23,19 @@
     }
   ],
   "require": {
-    "php": ">=7.2",
+    "php": "^7.2|^8.0",
     "ext-json": "*",
     "ext-curl": "*",
-    "psr/log": "^1.0",
+    "psr/log": "^1.1|^2.0|^3.0",
     "fig/http-message-util": "1.*",
     "monolog/monolog": "2.*",
-    "guzzlehttp/guzzle": "7.x",
+    "guzzlehttp/guzzle": "^7.0",
     "moneyphp/money": "^3.0"
   },
   "require-dev": {
-    "jakub-onderka/php-parallel-lint": "0.9",
-    "jakub-onderka/php-console-highlighter": "~0.3",
-    "phpunit/phpunit": "^7",
+    "php-parallel-lint/php-parallel-lint": "^1.0",
+    "php-parallel-lint/php-console-highlighter": "^1.0",
+    "phpunit/phpunit": "^7.0|^8.0",
     "vimeo/psalm": "^4.29"
   },
   "autoload": {
@@ -43,8 +43,14 @@
       "Rarus\\BonusServer\\": "src/Rarus/BonusServer"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Rarus\\BonusServer\\Tests\\": "tests/src/Rarus/BonusServer"
+    }
+  },
   "scripts": {
     "test": [
+      "Composer\\Config::disableProcessTimeout",
       "parallel-lint . --exclude vendor --no-colors",
       "phpunit --colors=always --verbose"
     ],

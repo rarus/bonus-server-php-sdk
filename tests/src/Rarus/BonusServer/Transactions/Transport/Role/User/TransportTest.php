@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Rarus\BonusServer\Transactions\Transport\Role\User\Transport;
+namespace Rarus\BonusServer\Tests\Transactions\Transport\Role\User;
 
 use PHPUnit\Framework\TestCase;
+use Rarus\BonusServer\Auth;
 use Rarus\BonusServer\Cards;
 use Rarus\BonusServer\Shops;
-use Rarus\BonusServer\Users;
 use Rarus\BonusServer\Transactions;
-use Rarus\BonusServer\Auth;
+use Rarus\BonusServer\Users;
 
 /**
  * Class TransportTest
@@ -72,7 +72,7 @@ class TransportTest extends TestCase
             ->setSum(new \Money\Money(4000, new \Money\Currency('RUB')))
             ->setDiscount(new \Money\Money(40, new \Money\Currency('RUB'))));
         $chequeRowCollection->attach((new Transactions\DTO\ChequeRows\ChequeRow())
-            ->setLineNumber(1)
+            ->setLineNumber(2)
             ->setArticleId(new \Rarus\BonusServer\Articles\DTO\ArticleId('ART-222222'))
             ->setName('товар 1')
             ->setQuantity(2)
@@ -94,6 +94,7 @@ class TransportTest extends TestCase
 
         $finalScore = $this->transactionTransport->addSaleTransaction($saleTransaction);
 
+        $chequeRowCollection = new Transactions\DTO\ChequeRows\ChequeRowCollection();
         $saleTransaction = new Transactions\DTO\Sale();
         $chequeRowCollection->attach((new Transactions\DTO\ChequeRows\ChequeRow())
             ->setLineNumber(1)

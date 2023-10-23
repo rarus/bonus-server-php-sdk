@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Rarus\BonusServer\Users\Transport\Role\Organization;
+namespace Rarus\BonusServer\Tests\Users\Transport\Role\Organization;
 
-use Rarus\BonusServer\Cards;
 use PHPUnit\Framework\TestCase;
+use Rarus\BonusServer\Cards;
 use Rarus\BonusServer\Exceptions\ApiClientException;
 use Rarus\BonusServer\Exceptions\NetworkException;
 use Rarus\BonusServer\Exceptions\UnknownException;
 use Rarus\BonusServer\Transport\DTO\Pagination;
 use Rarus\BonusServer\Users\DTO\UserFilter;
-use Rarus\BonusServer\Users\DTO\UserId;
+use Rarus\BonusServer\Users\Transport\Role\Organization\Fabric;
+use Rarus\BonusServer\Users\Transport\Role\Organization\Transport;
 
 /**
  * Class TransportTest

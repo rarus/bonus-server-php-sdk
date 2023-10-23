@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Rarus\BonusServer\Shops\Transport\Role\Organization;
+namespace Rarus\BonusServer\Tests\Shops\Transport\Role\Organization;
 
 use PHPUnit\Framework\TestCase;
 use Rarus\BonusServer\Shops;
+use Rarus\BonusServer\Shops\Transport\Role\Organization\Fabric;
+use Rarus\BonusServer\Shops\Transport\Role\Organization\Transport;
 
 /**
  * Class TransportTest

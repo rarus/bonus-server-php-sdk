@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Rarus\BonusServer\Transactions\Transport\Role\Organization\Transport;
+namespace Rarus\BonusServer\Tests\Transactions\Transport\Role\Organization;
 
 use Money\Money;
+use PHPUnit\Framework\TestCase;
 use Rarus\BonusServer\Cards;
 use Rarus\BonusServer\Shops;
+use Rarus\BonusServer\Transactions;
 use Rarus\BonusServer\Transport\DTO\Pagination;
 use Rarus\BonusServer\Users;
-use Rarus\BonusServer\Transactions;
-use PHPUnit\Framework\TestCase;
 
 /**
  * Class TransportTest
@@ -23,11 +23,6 @@ class TransportTest extends TestCase
      * @var Cards\Transport\Role\Organization\Transport
      */
     private $cardTransport;
-    /**
-     * @var Users\Transport\Role\Organization\Transport
-     */
-    private $userTransport;
-
     /**
      * @var Shops\Transport\Role\Organization\Transport
      */

@@ -27,7 +27,9 @@ class Fabric
         $articleDate->setTimestamp((int)$arArticle['timestamp']);
 
         $article = new Article(new ArticleId($arArticle['id']), (string)$arArticle['name']);
-        $article->setIsGroup((bool)$arArticle['isgroup'])
+        $article
+            ->setArticle((string)$arArticle['article'])
+            ->setIsGroup((bool)$arArticle['isgroup'])
             ->setDescription((string)$arArticle['description'])
             ->setDeleted((bool)$arArticle['deleted'])
             ->setUploadMobile((bool)$arArticle['unload'])

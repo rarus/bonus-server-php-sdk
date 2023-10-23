@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Rarus\BonusServer\Discounts\DTO;
 
+use InvalidArgumentException;
 use Money\Currency;
 use Rarus\BonusServer\Articles\DTO\ArticleId;
 use Rarus\BonusServer\Cards\DTO\PaymentDistribution\PaymentDistribution;
 use Rarus\BonusServer\Cards\DTO\PaymentDistribution\PaymentDistributionCollection;
 use Rarus\BonusServer\Discounts;
 use Rarus\BonusServer\Util\MoneyParser;
+use Rarus\BonusServer\Util\Utils;
+use TypeError;
 
 /**
  * Class Fabric
@@ -35,8 +38,11 @@ class Fabric
         $est->setDocumentItems($documentItemCollection);
 
         $discountItemCollection = new Discounts\DTO\DiscountItems\DiscountItemCollection();
-        foreach ($arEstimate['cheque_bonus'] as $discountItem) {
-            $discountItemCollection->attach(Discounts\DTO\DiscountItems\Fabric::initFromServerResponse($currency, $discountItem));
+
+        if (!empty($arEstimate['cheque_bonus'])) {
+            foreach ($arEstimate['cheque_bonus'] as $discountItem) {
+                $discountItemCollection->attach(Discounts\DTO\DiscountItems\Fabric::initFromServerResponse($currency, $discountItem));
+            }
         }
         $est->setDiscountItems($discountItemCollection);
 
@@ -61,5 +67,24 @@ class Fabric
         }
 
         return $est;
+    }
+
+    public static function initFullDiscountFromServerResponse(array $data): Discount
+    {
+        $dto = new Discount();
+
+        foreach ($data as $key => $value) {
+            $setterMethod = 'set' . ucfirst(Utils::snakeToCamel($key));
+
+            if (method_exists($dto, $setterMethod)) {
+                try {
+                    $dto->$setterMethod($value);
+                } catch (TypeError $e) {
+                    throw new InvalidArgumentException("Invalid data type for property '$key'");
+                }
+            }
+        }
+
+        return $dto;
     }
 }
