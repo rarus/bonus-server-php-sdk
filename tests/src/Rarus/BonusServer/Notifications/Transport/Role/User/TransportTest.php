@@ -26,10 +26,6 @@ class TransportTest extends TestCase
      */
     private $notificationOrganizationTransport;
     /**
-     * @var \Rarus\BonusServer\Notifications\Transport\Role\User\Transport
-     */
-    private $notificationUserTransport;
-    /**
      * @var \Rarus\BonusServer\Users\Transport\Role\Organization\Transport
      */
     private $userTransport;

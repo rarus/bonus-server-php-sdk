@@ -32,18 +32,6 @@ class TransportTest extends TestCase
      * @var \Rarus\BonusServer\Articles\Transport\Role\Organization\Transport
      */
     private $articleTransport;
-    /**
-     * @var \Rarus\BonusServer\Users\Transport\Role\Organization\Transport
-     */
-    private $userTransport;
-    /**
-     * @var \Rarus\BonusServer\Shops\Transport\Role\Organization\Transport
-     */
-    private $shopTransport;
-    /**
-     * @var \Rarus\BonusServer\Transactions\Transport\Role\Organization\Transport
-     */
-    private $transactionTransport;
 
     /**
      * @throws ApiClientException

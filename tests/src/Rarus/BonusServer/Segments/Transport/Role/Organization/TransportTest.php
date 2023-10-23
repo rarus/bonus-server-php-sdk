@@ -24,18 +24,6 @@ class TransportTest extends TestCase
      * @var \Rarus\BonusServer\Segments\Transport\Role\Organization\Transport
      */
     private $segmentTransport;
-    /**
-     * @var \Rarus\BonusServer\Users\Transport\Role\Organization\Transport
-     */
-    private $userTransport;
-    /**
-     * @var \Rarus\BonusServer\Shops\Transport\Role\Organization\Transport
-     */
-    private $shopTransport;
-    /**
-     * @var \Rarus\BonusServer\Transactions\Transport\Role\Organization\Transport
-     */
-    private $transactionTransport;
 
     public function testAddNewSegment(): void
     {

@@ -24,11 +24,6 @@ class TransportTest extends TestCase
      */
     private $cardTransport;
     /**
-     * @var Users\Transport\Role\Organization\Transport
-     */
-    private $userTransport;
-
-    /**
      * @var Shops\Transport\Role\Organization\Transport
      */
     private $shopTransport;

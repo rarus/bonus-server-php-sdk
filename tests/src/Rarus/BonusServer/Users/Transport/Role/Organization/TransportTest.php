@@ -12,6 +12,7 @@ use Rarus\BonusServer\Exceptions\UnknownException;
 use Rarus\BonusServer\Transport\DTO\Pagination;
 use Rarus\BonusServer\Users\DTO\UserFilter;
 use Rarus\BonusServer\Users\Transport\Role\Organization\Fabric;
+use Rarus\BonusServer\Users\Transport\Role\Organization\Transport;
 
 /**
  * Class TransportTest

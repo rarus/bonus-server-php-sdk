@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rarus\BonusServer\Tests\Discounts\Transport\Role\Organization\Transport;
+namespace Rarus\BonusServer\Tests\Discounts\Transport\Role\Organization;
 
 use Money\Money;
 use PHPUnit\Framework\TestCase;
