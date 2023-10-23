@@ -38,8 +38,11 @@ class Fabric
         $est->setDocumentItems($documentItemCollection);
 
         $discountItemCollection = new Discounts\DTO\DiscountItems\DiscountItemCollection();
-        foreach ($arEstimate['cheque_bonus'] as $discountItem) {
-            $discountItemCollection->attach(Discounts\DTO\DiscountItems\Fabric::initFromServerResponse($currency, $discountItem));
+
+        if (!empty($arEstimate['cheque_bonus'])) {
+            foreach ($arEstimate['cheque_bonus'] as $discountItem) {
+                $discountItemCollection->attach(Discounts\DTO\DiscountItems\Fabric::initFromServerResponse($currency, $discountItem));
+            }
         }
         $est->setDiscountItems($discountItemCollection);
 
