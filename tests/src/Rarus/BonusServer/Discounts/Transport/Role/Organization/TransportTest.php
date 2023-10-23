@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Rarus\BonusServer\Discounts\Transport\Role\Organization\Transport;
+namespace Rarus\BonusServer\Tests\Discounts\Transport\Role\Organization\Transport;
 
 use Money\Money;
 use PHPUnit\Framework\TestCase;
 use Rarus\BonusServer\Cards;
 use Rarus\BonusServer\Certificates\DTO\CertificateId;
+use Rarus\BonusServer\Discounts;
 use Rarus\BonusServer\Exceptions\ApiClientException;
 use Rarus\BonusServer\Exceptions\NetworkException;
 use Rarus\BonusServer\Exceptions\UnknownException;
 use Rarus\BonusServer\Shops;
+use Rarus\BonusServer\Transactions;
 use Rarus\BonusServer\Transport\DTO\Pagination;
 use Rarus\BonusServer\Users;
-use Rarus\BonusServer\Transactions;
-use Rarus\BonusServer\Discounts;
 
 /**
  * Class TransportTest

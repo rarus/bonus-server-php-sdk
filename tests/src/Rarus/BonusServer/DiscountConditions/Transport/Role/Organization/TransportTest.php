@@ -1,13 +1,12 @@
 <?php
 
-namespace src\Rarus\BonusServer\DiscountConditions\Transport\Role\Organization;
+namespace Rarus\BonusServer\Tests\DiscountConditions\Transport\Role\Organization;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
 use Rarus\BonusServer\DiscountConditions\DTO\DiscountConditionFilter;
 use Rarus\BonusServer\DiscountConditions\Transport\Role\Organization\Transport;
 use Rarus\BonusServer\Discounts\DTO\DiscountFilter;
-use Rarus\BonusServer\Discounts\DTO\DiscountId;
 use Rarus\BonusServer\Discounts\Transport\Role\Organization\Fabric;
 use Rarus\BonusServer\Exceptions\ApiClientException;
 use Rarus\BonusServer\Exceptions\NetworkException;

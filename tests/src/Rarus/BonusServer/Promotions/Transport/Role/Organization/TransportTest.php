@@ -1,6 +1,6 @@
 <?php
 
-namespace src\Rarus\BonusServer\Promotions\Transport\Role\Organization;
+namespace Rarus\BonusServer\Tests\Promotions\Transport\Role\Organization;
 
 use PHPUnit\Framework\TestCase;
 use Rarus\BonusServer\Promotions\DTO\Promotion;

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 
-namespace src\Rarus\BonusServer\Articles\Transport\Role\Organization;
+namespace Rarus\BonusServer\Tests\Articles\Transport\Role\Organization;
 
 use PHPUnit\Framework\TestCase;
 use Rarus\BonusServer\Articles\DTO\Article;
@@ -11,10 +11,10 @@ use Rarus\BonusServer\Articles\DTO\ArticleCollection;
 use Rarus\BonusServer\Articles\DTO\ArticleFilter;
 use Rarus\BonusServer\Articles\DTO\ArticleId;
 use Rarus\BonusServer\Articles\DTO\ArticleSegmentFilter;
+use Rarus\BonusServer\Articles\DTO\ArticleSegmentFilterProperty;
 use Rarus\BonusServer\Articles\DTO\Property\ArticleProperty;
 use Rarus\BonusServer\Articles\DTO\Property\ArticlePropertyCollection;
 use Rarus\BonusServer\Articles\DTO\Property\ArticlePropertyId;
-use Rarus\BonusServer\Articles\DTO\ArticleSegmentFilterProperty;
 use Rarus\BonusServer\Articles\Transport\Role\Organization\Fabric;
 use Rarus\BonusServer\Exceptions\ApiClientException;
 use Rarus\BonusServer\Exceptions\NetworkException;

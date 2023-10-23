@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Rarus\BonusServer\Transactions\Transport\Role\User\Transport;
+namespace Rarus\BonusServer\Tests\Transactions\Transport\Role\User;
 
 use PHPUnit\Framework\TestCase;
+use Rarus\BonusServer\Auth;
 use Rarus\BonusServer\Cards;
 use Rarus\BonusServer\Shops;
-use Rarus\BonusServer\Users;
 use Rarus\BonusServer\Transactions;
-use Rarus\BonusServer\Auth;
+use Rarus\BonusServer\Users;
 
 /**
  * Class TransportTest

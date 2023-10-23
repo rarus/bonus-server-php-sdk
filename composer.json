@@ -43,6 +43,11 @@
       "Rarus\\BonusServer\\": "src/Rarus/BonusServer"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Rarus\\BonusServer\\Tests\\": "tests/src/Rarus/BonusServer"
+    }
+  },
   "scripts": {
     "test": [
       "parallel-lint . --exclude vendor --no-colors",

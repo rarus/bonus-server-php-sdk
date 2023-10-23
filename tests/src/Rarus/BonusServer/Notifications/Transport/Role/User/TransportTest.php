@@ -3,19 +3,16 @@
 declare(strict_types=1);
 
 
-namespace src\Rarus\BonusServer\Notifications\Transport\Role\User;
+namespace Rarus\BonusServer\Tests\Notifications\Transport\Role\User;
 
 use PHPUnit\Framework\TestCase;
-
-
 use Rarus\BonusServer\Auth\Fabric;
 use Rarus\BonusServer\Notifications\DTO\NewNotification;
-use Rarus\BonusServer\Notifications\DTO\NotificationUserFilter;
 use Rarus\BonusServer\Notifications\DTO\NotificationId;
-use Rarus\BonusServer\Notifications\DTO\NotificationOrganizationFilter;
+use Rarus\BonusServer\Notifications\DTO\NotificationUserFilter;
 use Rarus\BonusServer\Transport\DTO\Pagination;
 use Rarus\BonusServer\Users\DTO\UserCollection;
-use Rarus\BonusServer\Users\DTO\UserId;
+
 
 /**
  * Class TransportTest

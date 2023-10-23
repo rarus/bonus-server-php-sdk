@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 
-namespace src\Rarus\BonusServer\Segments\Transport\Role\Organization;
+namespace Rarus\BonusServer\Tests\Segments\Transport\Role\Organization;
 
 use PHPUnit\Framework\TestCase;
 use Rarus\BonusServer\Exceptions\ApiClientException;
