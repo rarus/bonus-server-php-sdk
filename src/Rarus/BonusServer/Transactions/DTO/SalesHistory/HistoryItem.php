@@ -69,6 +69,18 @@ final class HistoryItem
     private $products;
 
     /**
+     * Баллов начислено
+     * @var float
+     */
+    private $bonusEarned;
+
+    /**
+     * Баллов списано
+     * @var float
+     */
+    private $bonusSpent;
+
+    /**
      * @return int
      */
     public function getLineNumber(): int
@@ -305,6 +317,28 @@ final class HistoryItem
     {
         $this->products = $products;
 
+        return $this;
+    }
+
+    public function getBonusEarned(): float
+    {
+        return $this->bonusEarned;
+    }
+
+    public function setBonusEarned(float $bonusEarned): HistoryItem
+    {
+        $this->bonusEarned = $bonusEarned;
+        return $this;
+    }
+
+    public function getBonusSpent(): float
+    {
+        return $this->bonusSpent;
+    }
+
+    public function setBonusSpent(float $bonusSpent): HistoryItem
+    {
+        $this->bonusSpent = $bonusSpent;
         return $this;
     }
 }

@@ -42,7 +42,10 @@ class Refund
             'doc_id_refund'      => $refundTrx->getRefundDocument()->getId(),
             'refund_bonus'       => $refundTrx->getRefundBonus(),
             'cheque_items'       => $arChequeItems,
-            'coupon'             => $refundTrx->getCouponId() ? $refundTrx->getCouponId()->getId() : ''
+            'coupon'             => $refundTrx->getCouponId() ? $refundTrx->getCouponId()->getId() : '',
+            'hold_id'            => $refundTrx->getHoldId() ? $refundTrx->getHoldId()->getId() : null,
+            'hold_used'          => $refundTrx->isHoldUsed(),
+            'test'               => $refundTrx->isTest()
         ];
     }
 }

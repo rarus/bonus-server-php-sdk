@@ -7,6 +7,7 @@ namespace Rarus\BonusServer\Transactions\DTO;
 use Rarus\BonusServer\Cards\DTO\CardId;
 use Rarus\BonusServer\Coupons\DTO\CouponId;
 use Rarus\BonusServer\Discounts\DTO\DiscountItems\DiscountItemCollection;
+use Rarus\BonusServer\Holds\DTO\HoldId;
 use Rarus\BonusServer\Shops\DTO\ShopId;
 use Rarus\BonusServer\Transactions\DTO\CashRegister\CashRegister;
 use Rarus\BonusServer\Transactions\DTO\ChequeRows\ChequeRowCollection;
@@ -73,6 +74,20 @@ abstract class AbstractTransaction
      * @var \Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection|null
      */
     protected $certPaymentCollection;
+    /**
+     * @var HoldId|null
+     */
+    protected $holdId;
+
+    /**
+     * @var boolean
+     */
+    protected $holdUsed = true;
+
+    /**
+     * @var boolean
+     */
+    protected $test = false;
 
     /**
      * @return string

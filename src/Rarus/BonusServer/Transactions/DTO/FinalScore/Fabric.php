@@ -32,6 +32,8 @@ class Fabric
         $score
             ->setBonusEarned($moneyParser->parse((string)$arResponse['bonus_earned'], $currency->getCode()))
             ->setBonusSpent($moneyParser->parse((string)$arResponse['bonus_spent'], $currency->getCode()))
+            ->setSaleId((string)$arResponse['sale_id'])
+            ->setDocId((string)$arResponse['doc_id'])
             ->setCardAccumulationAmount($moneyParser->parse((string)$arResponse['card_accum'], $currency->getCode()));
 
         return $score;

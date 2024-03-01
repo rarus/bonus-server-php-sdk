@@ -159,6 +159,8 @@ class Transport extends BonusServer\Transport\AbstractTransport
             'cardId' => $saleTransaction->getCardId()->getId(),
             'shopId' => $saleTransaction->getShopId()->getId(),
             'doc_id' => $saleTransaction->getDocument()->getId(),
+            'hold_id' => $saleTransaction->getHoldId()->getId(),
+            'bonus_payment' => $saleTransaction->getBonusPayment(),
             'kkm_id' => $saleTransaction->getCashRegister()->getId(),
             'dateCalculate' => $dateCalculate === null ? null : $dateCalculate->format(\DATE_ATOM),
         ]);
@@ -181,6 +183,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
         $finalScore = BonusServer\Transactions\DTO\FinalScore\Fabric::initFinalScoreFromServerResponse($this->getDefaultCurrency(), $requestResult);
 
         $this->log->debug('rarus.bonus.server.transactions.transport.addSaleTransaction.start', [
+            'sale_id' => $finalScore->getSaleId(),
             'bonus_earned' => $finalScore->getBonusEarned()->getAmount(),
             'bonus_spent' => $finalScore->getBonusSpent()->getAmount(),
             'card_accum' => $finalScore->getCardAccumulationAmount()->getAmount(),
@@ -199,17 +202,13 @@ class Transport extends BonusServer\Transport\AbstractTransport
      */
     public function addRefundTransaction(BonusServer\Transactions\DTO\Refund $refundTransaction): BonusServer\Transactions\DTO\FinalScore\FinalScore
     {
-        $this->log->debug('rarus.bonus.server.transactions.transport.addRefundTransaction.start', [
-            'cardId' => $refundTransaction->getCardId()->getId(),
-            'shopId' => $refundTransaction->getShopId()->getId(),
-            'doc_id' => $refundTransaction->getDocument()->getId(),
-            'kkm_id' => $refundTransaction->getCashRegister()->getId(),
-        ]);
+        $requestData = BonusServer\Transactions\Formatters\Refund::toArray($refundTransaction);
+        $this->log->debug('rarus.bonus.server.transactions.transport.addRefundTransaction.start', $requestData);
 
         $requestResult = $this->apiClient->executeApiRequest(
             '/organization/process_bonus',
             RequestMethodInterface::METHOD_POST,
-            BonusServer\Transactions\Formatters\Refund::toArray($refundTransaction)
+            $requestData
         );
 
         $finalScore = BonusServer\Transactions\DTO\FinalScore\Fabric::initFinalScoreFromServerResponse($this->getDefaultCurrency(), $requestResult);
