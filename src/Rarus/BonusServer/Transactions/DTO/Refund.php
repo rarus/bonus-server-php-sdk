@@ -6,6 +6,7 @@ namespace Rarus\BonusServer\Transactions\DTO;
 
 use Rarus\BonusServer\Cards\DTO\CardId;
 use Rarus\BonusServer\Coupons\DTO\CouponId;
+use Rarus\BonusServer\Holds\DTO\HoldId;
 use Rarus\BonusServer\Shops\DTO\ShopId;
 use Rarus\BonusServer\Transactions\DTO\CashRegister\CashRegister;
 use Rarus\BonusServer\Transactions\DTO\Document\Document;
@@ -23,7 +24,7 @@ final class Refund extends AbstractTransaction
      */
     protected $refundDocument;
     /**
-     * @var int Количество бонусов, к возврату. Используется при type="refund". Количество возвращаемых бонусов не должно превышать количество начисленных бонусов, иначе счет карты может стать отрицательным.
+     * @var int|null Количество бонусов, к возврату. Используется при type="refund". Количество возвращаемых бонусов не должно превышать количество начисленных бонусов, иначе счет карты может стать отрицательным.
      */
     protected $refundBonus;
 
@@ -134,15 +135,14 @@ final class Refund extends AbstractTransaction
     /**
      * @return int
      */
-    public function getRefundBonus(): int
+    public function getRefundBonus(): ?int
     {
         return $this->refundBonus;
     }
 
     /**
      * @param int $refundBonus
-     *
-     * @return Refund
+     * @return $this
      */
     public function setRefundBonus(int $refundBonus): Refund
     {
@@ -172,6 +172,38 @@ final class Refund extends AbstractTransaction
     {
         $this->couponId = $couponId;
 
+        return $this;
+    }
+    public function getHoldId(): ?HoldId
+    {
+        return $this->holdId;
+    }
+
+    public function setHoldId(?HoldId $holdId): Refund
+    {
+        $this->holdId = $holdId;
+        return $this;
+    }
+
+    public function isHoldUsed(): bool
+    {
+        return $this->holdUsed;
+    }
+
+    public function setHoldUsed(bool $holdUsed): Refund
+    {
+        $this->holdUsed = $holdUsed;
+        return $this;
+    }
+
+    public function isTest(): bool
+    {
+        return $this->test;
+    }
+
+    public function setTest(bool $test): Refund
+    {
+        $this->test = $test;
         return $this;
     }
 }

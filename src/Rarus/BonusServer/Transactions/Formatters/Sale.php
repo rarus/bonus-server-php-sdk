@@ -67,6 +67,9 @@ class Sale
             'coupon'         => $saleTrx->getCouponId() ? $saleTrx->getCouponId()->getId() : '',
             'payment_types'  => $arPaymentTypes,
             'cert_payments'  => $arCertPayments,
+            'hold_id'        => $saleTrx->getHoldId() ? $saleTrx->getHoldId()->getId() : null,
+            'hold_used'      => $saleTrx->isHoldUsed(),
+            'test'           => $saleTrx->isTest()
         ];
     }
 }

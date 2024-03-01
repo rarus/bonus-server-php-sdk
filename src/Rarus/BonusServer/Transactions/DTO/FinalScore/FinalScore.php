@@ -25,6 +25,14 @@ final class FinalScore
      * @var Money
      */
     private $cardAccumulationAmount;
+    /**
+     * @var string
+     */
+    private $saleId;
+    /**
+     * @var string
+     */
+    private $docId;
 
     /**
      * @return Money
@@ -83,6 +91,28 @@ final class FinalScore
     {
         $this->cardAccumulationAmount = $cardAccumulationAmount;
 
+        return $this;
+    }
+
+    public function getSaleId(): string
+    {
+        return $this->saleId;
+    }
+
+    public function setSaleId(string $saleId): FinalScore
+    {
+        $this->saleId = $saleId;
+        return $this;
+    }
+
+    public function getDocId(): string
+    {
+        return $this->docId;
+    }
+
+    public function setDocId(string $docId): FinalScore
+    {
+        $this->docId = $docId;
         return $this;
     }
 }
