@@ -51,6 +51,8 @@ class Fabric
             ->setChequeId(new ChequeId((string)$arResponse['check_number']))
             ->setSum($moneyParser->parse((string)$arResponse['summ'], $currency->getCode()))
             ->setSumWithDiscount($moneyParser->parse((string)$arResponse['summ_with_discount'], $currency->getCode()))
+            ->setBonusEarned((float)$arResponse['bonus_earned'])
+            ->setBonusSpent((float)$arResponse['bonus_spent'])
             ->setType(Transactions\DTO\Type\Fabric::initFromServerResponse((string)$arResponse['operation']))
             ->setProducts($productRowCollection);
 
