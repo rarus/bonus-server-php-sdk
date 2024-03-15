@@ -64,7 +64,10 @@ final class User
      * @var CardCollection | null
      */
     private $cardCollection;
-
+    /**
+     * @var string | null
+     */
+    private $appClient;
     /**
      * @return null|string
      */
@@ -295,6 +298,15 @@ final class User
     {
         $this->cardCollection = $cardCollection;
 
+        return $this;
+    }
+    public function getAppClient(): ?string
+    {
+        return $this->appClient;
+    }
+    public function setAppClient(?string $appClient): User
+    {
+        $this->appClient = $appClient;
         return $this;
     }
 }

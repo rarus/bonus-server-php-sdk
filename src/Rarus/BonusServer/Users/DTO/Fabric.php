@@ -31,7 +31,9 @@ class Fabric
             ->setPhone($arUser['phone'])
             ->setStatus(Users\DTO\Status\Fabric::initFromServerResponse($arUser))
             ->setImageUrl($arUser['image'])
-            ->setEmail($arUser['email']);
+            ->setEmail($arUser['email'])
+            ->setAppClient((string)$arUser['app_client']);
+
         if ($arUser['gender'] !== 'none') {
             $user->setGender(Users\DTO\Gender\Fabric::initFromServerResponse($arUser['gender']));
         }
@@ -39,6 +41,7 @@ class Fabric
             $birthday = DateTimeParser::parseTimestampFromServerResponse((string)$arUser['birthdate'], $dateTimeZone);
             $user->setBirthdate($birthday);
         }
+
 
         return $user;
     }

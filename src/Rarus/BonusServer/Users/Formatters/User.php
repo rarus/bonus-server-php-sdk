@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Rarus\BonusServer\Users\Formatters;
 
-use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use Rarus\BonusServer;
 
 /**
@@ -31,9 +30,11 @@ class User
             'gender' => $user->getGender() === null ? null : $user->getGender()->getCode(),
             'imageUrl' => $user->getImageUrl(),
             'recieve_notifications' => $user->isReceiveNotifications(),
+            'app_client' => $user->getAppClient(),
             'status' => [
                 'confirmed' => (int)$user->getStatus()->isConfirmed(),
                 'is_locked' => (int)$user->getStatus()->isBlocked(),
+                'personal_data_agree' => (int)$user->getStatus()->isPersonalDataAgree(),
             ],
         ];
     }
@@ -52,8 +53,10 @@ class User
             'phone' => $user->getPhone(),
             'gender' => $user->getGender() === null ? null : $user->getGender()->getCode(),
             'recieve_notifications' => (int)$user->isReceiveNotifications(),
-            'confirmed' => (int)$user->getStatus()->isConfirmed(),
-            'is_locked' => (int)$user->getStatus()->isBlocked(),
+            'confirmed' => $user->getStatus()->isConfirmed(),
+            'is_locked' => $user->getStatus()->isBlocked(),
+            'personal_data_agree' => $user->getStatus()->isPersonalDataAgree(),
+            'app_client' => $user->getAppClient() ?? '',
         ];
 
         if ($user->getBirthdate() !== null) {
@@ -87,9 +90,10 @@ class User
 
     /**
      * @param BonusServer\Users\DTO\User $newUser
-     * @param \DateTimeZone              $dateTimeZone
+     * @param \DateTimeZone $dateTimeZone
      *
      * @return array
+     * @throws \Exception
      */
     public static function toArrayForCreateNewUser(BonusServer\Users\DTO\User $newUser, \DateTimeZone $dateTimeZone): array
     {
@@ -100,6 +104,10 @@ class User
             'email' => $newUser->getEmail(),
             'gender' => $newUser->getGender() === null ? '' : $newUser->getGender()->getCode(),
             'recieve_notifications' => (int)$newUser->isReceiveNotifications(),
+            'confirmed' => $newUser->getStatus()->isConfirmed(),
+            'is_locked' => $newUser->getStatus()->isBlocked(),
+            'personal_data_agree' => $newUser->getStatus()->isPersonalDataAgree(),
+            'app_client' => $newUser->getAppClient() ?? '',
         ];
         if ($newUser->getBirthdate() !== null) {
             $utcBirthday = new \DateTime($newUser->getBirthdate()->format('d.m.Y H:i:s'), new \DateTimeZone('UTC'));
@@ -113,9 +121,10 @@ class User
 
     /**
      * @param BonusServer\Users\DTO\User $newUser
-     * @param \DateTimeZone              $dateTimeZone
+     * @param \DateTimeZone $dateTimeZone
      *
      * @return array
+     * @throws \Exception
      */
     public static function toArrayForImportNewUser(BonusServer\Users\DTO\User $newUser, \DateTimeZone $dateTimeZone): array
     {
@@ -126,8 +135,10 @@ class User
             'phone' => $newUser->getPhone(),
             'email' => $newUser->getEmail(),
             'gender' => $newUser->getGender() === null ? '' : $newUser->getGender()->getCode(),
-            'confirmed' => (int)$newUser->getStatus()->isConfirmed(),
-            'is_locked' => (int)$newUser->getStatus()->isBlocked(),
+            'confirmed' => $newUser->getStatus()->isConfirmed(),
+            'is_locked' => $newUser->getStatus()->isBlocked(),
+            'personal_data_agree' => $newUser->getStatus()->isPersonalDataAgree(),
+            'app_client' => $newUser->getAppClient() ?? '',
             'password' => $newUser->getPasswordHash() ?? '',
             'recieve_notifications' => (int)$newUser->isReceiveNotifications(),
         ];
