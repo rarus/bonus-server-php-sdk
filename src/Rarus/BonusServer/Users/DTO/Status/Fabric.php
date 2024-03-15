@@ -20,7 +20,8 @@ class Fabric
     {
         return (new UserStatus())
             ->setIsConfirmed((bool)$arUser['confirmed'])
-            ->setIsBlocked((bool)$arUser['is_locked']);
+            ->setIsBlocked((bool)$arUser['is_locked'])
+            ->setPersonalDataAgree((bool)$arUser['personal_data_agree']);
     }
 
     /**
@@ -30,6 +31,7 @@ class Fabric
     {
         return (new UserStatus())
             ->setIsConfirmed(true)
+            ->setPersonalDataAgree(true)
             ->setIsBlocked(false);
     }
 }

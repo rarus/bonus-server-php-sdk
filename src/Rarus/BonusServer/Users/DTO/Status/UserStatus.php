@@ -17,9 +17,13 @@ final class UserStatus
      */
     private $isBlocked;
     /**
-     * @var bool Принак, что пользователь подтвержен
+     * @var bool Признак, что пользователь подтвержден
      */
     private $isConfirmed;
+    /**
+     * @var bool Признак согласия на обработку персональных данных
+     */
+    private $personalDataAgree = true;
 
     /**
      * @return bool
@@ -58,6 +62,17 @@ final class UserStatus
     {
         $this->isConfirmed = $isConfirmed;
 
+        return $this;
+    }
+
+    public function isPersonalDataAgree(): bool
+    {
+        return $this->personalDataAgree;
+    }
+
+    public function setPersonalDataAgree(bool $personalDataAgree): UserStatus
+    {
+        $this->personalDataAgree = $personalDataAgree;
         return $this;
     }
 }
