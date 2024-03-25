@@ -10,6 +10,7 @@ use Rarus\BonusServer\Discounts\DTO\DiscountItems\DiscountItemCollection;
 use Rarus\BonusServer\Holds\DTO\HoldId;
 use Rarus\BonusServer\Shops\DTO\ShopId;
 use Rarus\BonusServer\Transactions\DTO\CashRegister\CashRegister;
+use Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection;
 use Rarus\BonusServer\Transactions\DTO\ChequeRows\ChequeRowCollection;
 use Rarus\BonusServer\Transactions\DTO\Document\Document;
 use Rarus\BonusServer\Transactions\DTO\PaymentTypes\PaymentTypeCollection;
@@ -67,13 +68,18 @@ abstract class AbstractTransaction
      */
     protected $discountItemCollection;
     /**
-     * @var \Rarus\BonusServer\Transactions\DTO\PaymentTypes\PaymentTypeCollection|null
+     * @var PaymentTypeCollection|null
      */
     protected $paymentTypeCollection;
     /**
-     * @var \Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection|null
+     * @var CertPaymentCollection|null
      */
     protected $certPaymentCollection;
+
+    /**
+     * @var DiscountItemCollection|null
+     */
+    protected $calculateHistoryCollection;
     /**
      * @var HoldId|null
      */
@@ -180,12 +186,13 @@ abstract class AbstractTransaction
     /**
      * @param DiscountItemCollection $discountItemCollection
      */
-    public function setDiscountItemCollection(DiscountItemCollection $discountItemCollection): void
+    public function setDiscountItemCollection(DiscountItemCollection $discountItemCollection): AbstractTransaction
     {
         $this->discountItemCollection = $discountItemCollection;
+        return $this;
     }
     /**
-     * @return \Rarus\BonusServer\Transactions\DTO\PaymentTypes\PaymentTypeCollection
+     * @return PaymentTypeCollection
      */
     public function getPaymentTypeCollection(): ?PaymentTypeCollection
     {
@@ -193,7 +200,7 @@ abstract class AbstractTransaction
     }
 
     /**
-     * @param \Rarus\BonusServer\Transactions\DTO\PaymentTypes\PaymentTypeCollection $paymentTypeCollection
+     * @param PaymentTypeCollection $paymentTypeCollection
      */
     public function setPaymentTypeCollection(
         PaymentTypeCollection $paymentTypeCollection
@@ -202,19 +209,30 @@ abstract class AbstractTransaction
     }
 
     /**
-     * @return \Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection|null
+     * @return CertPaymentCollection|null
      */
-    public function getCertPaymentCollection(): ?\Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection
+    public function getCertPaymentCollection(): ?CertPaymentCollection
     {
         return $this->certPaymentCollection;
     }
 
     /**
-     * @param \Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection|null $certPaymentCollection
+     * @param CertPaymentCollection|null $certPaymentCollection
      */
     public function setCertPaymentCollection(
-        ?\Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection $certPaymentCollection
+        ?CertPaymentCollection $certPaymentCollection
     ): void {
         $this->certPaymentCollection = $certPaymentCollection;
+    }
+
+    public function getCalculateHistoryCollection(): ?DiscountItemCollection
+    {
+        return $this->calculateHistoryCollection;
+    }
+
+    public function setCalculateHistoryCollection(?DiscountItemCollection $calculateHistoryCollection
+    ): AbstractTransaction {
+        $this->calculateHistoryCollection = $calculateHistoryCollection;
+        return $this;
     }
 }

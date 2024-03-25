@@ -59,6 +59,34 @@ class TransportTest extends TestCase
         $this->cardTransport->delete($card, true);
     }
 
+    public function testGetSaleHistoryByDocumentId(): void
+    {
+        $newCard = Cards\DTO\Fabric::createNewInstance((string)random_int(1000000, 100000000), (string)random_int(1000000, 100000000), new \Money\Currency('RUB'));
+        $card = $this->cardTransport->addNewCard($newCard);
+        $card = $this->cardTransport->activate($card);
+
+        $newShop = Shops\DTO\Fabric::createNewInstance('Новый магазин');
+        $shop = $this->shopTransport->add($newShop);
+
+        // конструируем транзакцию
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+        $this->transactionTransport->addSaleTransaction(\DemoDataGenerator::createNewSaleTransaction($card, $shop, \TestEnvironmentManager::getDefaultCurrency()));
+
+        $historyCollection = $this->transactionTransport->getSalesHistoryByCard($card);
+        $historyItem = $historyCollection->current();
+        $docId = $historyItem->getDocumentId();
+        $historyItem = $this->transactionTransport->getSaleHistoryByDocumentId($docId);
+
+        $this->assertInstanceOf(Transactions\DTO\SalesHistory\HistoryItem::class, $historyItem);
+
+        $this->shopTransport->delete($shop);
+        $this->cardTransport->delete($card, true);
+    }
+
     /**
      * @covers \Rarus\BonusServer\Transactions\Transport\Role\Organization\Transport::addSaleTransaction()
      */

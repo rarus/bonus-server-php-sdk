@@ -24,9 +24,14 @@ final class Estimate
      */
     private $discountItems;
     /**
-     * @var \Rarus\BonusServer\Cards\DTO\PaymentDistribution\PaymentDistributionCollection|null
+     * @var PaymentDistributionCollection|null
      */
     private $paymentDistributionCollection;
+
+    /**
+     * @var DiscountItemCollection
+     */
+    private $chequeDiscounts;
 
     /**
      * @var int|null
@@ -74,7 +79,7 @@ final class Estimate
     }
 
     /**
-     * @param \Rarus\BonusServer\Cards\DTO\PaymentDistribution\PaymentDistributionCollection $paymentDistributionCollection
+     * @param PaymentDistributionCollection $paymentDistributionCollection
      *
      * @return Estimate
      */
@@ -86,7 +91,7 @@ final class Estimate
     }
 
     /**
-     * @return \Rarus\BonusServer\Cards\DTO\PaymentDistribution\PaymentDistributionCollection|null
+     * @return PaymentDistributionCollection|null
      */
     public function getPaymentDistributionCollection(): ?PaymentDistributionCollection
     {
@@ -110,5 +115,16 @@ final class Estimate
     public function getMaxPayment(): ?int
     {
         return $this->maxPayment;
+    }
+
+    public function getChequeDiscounts(): DiscountItemCollection
+    {
+        return $this->chequeDiscounts;
+    }
+
+    public function setChequeDiscounts(DiscountItemCollection $chequeDiscounts): Estimate
+    {
+        $this->chequeDiscounts = $chequeDiscounts;
+        return $this;
     }
 }

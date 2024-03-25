@@ -62,6 +62,14 @@ class Fabric
             $est->setPaymentDistributionCollection($paymentDistributionCollection);
         }
 
+        $chequeItemCollection = new Discounts\DTO\DiscountItems\DiscountItemCollection();
+        if (!empty($arEstimate['cheque_discounts'])) {
+            foreach ($arEstimate['cheque_discounts'] as $discountItem) {
+                $chequeItemCollection->attach(Discounts\DTO\DiscountItems\Fabric::initFromServerResponse($currency, $discountItem));
+            }
+        }
+        $est->setChequeDiscounts($chequeItemCollection);
+
         if (!empty($arEstimate['max_payment'])) {
             $est->setMaxPayment((int)$arEstimate['max_payment']);
         }
