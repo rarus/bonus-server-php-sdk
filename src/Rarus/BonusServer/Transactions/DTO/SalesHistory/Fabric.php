@@ -9,10 +9,12 @@ use Money\Money;
 use Money\Currencies\ISOCurrencies;
 use Money\Parser\DecimalMoneyParser;
 use Rarus\BonusServer\Cards\DTO\CardId;
+use Rarus\BonusServer\Exceptions\ApiClientException;
 use Rarus\BonusServer\Shops\DTO\ShopId;
 use Rarus\BonusServer\Transactions\DTO\Document\DocumentId;
 use Rarus\BonusServer\Transactions\DTO\CashRegister\CashRegisterId;
 use Rarus\BonusServer\Transactions;
+use Rarus\BonusServer\Util\DateTimeParser;
 
 /**
  * Class Fabric
@@ -23,16 +25,13 @@ class Fabric
 {
     /**
      * @param Currency $currency
-     * @param array    $arResponse
-     *
+     * @param array $arResponse
+     * @param \DateTimeZone $dateTimeZone
      * @return HistoryItem
-     * @throws \Rarus\BonusServer\Exceptions\ApiClientException
+     * @throws ApiClientException
      */
-    public static function initHistoryItemFromServerResponse(Currency $currency, array $arResponse): HistoryItem
+    public static function initHistoryItemFromServerResponse(Currency $currency, array $arResponse, \DateTimeZone $dateTimeZone): HistoryItem
     {
-        $operationDate = new \DateTime();
-        $operationDate->setTimestamp((int)$arResponse['date']);
-
         $moneyParser = new DecimalMoneyParser(new ISOCurrencies());
 
         $productRowCollection = new Transactions\DTO\Products\ProductRowCollection();
@@ -43,7 +42,7 @@ class Fabric
         $operation = new HistoryItem();
         $operation
             ->setLineNumber((int)$arResponse['row_number'])
-            ->setDate($operationDate)
+            ->setDate(DateTimeParser::parseTimestampFromServerResponse((string)$arResponse['date'], $dateTimeZone))
             ->setDocumentId(new DocumentId((string)$arResponse['doc_id']))
             ->setCardId(new CardId((string)$arResponse['card_id']))
             ->setShopId(new ShopId((string)$arResponse['shop_id']))
@@ -57,9 +56,7 @@ class Fabric
             ->setProducts($productRowCollection);
 
         if ($arResponse['date_calculate_local'] !== 0) {
-            $operationDate = new \DateTime();
-            $operationDate->setTimestamp((int)$arResponse['date_calculate_local']);
-            $operation->setDateCalculate($operationDate);
+            $operation->setDateCalculate(DateTimeParser::parseTimestampFromServerResponse((string)$arResponse['date_calculate_local'], $dateTimeZone));
         }
 
         return $operation;

@@ -42,6 +42,10 @@ final class ChequeRow
      * @var Money
      */
     private $discount;
+    /**
+     * @var Money|null
+     */
+    private $bonusPaymentSum;
 
     /**
      * @return int
@@ -180,6 +184,17 @@ final class ChequeRow
     {
         $this->discount = $discount;
 
+        return $this;
+    }
+
+    public function getBonusPaymentSum(): ?Money
+    {
+        return $this->bonusPaymentSum;
+    }
+
+    public function setBonusPaymentSum(?Money $bonusPaymentSum): ChequeRow
+    {
+        $this->bonusPaymentSum = $bonusPaymentSum;
         return $this;
     }
 }

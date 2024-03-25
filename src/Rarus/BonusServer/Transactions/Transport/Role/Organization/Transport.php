@@ -5,6 +5,11 @@ declare(strict_types=1);
 namespace Rarus\BonusServer\Transactions\Transport\Role\Organization;
 
 use Rarus\BonusServer;
+use Rarus\BonusServer\Exceptions\ApiClientException;
+use Rarus\BonusServer\Exceptions\NetworkException;
+use Rarus\BonusServer\Exceptions\UnknownException;
+use Rarus\BonusServer\Transactions\DTO\Document\DocumentId;
+use Rarus\BonusServer\Transactions\DTO\SalesHistory\HistoryItem;
 use Rarus\BonusServer\Transport\DTO\Pagination;
 use Rarus\BonusServer\Transactions\DTO\SalesHistory\HistoryItemCollection;
 use Fig\Http\Message\RequestMethodInterface;
@@ -60,7 +65,8 @@ class Transport extends BonusServer\Transport\AbstractTransport
             foreach ((array)$requestResult['sales'] as $arSaleItem) {
                 $historySalesCollection->attach(BonusServer\Transactions\DTO\SalesHistory\Fabric::initHistoryItemFromServerResponse(
                     $this->getDefaultCurrency(),
-                    $arSaleItem
+                    $arSaleItem,
+                    $this->apiClient->getTimezone()
                 ));
             }
             $historySalesCollection->rewind();
@@ -75,6 +81,42 @@ class Transport extends BonusServer\Transport\AbstractTransport
         ]);
 
         return $historySalesCollection;
+    }
+
+    /**
+     * @param DocumentId $documentId
+     * @return HistoryItem|null
+     * @throws ApiClientException
+     * @throws NetworkException
+     * @throws UnknownException
+     */
+    public function getSaleHistoryByDocumentId(BonusServer\Transactions\DTO\Document\DocumentId $documentId): ?HistoryItem
+    {
+        $this->log->debug('rarus.bonus.server.transactions.transport.organization.getSaleHistoryByDocumentId.start', [
+            'documentId' => $documentId->getId()
+        ]);
+
+        try {
+            $requestResult = $this->apiClient->executeApiRequest(
+                sprintf('/organization/sale_info?doc_id=%s&card_info=true&cheque_items_info=true&payment_info=true&transactions_not_accrued_info=true', $documentId->getId()),
+                RequestMethodInterface::METHOD_GET
+            );
+
+            if (!empty($requestResult['sales'])) {
+                return (BonusServer\Transactions\DTO\SalesHistory\Fabric::initHistoryItemFromServerResponse(
+                    $this->getDefaultCurrency(),
+                    $requestResult['sales'][0],
+                    $this->apiClient->getTimezone()
+                ));
+            }
+        } catch (BonusServer\Exceptions\ApiClientException $exception) {
+            // если транзакции не найдены, то сервер возвращает 404 статус выставив 114 код в данном случае мы его подавляем
+            if ($exception->getCode() !== 114) {
+                throw $exception;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -159,7 +201,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
             'cardId' => $saleTransaction->getCardId()->getId(),
             'shopId' => $saleTransaction->getShopId()->getId(),
             'doc_id' => $saleTransaction->getDocument()->getId(),
-            'hold_id' => $saleTransaction->getHoldId()->getId(),
+            'hold_id' => $saleTransaction->getHoldId() ? $saleTransaction->getHoldId()->getId() : null,
             'bonus_payment' => $saleTransaction->getBonusPayment(),
             'kkm_id' => $saleTransaction->getCashRegister()->getId(),
             'dateCalculate' => $dateCalculate === null ? null : $dateCalculate->format(\DATE_ATOM),

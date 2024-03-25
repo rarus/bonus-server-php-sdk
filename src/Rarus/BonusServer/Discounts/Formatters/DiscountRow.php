@@ -8,6 +8,7 @@ use Money\Currencies\ISOCurrencies;
 use Money\Formatter\DecimalMoneyFormatter;
 use Rarus\BonusServer\Discounts\DTO\DiscountItems\DiscountItem;
 use Rarus\BonusServer\Transactions;
+use Rarus\BonusServer\Util\MoneyParser;
 
 /**
  * Class DiscountRow
@@ -27,6 +28,15 @@ class DiscountRow
             'gift_list_id'   => $discountItem->getGiftSegment() ?: '',
             'discount_name'  => $discountItem->getName(),
             'discount_value' => $discountItem->getValue(),
+        ];
+    }
+
+    public static function toCalculateHistory(DiscountItem $discountItem): array
+    {
+        return [
+            'line_number' => $discountItem->getLineNumber(),
+            'discount_id' => $discountItem->getDiscountId()->getId() ?: '',
+            'discount_summ' => (float)MoneyParser::convertMoneyToString($discountItem->getSum())
         ];
     }
 }

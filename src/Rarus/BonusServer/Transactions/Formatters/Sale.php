@@ -49,6 +49,13 @@ class Sale
             }
         }
 
+        $arCalculateHistory = [];
+        if ($saleTrx->getCalculateHistoryCollection()) {
+            foreach ($saleTrx->getCalculateHistoryCollection() as $discount) {
+                $arCalculateHistory[] = DiscountRow::toCalculateHistory($discount);
+            }
+        }
+
         return [
             'operation_type' => 'sale',
             'level_up'       => true,
@@ -69,7 +76,8 @@ class Sale
             'cert_payments'  => $arCertPayments,
             'hold_id'        => $saleTrx->getHoldId() ? $saleTrx->getHoldId()->getId() : null,
             'hold_used'      => $saleTrx->isHoldUsed(),
-            'test'           => $saleTrx->isTest()
+            'test'           => $saleTrx->isTest(),
+            'calculate_history' => $arCalculateHistory
         ];
     }
 }

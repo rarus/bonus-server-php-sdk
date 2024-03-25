@@ -29,6 +29,9 @@ class ChequeRow
             'price' => (float)MoneyParser::convertMoneyToString($chequeRow->getPrice()),
             'summ' => (float)MoneyParser::convertMoneyToString($chequeRow->getSum()),
             'discount_summ' => (float)MoneyParser::convertMoneyToString($chequeRow->getDiscount()),
+            'bonus_payment_sum' => $chequeRow->getBonusPaymentSum() ? (float)MoneyParser::convertMoneyToString(
+                $chequeRow->getBonusPaymentSum()
+            ) : null
         ];
     }
 }
