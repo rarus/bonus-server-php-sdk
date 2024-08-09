@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rarus\BonusServer\Transactions\Formatters;
 
 use Rarus\BonusServer\Discounts\Formatters\DiscountRow;
+use Rarus\BonusServer\Holds\Formatters\HoldItem;
 use Rarus\BonusServer\Transactions;
 
 /**
@@ -56,6 +57,13 @@ class Sale
             }
         }
 
+        $arHoldItems = [];
+        if ($saleTrx->getHoldItemCollection()) {
+            foreach ($saleTrx->getHoldItemCollection() as $item) {
+                $arHoldItems[] = HoldItem::toArray($item);
+            }
+        }
+
         return [
             'operation_type' => 'sale',
             'level_up'       => true,
@@ -74,8 +82,9 @@ class Sale
             'coupon'         => $saleTrx->getCouponId() ? $saleTrx->getCouponId()->getId() : '',
             'payment_types'  => $arPaymentTypes,
             'cert_payments'  => $arCertPayments,
-            'hold_id'        => $saleTrx->getHoldId() ? $saleTrx->getHoldId()->getId() : null,
+            'hold_id'        => $saleTrx->getHoldId() ? $saleTrx->getHoldId()->getId() : '',
             'hold_used'      => $saleTrx->isHoldUsed(),
+            'hold_items'     => $arHoldItems,
             'test'           => $saleTrx->isTest(),
             'calculate_history' => $arCalculateHistory
         ];

@@ -48,6 +48,8 @@ class Document
             'cheque_items' => $arChequeItems,
             'payment_types' => $arPaymentTypes,
             'cert_payments' => $arCertPayments,
+            'hold_id' => $discountDocument->getHoldId() ? $discountDocument->getHoldId()->getId() : '',
+            'hold_used' => $discountDocument->isHoldUsed(),
         ];
 
         if ($discountDocument->getCard() !== null) {
