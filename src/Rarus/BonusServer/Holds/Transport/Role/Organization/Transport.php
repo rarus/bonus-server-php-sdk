@@ -55,7 +55,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
 
         $holdCollection = new BonusServer\Holds\DTO\HoldCollection();
         foreach ((array)$requestResult['holds'] as $hold) {
-            $holdCollection->attach(BonusServer\Holds\DTO\Fabric::initHoldFromServerResponse($hold));
+            $holdCollection->attach(BonusServer\Holds\DTO\Fabric::initHoldFromServerResponse($hold, $this->apiClient->getTimezone()));
         }
 
         $paginationResponse = new PaginationResponse(
@@ -98,7 +98,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
             throw new ApiClientException('hold is empty');
         }
 
-        $hold = BonusServer\Holds\DTO\Fabric::initHoldFromServerResponse($requestResult['hold']);
+        $hold = BonusServer\Holds\DTO\Fabric::initHoldFromServerResponse($requestResult['hold'], $this->apiClient->getTimezone());
 
         $this->log->debug('rarus.bonus.server.hold.transport.getById.finish', [
             'hold_id' => $hold->getHoldId()->getId(),

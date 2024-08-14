@@ -8,6 +8,7 @@ use Rarus\BonusServer\Cards\DTO\CardId;
 use Rarus\BonusServer\Coupons\DTO\CouponId;
 use Rarus\BonusServer\Discounts\DTO\DiscountItems\DiscountItemCollection;
 use Rarus\BonusServer\Holds\DTO\HoldId;
+use Rarus\BonusServer\Holds\DTO\HoldItemCollection;
 use Rarus\BonusServer\Shops\DTO\ShopId;
 use Rarus\BonusServer\Transactions\DTO\CashRegister\CashRegister;
 use Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection;
@@ -94,6 +95,11 @@ abstract class AbstractTransaction
      * @var boolean
      */
     protected $test = false;
+
+    /**
+     * @var HoldItemCollection|null
+     */
+    protected $holdItemCollection;
 
     /**
      * @return string
@@ -233,6 +239,17 @@ abstract class AbstractTransaction
     public function setCalculateHistoryCollection(?DiscountItemCollection $calculateHistoryCollection
     ): AbstractTransaction {
         $this->calculateHistoryCollection = $calculateHistoryCollection;
+        return $this;
+    }
+
+    public function getHoldItemCollection(): ?HoldItemCollection
+    {
+        return $this->holdItemCollection;
+    }
+
+    public function setHoldItemCollection(HoldItemCollection $holdItems): AbstractTransaction
+    {
+        $this->holdItemCollection = $holdItems;
         return $this;
     }
 }

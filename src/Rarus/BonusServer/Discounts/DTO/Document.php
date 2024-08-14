@@ -6,6 +6,7 @@ namespace Rarus\BonusServer\Discounts\DTO;
 
 use Rarus\BonusServer\Cards\DTO\Card;
 use Rarus\BonusServer\Coupons\DTO\CouponId;
+use Rarus\BonusServer\Holds\DTO\HoldId;
 use Rarus\BonusServer\Shops\DTO\ShopId;
 use Rarus\BonusServer\Transactions\DTO\CertPayments\CertPaymentCollection;
 use Rarus\BonusServer\Transactions\DTO\ChequeRows\ChequeRowCollection;
@@ -38,6 +39,17 @@ final class Document
      * @var int|null
      */
     private $bonusPayment;
+
+    /**
+     * @var HoldId|null
+     */
+    private $holdId;
+
+    /**
+     * @var boolean
+     */
+    protected $holdUsed = false;
+
     /**
      * @var \Rarus\BonusServer\Transactions\DTO\PaymentTypes\PaymentTypeCollection|null
      */
@@ -180,5 +192,27 @@ final class Document
     public function getBonusPayment(): ?int
     {
         return $this->bonusPayment;
+    }
+
+    public function getHoldId(): ?HoldId
+    {
+        return $this->holdId;
+    }
+
+    public function setHoldId(?HoldId $holdId): Document
+    {
+        $this->holdId = $holdId;
+        return $this;
+    }
+
+    public function isHoldUsed(): bool
+    {
+        return $this->holdUsed;
+    }
+
+    public function setHoldUsed(bool $holdUsed): Document
+    {
+        $this->holdUsed = $holdUsed;
+        return $this;
     }
 }
