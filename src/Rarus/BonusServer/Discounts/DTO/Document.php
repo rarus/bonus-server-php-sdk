@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rarus\BonusServer\Discounts\DTO;
 
 use Rarus\BonusServer\Cards\DTO\Card;
+use Rarus\BonusServer\CouponHolds\DTO\CouponHoldId;
 use Rarus\BonusServer\Coupons\DTO\CouponId;
 use Rarus\BonusServer\Holds\DTO\HoldId;
 use Rarus\BonusServer\Shops\DTO\ShopId;
@@ -44,6 +45,11 @@ final class Document
      * @var HoldId|null
      */
     private $holdId;
+
+    /**
+     * @var CouponHoldId|null
+     */
+    private $couponHoldId;
 
     /**
      * @var boolean
@@ -213,6 +219,17 @@ final class Document
     public function setHoldUsed(bool $holdUsed): Document
     {
         $this->holdUsed = $holdUsed;
+        return $this;
+    }
+
+    public function getCouponHoldId(): ?CouponHoldId
+    {
+        return $this->couponHoldId;
+    }
+
+    public function setCouponHoldId(?CouponHoldId $couponHoldId): Document
+    {
+        $this->couponHoldId = $couponHoldId;
         return $this;
     }
 }

@@ -298,16 +298,21 @@ class ApiClient
                 $responseBodyAsString = $response->getBody()->getContents();
             }
             $result = $this->decodeApiJsonResponse($responseBodyAsString);
-            $this->log->error(
-                'rarus.bonus.server.apiClient.backend.error',
-                [
-                    'code' => $exception->getCode(),
-                    'message' => $exception->getMessage(),
-                    'server_response' => $responseBodyAsString,
-                    'decodedResponse' => $result,
-                ]
-            );
-            throw new BonusServer\Exceptions\ApiClientException($result['message'], (int)$result['code']);
+
+            // не записываем в логи сообщения с не найденными элементами
+            if ((int)$result['code'] !== 114) {
+                $this->log->error(
+                    'rarus.bonus.server.apiClient.backend.error',
+                    [
+                        'code' => $exception->getCode(),
+                        'message' => $exception->getMessage(),
+                        'server_response' => $responseBodyAsString,
+                        'decodedResponse' => $result,
+                    ]
+                );
+            }
+
+            throw new BonusServer\Exceptions\ApiClientException($result['message'], (int)$result['code'], $exception, $result);
         } catch (GuzzleHttp\Exception\GuzzleException $exception) {
             // произошла ошибка на уровне сетевой подсистемы
             $this->log->error(

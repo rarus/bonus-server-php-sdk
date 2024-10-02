@@ -49,6 +49,7 @@ class Document
             'payment_types' => $arPaymentTypes,
             'cert_payments' => $arCertPayments,
             'hold_id' => $discountDocument->getHoldId() ? $discountDocument->getHoldId()->getId() : '',
+            'coupon_hold_id' => $discountDocument->getCouponHoldId() ? $discountDocument->getCouponHoldId()->getId() : '',
             'hold_used' => $discountDocument->isHoldUsed(),
         ];
 

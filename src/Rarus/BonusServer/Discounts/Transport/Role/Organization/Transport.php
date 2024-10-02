@@ -44,10 +44,20 @@ class Transport extends BonusServer\Transport\AbstractTransport
                 'discountItemsCount' => $estimate->getDiscountItems()->count(),
             ]);
         } catch (BonusServer\Exceptions\ApiClientException $exception) {
-            // если скидки не найдены, то сервер возврашает 404 статус выставив 114 код в данном случае мы его подавляем
-            if ($exception->getCode() !== 114) {
+            // если скидки не найдены, то сервер возвращает 404 статус выставив 114 код в данном случае мы его подавляем
+            if ($exception->getCode() !== 114 && empty($exception->getResponse()['payment_distribution'])) {
                 throw $exception;
             }
+
+            $estimate = \Rarus\BonusServer\Discounts\DTO\Fabric::initEstimateFromServerResponse(
+                $this->getDefaultCurrency(),
+                $exception->getResponse()
+            );
+
+            $this->log->debug('rarus.bonus.server.CustomTransport.calculateDiscounts.finish', [
+                'documentItemsCount' => $estimate->getDocumentItems()->count(),
+                'discountItemsCount' => $estimate->getDiscountItems()->count(),
+            ]);
         }
 
         return $estimate;
