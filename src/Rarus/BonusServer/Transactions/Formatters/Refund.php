@@ -43,6 +43,7 @@ class Refund
             'refund_bonus'       => $refundTrx->getRefundBonus(),
             'cheque_items'       => $arChequeItems,
             'coupon'             => $refundTrx->getCouponId() ? $refundTrx->getCouponId()->getId() : '',
+            'coupon_hold_id'     => $refundTrx->getCouponHoldId() ? $refundTrx->getCouponHoldId()->getId() : '',
             'hold_id'            => $refundTrx->getHoldId() ? $refundTrx->getHoldId()->getId() : null,
             'hold_used'          => $refundTrx->isHoldUsed(),
             'test'               => $refundTrx->isTest()

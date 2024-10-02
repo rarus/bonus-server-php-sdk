@@ -32,13 +32,14 @@ class Fabric
         $est = new Estimate();
 
         $documentItemCollection = new Discounts\DTO\DocumentItems\DocumentItemCollection();
-        foreach ($arEstimate['cheque_items'] as $chequeItem) {
-            $documentItemCollection->attach(Discounts\DTO\DocumentItems\Fabric::initFromServerResponse($currency, $chequeItem));
+        if (!empty($arEstimate['cheque_items'])) {
+            foreach ($arEstimate['cheque_items'] as $chequeItem) {
+                $documentItemCollection->attach(Discounts\DTO\DocumentItems\Fabric::initFromServerResponse($currency, $chequeItem));
+            }
         }
         $est->setDocumentItems($documentItemCollection);
 
         $discountItemCollection = new Discounts\DTO\DiscountItems\DiscountItemCollection();
-
         if (!empty($arEstimate['cheque_bonus'])) {
             foreach ($arEstimate['cheque_bonus'] as $discountItem) {
                 $discountItemCollection->attach(Discounts\DTO\DiscountItems\Fabric::initFromServerResponse($currency, $discountItem));
@@ -46,7 +47,7 @@ class Fabric
         }
         $est->setDiscountItems($discountItemCollection);
 
-        if(!empty($arEstimate['payment_distribution'])) {
+        if (!empty($arEstimate['payment_distribution'])) {
             $paymentDistributionCollection = new PaymentDistributionCollection();
             foreach ($arEstimate['payment_distribution'] as $item) {
                 $paymentDistribution = new PaymentDistribution(

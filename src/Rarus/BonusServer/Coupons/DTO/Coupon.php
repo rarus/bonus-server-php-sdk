@@ -19,6 +19,10 @@ class Coupon
      */
     private $id;
     /**
+     * @var CouponGroupId
+     */
+    private $couponGroupId;
+    /**
      * @var bool|null
      */
     private $active;
@@ -144,6 +148,7 @@ class Coupon
 
     /**
      * @param \DateTime|null $activateDate
+     * @return Coupon
      */
     public function setActivateDate(?\DateTime $activateDate): self
     {
@@ -162,11 +167,23 @@ class Coupon
 
     /**
      * @param \DateTime|null $lastDate
+     * @return Coupon
      */
     public function setLastDate(?\DateTime $lastDate): self
     {
         $this->lastDate = $lastDate;
 
+        return $this;
+    }
+
+    public function getCouponGroupId(): CouponGroupId
+    {
+        return $this->couponGroupId;
+    }
+
+    public function setCouponGroupId(CouponGroupId $couponGroupId): Coupon
+    {
+        $this->couponGroupId = $couponGroupId;
         return $this;
     }
 }

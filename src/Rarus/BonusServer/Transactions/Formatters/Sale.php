@@ -80,6 +80,7 @@ class Sale
             'cheque_items'   => $arChequeItems,
             'cheque_bonus'   => $arChequeBonus,
             'coupon'         => $saleTrx->getCouponId() ? $saleTrx->getCouponId()->getId() : '',
+            'coupon_hold_id' => $saleTrx->getCouponHoldId() ? $saleTrx->getCouponHoldId()->getId() : '',
             'payment_types'  => $arPaymentTypes,
             'cert_payments'  => $arCertPayments,
             'hold_id'        => $saleTrx->getHoldId() ? $saleTrx->getHoldId()->getId() : '',

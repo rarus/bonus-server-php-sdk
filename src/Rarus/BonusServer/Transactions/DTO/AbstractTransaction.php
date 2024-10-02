@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rarus\BonusServer\Transactions\DTO;
 
 use Rarus\BonusServer\Cards\DTO\CardId;
+use Rarus\BonusServer\CouponHolds\DTO\CouponHoldId;
 use Rarus\BonusServer\Coupons\DTO\CouponId;
 use Rarus\BonusServer\Discounts\DTO\DiscountItems\DiscountItemCollection;
 use Rarus\BonusServer\Holds\DTO\HoldId;
@@ -64,6 +65,11 @@ abstract class AbstractTransaction
      * @var CouponId
      */
     protected $couponId;
+
+    /**
+     * @var CouponHoldId|null
+     */
+    protected $couponHoldId;
     /**
      * @var DiscountItemCollection|null
      */
@@ -250,6 +256,17 @@ abstract class AbstractTransaction
     public function setHoldItemCollection(HoldItemCollection $holdItems): AbstractTransaction
     {
         $this->holdItemCollection = $holdItems;
+        return $this;
+    }
+
+    public function getCouponHoldId(): ?CouponHoldId
+    {
+        return $this->couponHoldId;
+    }
+
+    public function setCouponHoldId(?CouponHoldId $couponHoldId): AbstractTransaction
+    {
+        $this->couponHoldId = $couponHoldId;
         return $this;
     }
 }
