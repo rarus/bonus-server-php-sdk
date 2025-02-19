@@ -30,11 +30,11 @@ class Fabric
         $moneyParser = new DecimalMoneyParser($currencies);
 
         $score
-            ->setBonusEarned($moneyParser->parse((string)$arResponse['bonus_earned'], $currency->getCode()))
-            ->setBonusSpent($moneyParser->parse((string)$arResponse['bonus_spent'], $currency->getCode()))
+            ->setBonusEarned($moneyParser->parse((string)$arResponse['bonus_earned'], $currency))
+            ->setBonusSpent($moneyParser->parse((string)$arResponse['bonus_spent'], $currency))
             ->setSaleId((string)$arResponse['sale_id'])
             ->setDocId((string)$arResponse['doc_id'])
-            ->setCardAccumulationAmount($moneyParser->parse((string)$arResponse['card_accum'], $currency->getCode()));
+            ->setCardAccumulationAmount($moneyParser->parse((string)$arResponse['card_accum'], $currency));
 
         return $score;
     }

@@ -32,8 +32,8 @@ class Fabric
             ->setArticleId(new ArticleId((string)$arResponse['article_id']))
             ->setName((string)$arResponse['item_name'])
             ->setQuantity((int)$arResponse['quantity'])
-            ->setPrice($moneyParser->parse((string)$arResponse['price'], $currency->getCode()))
-            ->setDiscount($moneyParser->parse((string)$arResponse['discount'], $currency->getCode()));
+            ->setPrice($moneyParser->parse((string)$arResponse['price'], $currency))
+            ->setDiscount($moneyParser->parse((string)$arResponse['discount'], $currency));
 
         return $productRow;
     }

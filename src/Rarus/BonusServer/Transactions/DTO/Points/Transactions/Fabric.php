@@ -43,7 +43,7 @@ class Fabric
             ->setCardId(new CardId((string)$arPointTransaction['card_id']))
             ->setMastercardId(new CardId((string)$arPointTransaction['mastercard_id']))
             ->setTime(DateTimeParser::parseTimestampFromServerResponse((string)$arPointTransaction['time'], $dateTimeZone))
-            ->setSum($moneyParser->parse((string)$arPointTransaction['sum'], $currency->getCode()))
+            ->setSum($moneyParser->parse((string)$arPointTransaction['sum'], $currency))
             ->setType($arPointTransaction['type'] === 0 ? Type\Fabric::getRefund() : Type\Fabric::getSale())
             ->setAuthor((string)$arPointTransaction['author'])
             ->setDescription((string)$arPointTransaction['description'])

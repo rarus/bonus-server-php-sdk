@@ -36,7 +36,7 @@ class Fabric
 
         $point = new Point();
         $point
-            ->setSum($moneyParser->parse((string)$arPoint['sum'], $currency->getCode()))
+            ->setSum($moneyParser->parse((string)$arPoint['sum'], $currency))
             ->setDateCreate(DateTimeParser::parseTimestampFromServerResponse((string)$arPoint['date'], $dateTimeZone));
 
         if ($arPoint['active_from'] !== 0) {

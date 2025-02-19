@@ -47,7 +47,7 @@ class Fabric
             $card->setCardLevelId(new LevelId((string)$arCard['card_level_id']));
         }
         if (key_exists('accum_sale_amount', $arCard)) {
-            $card->setAccumSaleAmount($moneyParser->parse((string)$arCard['accum_sale_amount'], $currency->getCode()));
+            $card->setAccumSaleAmount($moneyParser->parse((string)$arCard['accum_sale_amount'], $currency));
         }
         if (key_exists('date_last_transaction', $arCard) && $arCard['date_last_transaction'] !== 0) {
             $card->setDateLastTransaction(DateTimeParser::parseTimestampFromServerResponse((string)$arCard['date_last_transaction'], $dateTimeZone));
