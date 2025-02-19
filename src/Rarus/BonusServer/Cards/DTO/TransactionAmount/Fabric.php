@@ -29,7 +29,7 @@ class Fabric
         $moneyParser = new DecimalMoneyParser(new ISOCurrencies());
 
         return (new TransactionAmount())
-            ->setTransactionSum($moneyParser->parse((string)$arTransactionAmount['sum'], $currency->getCode()))
+            ->setTransactionSum($moneyParser->parse((string)$arTransactionAmount['sum'], $currency))
             ->setDate(DateTimeParser::parseTimestampFromServerResponse((string)$arTransactionAmount['date'], $dateTimeZone));
     }
 }

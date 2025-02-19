@@ -80,9 +80,10 @@ class Fabric
         if ($userId !== null) {
             $user->setUserId($userId);
         }
-        if ($status !== null) {
-            $user->setStatus($status);
+        if ($status === null) {
+            $status = Users\DTO\Status\Fabric::initDefaultStatusForNewUser();
         }
+        $user->setStatus($status);
 
         return $user;
     }

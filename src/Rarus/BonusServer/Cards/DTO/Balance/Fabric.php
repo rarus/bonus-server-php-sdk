@@ -31,8 +31,8 @@ class Fabric
         $moneyParser = new DecimalMoneyParser(new ISOCurrencies());
 
         return (new Balance())
-            ->setAvailable($moneyParser->parse((string)$arBalanceInfo['balance_available'], $currency->getCode()))
-            ->setTotal($moneyParser->parse((string)$arBalanceInfo['balance'], $currency->getCode()));
+            ->setAvailable($moneyParser->parse((string)$arBalanceInfo['balance_available'], $currency))
+            ->setTotal($moneyParser->parse((string)$arBalanceInfo['balance'], $currency));
     }
 
     /**
@@ -49,9 +49,9 @@ class Fabric
 
         $paymentBalance
             ->setCardLevelId(new LevelId((string)$arPaymentBalance['card_level_id']))
-            ->setAvailableBalance($moneyParser->parse((string)$arPaymentBalance['balance_available'], $currency->getCode()));
+            ->setAvailableBalance($moneyParser->parse((string)$arPaymentBalance['balance_available'], $currency));
 
-        $paymentBalance->setPaymentBalance($moneyParser->parse((string)$arPaymentBalance['max_payment'], $currency->getCode()));
+        $paymentBalance->setPaymentBalance($moneyParser->parse((string)$arPaymentBalance['max_payment'], $currency));
 
         if ($arPaymentBalance['master_card_id'] !== '') {
             $paymentBalance->setMastercardId(new Cards\DTO\CardId((string)$arPaymentBalance['master_card_id']));
@@ -74,10 +74,10 @@ class Fabric
                 $paymentDistribution = new Cards\DTO\PaymentDistribution\PaymentDistribution(
                     $item['line_number'],
                     new ArticleId($item['article']),
-                    $moneyParser->parse((string)$item['summ'], $currency->getCode()),
+                    $moneyParser->parse((string)$item['summ'], $currency),
                     (float)$item['max_payment_percent'],
                     (float)$item['max_payment_sum'],
-                    $moneyParser->parse((string)$item['payment_sum'], $currency->getCode())
+                    $moneyParser->parse((string)$item['payment_sum'], $currency)
                 );
                 $paymentDistributionCollection->attach($paymentDistribution);
             }

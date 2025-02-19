@@ -30,7 +30,7 @@ class Fabric
             ->setLevelId(new LevelId((string)$arLevel['id']))
             ->setName((string)$arLevel['name'])
             ->setOrder((int)$arLevel['order'])
-            ->setAccumulationAmountToNextLevel($moneyParser->parse((string)$arLevel['accum_level'], $currency->getCode()))
+            ->setAccumulationAmountToNextLevel($moneyParser->parse((string)$arLevel['accum_level'], $currency))
             ->setResetAccumulationSumWhenUpgradeLevel((bool)$arLevel['reset_card_accum'])
             ->setMaxPaymentPercent((int)$arLevel['max_payment_percent'])
             ->setRestrictionRule(new RestrictionRule(
@@ -53,7 +53,7 @@ class Fabric
         return (new LevelDescription())
             ->setLevelId(new LevelId($arLevelDescription['level_id']))
             ->setName($arLevelDescription['level_name'])
-            ->setLevelUpAccumulationSum($moneyParser->parse((string)$arLevelDescription['accum_level'], $currency->getCode()))
-            ->setCardAccumulationSum($moneyParser->parse((string)$arLevelDescription['accum_amount'], $currency->getCode()));
+            ->setLevelUpAccumulationSum($moneyParser->parse((string)$arLevelDescription['accum_level'], $currency))
+            ->setCardAccumulationSum($moneyParser->parse((string)$arLevelDescription['accum_amount'], $currency));
     }
 }
