@@ -62,7 +62,7 @@ class Transport extends BonusServer\Transport\AbstractTransport
 
         // получили юзера
         $requestResult = $this->apiClient->executeApiRequest(
-            sprintf('/organization/user/%s', $userId->getId()),
+            sprintf('/organization/user/%s?%s', $userId->getId(), 'with_additional_fields=true'),
             RequestMethodInterface::METHOD_GET
         );
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rarus\BonusServer\Users\DTO;
 
 use Rarus\BonusServer\Users;
+use Rarus\BonusServer\Users\DTO\AdditionalField\AdditionalFieldCollection;
 use Rarus\BonusServer\Util\DateTimeParser;
 
 /**
@@ -42,6 +43,14 @@ class Fabric
             $user->setBirthdate($birthday);
         }
 
+        if (!empty($arUser['additional_fields']) && is_array($arUser['additional_fields'])) {
+            $additionalFieldCollection = new AdditionalFieldCollection();
+            foreach ($arUser['additional_fields'] as $field) {
+                $additionalField = Users\DTO\AdditionalField\Fabric::initAdditionFieldFromResponse($field);
+                $additionalFieldCollection->attach($additionalField);
+            }
+            $user->setAdditionalFields($additionalFieldCollection);
+        }
 
         return $user;
     }

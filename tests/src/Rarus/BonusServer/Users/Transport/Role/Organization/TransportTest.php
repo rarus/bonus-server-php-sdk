@@ -231,6 +231,7 @@ class TransportTest extends TestCase
 
         $userFilter = new UserFilter();
         $userFilter->setLogin('ivlean-' . $userUUID);
+        $userFilter->setAdditionalFields(true);
         $users = $this->userTransport->list($userFilter, new Pagination());
 
         $this->assertEquals(1, $users->getPagination()->getResultItemsCount());
