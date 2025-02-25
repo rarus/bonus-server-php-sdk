@@ -20,6 +20,13 @@ class User
      */
     public static function toArray(BonusServer\Users\DTO\User $user): array
     {
+        $additionalFields  = [];
+        if (!empty($user->getAdditionalFields())) {
+            foreach ($user->getAdditionalFields() as $additionalField) {
+                $additionalFields[] = AdditionalField::toArray($additionalField);
+            }
+        }
+
         return [
             'id' => $user->getUserId()->getId(),
             'login' => $user->getLogin(),
@@ -36,6 +43,7 @@ class User
                 'is_locked' => (int)$user->getStatus()->isBlocked(),
                 'personal_data_agree' => (int)$user->getStatus()->isPersonalDataAgree(),
             ],
+            'additional_fields' => $additionalFields,
         ];
     }
 
@@ -97,6 +105,13 @@ class User
      */
     public static function toArrayForCreateNewUser(BonusServer\Users\DTO\User $newUser, \DateTimeZone $dateTimeZone): array
     {
+        $additionalFields = [];
+        if (!empty($newUser->getAdditionalFields())) {
+            foreach ($newUser->getAdditionalFields() as $additionalField) {
+                $additionalFields[] = AdditionalField::toArray($additionalField);
+            }
+        }
+
         $arNewUser = [
             'login' => $newUser->getLogin(),
             'name' => $newUser->getName(),
@@ -108,6 +123,7 @@ class User
             'is_locked' => $newUser->getStatus()->isBlocked(),
             'personal_data_agree' => $newUser->getStatus()->isPersonalDataAgree(),
             'app_client' => $newUser->getAppClient() ?? '',
+            'additional_fields' => $additionalFields,
         ];
         if ($newUser->getBirthdate() !== null) {
             $utcBirthday = new \DateTime($newUser->getBirthdate()->format('d.m.Y H:i:s'), new \DateTimeZone('UTC'));
@@ -135,8 +151,8 @@ class User
             'phone' => $newUser->getPhone(),
             'email' => $newUser->getEmail(),
             'gender' => $newUser->getGender() === null ? '' : $newUser->getGender()->getCode(),
-            'confirmed' => $newUser->getStatus()->isConfirmed(),
-            'is_locked' => $newUser->getStatus()->isBlocked(),
+            'confirmed' => $newUser->getStatus()->isConfirmed() ? 1 : 0,
+            'is_locked' => $newUser->getStatus()->isBlocked() ? 1 : 0,
             'personal_data_agree' => $newUser->getStatus()->isPersonalDataAgree(),
             'app_client' => $newUser->getAppClient() ?? '',
             'password' => $newUser->getPasswordHash() ?? '',

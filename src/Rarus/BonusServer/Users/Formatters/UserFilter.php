@@ -14,33 +14,36 @@ use Rarus\BonusServer;
 class UserFilter
 {
     /**
-     * @param BonusServer\Users\DTO\UserFilter $UserFilter
+     * @param BonusServer\Users\DTO\UserFilter $userFilter
      *
      * @return string
      */
-    public static function toUrlArguments(BonusServer\Users\DTO\UserFilter $UserFilter): string
+    public static function toUrlArguments(BonusServer\Users\DTO\UserFilter $userFilter): string
     {
         $arFilter = [];
-        if ($UserFilter->getGender()) {
-            $arFilter['gender'] = $UserFilter->getGender()->getCode();
+        if ($userFilter->getGender()) {
+            $arFilter['gender'] = $userFilter->getGender()->getCode();
         }
-        if ($UserFilter->isBlocked()) {
-            $arFilter['is_locked'] = $UserFilter->isBlocked();
+        if ($userFilter->isBlocked()) {
+            $arFilter['is_locked'] = $userFilter->isBlocked();
         }
-        if ($UserFilter->isConfirmed()) {
-            $arFilter['confirmed'] = $UserFilter->isConfirmed();
+        if ($userFilter->isConfirmed()) {
+            $arFilter['confirmed'] = $userFilter->isConfirmed();
         }
-        if ($UserFilter->getSearchValue() !== '') {
-            $arFilter['user_filter'] = $UserFilter->getSearchValue();
+        if ($userFilter->getSearchValue() !== '') {
+            $arFilter['user_filter'] = $userFilter->getSearchValue();
         }
-        if ($UserFilter->getLogin() !== '') {
-            $arFilter['login'] = $UserFilter->getLogin();
+        if ($userFilter->getLogin() !== '') {
+            $arFilter['login'] = $userFilter->getLogin();
         }
-        if ($UserFilter->getEmail() !== '') {
-            $arFilter['email'] = $UserFilter->getEmail();
+        if ($userFilter->getEmail() !== '') {
+            $arFilter['email'] = $userFilter->getEmail();
         }
-        if ($UserFilter->getPhone() !== '') {
-            $arFilter['phone'] = $UserFilter->getPhone();
+        if ($userFilter->getPhone() !== '') {
+            $arFilter['phone'] = $userFilter->getPhone();
+        }
+        if ($userFilter->isAdditionalFields()) {
+            $arFilter['with_additional_fields'] = 'true';
         }
 
         return http_build_query($arFilter);

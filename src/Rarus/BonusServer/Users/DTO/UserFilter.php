@@ -43,6 +43,10 @@ class UserFilter
     protected $phone;
 
     /**
+     * @var bool
+     */
+    protected $additionalFields = false;
+    /**
      * @return Gender
      */
     public function getGender(): ?Gender
@@ -146,5 +150,16 @@ class UserFilter
     public function setPhone(?string $phone): void
     {
         $this->phone = $phone;
+    }
+
+    public function isAdditionalFields(): bool
+    {
+        return $this->additionalFields;
+    }
+
+    public function setAdditionalFields(bool $additionalFields): UserFilter
+    {
+        $this->additionalFields = $additionalFields;
+        return $this;
     }
 }

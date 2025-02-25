@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rarus\BonusServer\Users\DTO;
 
 use Rarus\BonusServer\Cards\DTO\CardCollection;
+use Rarus\BonusServer\Users\DTO\AdditionalField\AdditionalFieldCollection;
 use Rarus\BonusServer\Users\DTO\Gender\Gender;
 
 /**
@@ -68,6 +69,11 @@ final class User
      * @var string | null
      */
     private $appClient;
+
+    /**
+     * @var AdditionalFieldCollection | null
+     */
+    private $additionalFields;
     /**
      * @return null|string
      */
@@ -307,6 +313,17 @@ final class User
     public function setAppClient(?string $appClient): User
     {
         $this->appClient = $appClient;
+        return $this;
+    }
+
+    public function getAdditionalFields(): ?AdditionalFieldCollection
+    {
+        return $this->additionalFields;
+    }
+
+    public function setAdditionalFields(?AdditionalFieldCollection $additionalFields): User
+    {
+        $this->additionalFields = $additionalFields;
         return $this;
     }
 }
