@@ -2,109 +2,98 @@
 
 declare(strict_types=1);
 
+use Money\Currency;
+use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
-use GuzzleHttp\MessageFormatter;
 use Monolog\Processor\IntrospectionProcessor;
 use Monolog\Processor\MemoryPeakUsageProcessor;
 use Monolog\Processor\MemoryUsageProcessor;
 use Monolog\Processor\UidProcessor;
+use Psr\Log\LoggerInterface;
+use RarusBonus\Client;
+use RarusBonus\RarusBonus;
 
 /**
- * фабрика создающая подключение к БС для прохождения интеграционных тестов
+ * Фабрика, создающая подключение к БС для прохождения интеграционных тестов
  *
  * Class TestEnvironmentManager
  */
 class TestEnvironmentManager
 {
-    /**
-     * @var string
-     */
-    private const URL = 'https://demo.bonus.rarus-online.com:88';
-    /**
-     * @var string
-     */
-    private const LOGIN = 'mesm';
-    /**
-     * @var string
-     */
-    private const PASSWORD = '3a9e090168bf592bcc35990bcc9fab9aff090004';
-    /**
-     * @var string
-     */
-    private const LOG_FILE = 'rarus-bonus-service-integration-tests.log';
-    /**
-     * @var string
-     */
-    private const DEFAULT_TIMEZONE = 'Europe/Moscow';
+    public const DEFAULT_TIMEZONE = 'Europe/Moscow';
 
     /**
-     * @return \Rarus\BonusServer\ApiClient
-     * @throws Exception
+     * @throws Exception|\Psr\SimpleCache\InvalidArgumentException
      */
-    public static function getInstanceForRoleOrganization(): \Rarus\BonusServer\ApiClient
+    public static function getInstance(): Client
     {
-        $credentials = Rarus\BonusServer\Auth\Fabric::createCredentialsForRoleOrganization(self::LOGIN, self::PASSWORD);
-
-        $log = self::getMonologInstance();
-
-        $guzzleHandlerStack = HandlerStack::create();
-        $guzzleHandlerStack->push(
-            Middleware::log(
-                $log,
-                new MessageFormatter(MessageFormatter::SHORT)
-            )
+        return RarusBonus::client(
+            $_ENV['RARUS_BONUS_API_URL'],
+            $_ENV['RARUS_BONUS_ORGANIZATION'],
+            $_ENV['RARUS_BONUS_REGISTER_TOKEN']
         );
-        $httpClient = new \GuzzleHttp\Client();
 
-        $apiClient = new Rarus\BonusServer\ApiClient(self::URL, new \GuzzleHttp\Client(), $log);
-        $apiClient
-            ->setTimezone(new \DateTimeZone(self::DEFAULT_TIMEZONE))
-            ->setGuzzleHandlerStack($guzzleHandlerStack);
-
-        $newAuthToken = $apiClient->getNewAuthToken($credentials);
-        $apiClient->setAuthToken($newAuthToken);
-
-        return $apiClient;
+        //        $logger = self::getMonologInstance();
+        //
+        //        $guzzleHandlerStack = HandlerStack::create();
+        //        $guzzleHandlerStack->push(
+        //            Middleware::log(
+        //                $logger,
+        //                new MessageFormatter(MessageFormatter::DEBUG)
+        //            )
+        //        );
+        //
+        //        $httpClient = new \GuzzleHttp\Client([
+        //            'base_uri' => $_ENV['RARUS_BONUS_API_URL'],
+        //            'headers' => [
+        //                'Cache-Control' => 'no-cache',
+        //                'Content-type' => 'application/json; charset=utf-8',
+        //            ],
+        //            'handler' => $guzzleHandlerStack
+        //        ]);
+        //
+        //
+        //        return RarusBonus::factory()
+        //            ->setApiUrl($_ENV['RARUS_BONUS_API_URL'])
+        //            ->setOrganization($_ENV['RARUS_BONUS_ORGANIZATION'])
+        //            ->setApiKey($_ENV['RARUS_BONUS_REGISTER_TOKEN'])
+        //            ->setHttpClient($httpClient)
+        //            ->setLogger($logger)
+        //            ->setCurrency(self::getDefaultCurrency())
+        //            ->setDateTimeZone(self::getDefaultTimezone())
+        //            ->create();
     }
 
     /**
-     * @return \Psr\Log\LoggerInterface
      * @throws Exception
      */
-    public static function getMonologInstance(): \Psr\Log\LoggerInterface
+    public static function getMonologInstance(): LoggerInterface
     {
         static $log;
 
-        if (null === $log) {
+        if ($log === null) {
             $log = new Logger('rarus-bonus-service');
-            $log->pushProcessor(new MemoryUsageProcessor());
-            $log->pushProcessor(new MemoryUsageProcessor());
-            $log->pushProcessor(new MemoryPeakUsageProcessor());
-            $log->pushProcessor(new IntrospectionProcessor());
-            $log->pushProcessor(new UidProcessor());
+            $log->pushProcessor(new MemoryUsageProcessor);
+            $log->pushProcessor(new MemoryUsageProcessor);
+            $log->pushProcessor(new MemoryPeakUsageProcessor);
+            $log->pushProcessor(new IntrospectionProcessor);
+            $log->pushProcessor(new UidProcessor);
 
-            $log->pushHandler(new \Monolog\Handler\StreamHandler(__DIR__ . '/logs/' . self::LOG_FILE, Logger::DEBUG));
-            $log->pushHandler(new \Monolog\Handler\StreamHandler('php://stdout', Logger::WARNING));
+            $log->pushHandler(
+                new StreamHandler($_ENV['INTEGRATION_TEST_LOG_FILE'], $_ENV['INTEGRATION_TEST_LOG_LEVEL'])
+            );
         }
 
         return $log;
     }
 
-    /**
-     * @return \Money\Currency
-     */
-    public static function getDefaultCurrency(): \Money\Currency
+    public static function getDefaultCurrency(): Currency
     {
-        return new \Money\Currency('RUB');
+        return new Currency('RUB');
     }
 
-    /**
-     * @return DateTimeZone
-     */
-    public static function getDefaultTimezone(): \DateTimeZone
+    public static function getDefaultTimezone(): DateTimeZone
     {
-        return new \DateTimeZone(self::DEFAULT_TIMEZONE);
+        return new DateTimeZone(self::DEFAULT_TIMEZONE);
     }
 }

@@ -1,0 +1,110 @@
+<?php
+
+declare(strict_types=1);
+
+namespace RarusBonus\Cards\DTO;
+
+use Money\Currency;
+use Money\Money;
+use RarusBonus\Exceptions\ApiClientException;
+use RarusBonus\Users\DTO\UserDto;
+use RarusBonus\Util\MoneyParser;
+
+final readonly class CardDto
+{
+    /**
+     * @param  array<string>  $permissions
+     * @param  array<string>  $typeCards
+     * @param  array<CardDto>  $otherCardsOnAccount
+     */
+    public function __construct(
+        public int $id,
+        public string $externalId,
+        public string $account,
+        public ?CardLevelDto $cardLevel,
+        public array $permissions,
+        public ?UserDto $client,
+        public ?TransactionDto $transactions,
+        public array $typeCards,
+        public string $name,
+        public string $barcode,
+        public ?string $magneticCode,
+        public bool $isPhysical,
+        public bool $blocked,
+        public ?int $dateBlocked,
+        public string $state,
+        public ?int $dateState,
+        public ?int $dateActivated,
+        public Money $balance,
+        public ?int $balanceDate,
+        public Money $turnover,
+        public ?SalesDto $sales,
+        /** @var CardDto[] */
+        public array $otherCardsOnAccount,
+    ) {}
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'external_id' => $this->externalId,
+            'account' => $this->account,
+            'card_level' => $this->cardLevel?->toArray(),
+            'permissions' => $this->permissions,
+            'client' => $this->client?->toArray(),
+            'transactions' => $this->transactions?->toArray(),
+            'type_cards' => $this->typeCards,
+            'name' => $this->name,
+            'barcode' => $this->barcode,
+            'magnetic_code' => $this->magneticCode,
+            'is_physical' => $this->isPhysical,
+            'blocked' => $this->blocked,
+            'date_blocked' => $this->dateBlocked,
+            'state' => $this->state,
+            'date_state' => $this->dateState,
+            'date_activated' => $this->dateActivated,
+            'balance' => MoneyParser::toString($this->balance),
+            'balance_date' => $this->balanceDate,
+            'turnover' => $this->turnover,
+            'sales' => $this->sales?->toArray(),
+            'other_cards_on_account' => array_map(fn (CardDto $c) => $c->toArray(), $this->otherCardsOnAccount),
+        ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     *
+     * @throws ApiClientException
+     */
+    public static function createFromArray(array $data, Currency $currency, \DateTimeZone $dateTimeZone): self
+    {
+        return new self(
+            (int) $data['id'],
+            (string) $data['external_id'],
+            (string) $data['account'],
+            isset($data['card_level']) ? CardLevelDto::createFromArray($data['card_level']) : null,
+            $data['permissions'] ?? [],
+            isset($data['client']) ? UserDto::createFromArray($data['client'], $currency, $dateTimeZone) : null,
+            isset($data['transactions']) ? TransactionDto::createFromArray($data['transactions'], $dateTimeZone) : null,
+            $data['type_cards'] ?? [],
+            (string) $data['name'],
+            (string) $data['barcode'],
+            $data['magnetic_code'] ?? null,
+            (bool) $data['is_physical'],
+            (bool) $data['blocked'],
+            $data['date_blocked'] ?? null,
+            (string) $data['state'],
+            $data['date_state'] ?? null,
+            $data['date_activated'] ?? null,
+            MoneyParser::parse($data['balance'] ?? 0.0, $currency),
+            $data['balance_date'] ?? null,
+            MoneyParser::parse($data['turnover'] ?? 0.0, $currency),
+            isset($data['sales']) ? SalesDto::createFromArray($data['sales'], $dateTimeZone) : null,
+            array_map(fn (array $c) => CardDto::createFromArray($c, $currency, $dateTimeZone),
+                $data['other_cards_on_account'] ?? []),
+        );
+    }
+}
