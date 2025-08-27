@@ -14,7 +14,7 @@ composer require rarus/bonus-server-php-sdk^2.0
 ## Быстрый старт
 
 ```php
-$client = RarusBonus::client(
+$client = RarusLMS::client(
     'API_URL',
     'ORGANIZATION',
     'API_TOKEN'
@@ -30,8 +30,14 @@ $payload = $card->toArray();
 ## Расширенный пример использования
 
 ```php
-use RarusBonus\RarusBonus;
-use RarusBonus\Users\DTO\Fabric;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\MessageFormatter;
+use GuzzleHttp\Middleware;
+use Money\Currency;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Rarus\LMS\SDK\RarusLMS;
+use Rarus\LMS\SDK\Users\DTO\Fabric;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Psr16Cache;
 
@@ -63,14 +69,13 @@ $httpClient = new GuzzleHttp\Client([
 $psr6Cache = new FilesystemAdapter(); 
 $psr16Cache = new Psr16Cache($psr6Cache);
 
-$client = RarusBonus::factory()
-    ->setOrganization(getenv('ORGANIZATION'))
+$client = RarusLMS::factory()
     ->setApiKey(getenv('API_TOKEN'))
     ->setHttpClient($httpClient)
     ->setLogger($logger)
     ->setCurrency(new Currency('RUB'))
     ->setDateTimeZone(new DateTimeZone('Europe/Moscow'))
-    ->setCache($psr16Cache) // Кеширование AuthToken
+    ->setCache($psr16Cache)
     ->build();
 
 $userDto = Fabric::createNewInstance(

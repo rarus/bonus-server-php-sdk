@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RarusBonus\Exceptions;
+namespace Rarus\LMS\SDK\Exceptions;
 
 use Exception;
 

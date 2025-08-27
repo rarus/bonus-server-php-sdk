@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace RarusBonus\Cards\DTO;
+namespace Rarus\LMS\SDK\Cards\DTO;
 
 use Money\Currency;
 use Money\Money;
-use RarusBonus\Exceptions\ApiClientException;
-use RarusBonus\Users\DTO\UserDto;
-use RarusBonus\Util\MoneyParser;
+use Rarus\LMS\SDK\Exceptions\ApiClientException;
+use Rarus\LMS\SDK\Users\DTO\UserDto;
+use Rarus\LMS\SDK\Utils\MoneyParser;
 
 final readonly class CardDto
 {

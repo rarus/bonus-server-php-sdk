@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RarusBonus\Cards\DTO;
+namespace Rarus\LMS\SDK\Cards\DTO;
 
 final readonly class CardLevelDto
 {

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace RarusBonus\Cards\Transport;
+namespace Rarus\LMS\SDK\Cards\Transport;
 
 use Fig\Http\Message\RequestMethodInterface;
-use RarusBonus\Cards\DTO\CardDto;
-use RarusBonus\Exceptions\ApiClientException;
-use RarusBonus\Exceptions\NetworkException;
-use RarusBonus\Exceptions\UnknownException;
-use RarusBonus\Transport\BaseTransport;
+use Rarus\LMS\SDK\Cards\DTO\CardDto;
+use Rarus\LMS\SDK\Exceptions\ApiClientException;
+use Rarus\LMS\SDK\Exceptions\NetworkException;
+use Rarus\LMS\SDK\Exceptions\UnknownException;
+use Rarus\LMS\SDK\Transport\BaseTransport;
 
 class CardsTransport extends BaseTransport
 {
@@ -22,7 +22,7 @@ class CardsTransport extends BaseTransport
     {
         $result = $this->transport->request(
             RequestMethodInterface::METHOD_GET,
-            sprintf('/web-flow/card/by-id/%s', $id),
+            sprintf('web-flow/card/by-id/%s', $id),
         );
 
         return CardDto::createFromArray($result, $this->getDefaultCurrency(), $this->getDateTimeZone());
@@ -37,7 +37,7 @@ class CardsTransport extends BaseTransport
     {
         $result = $this->transport->request(
             RequestMethodInterface::METHOD_GET,
-            sprintf('/web-flow/card/by-barcode/%s', $barcode),
+            sprintf('web-flow/card/by-barcode/%s', $barcode),
         );
 
         return CardDto::createFromArray($result, $this->getDefaultCurrency(), $this->getDateTimeZone());

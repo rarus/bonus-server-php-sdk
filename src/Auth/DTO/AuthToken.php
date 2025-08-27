@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace RarusBonus\Auth\DTO;
+namespace Rarus\LMS\SDK\Auth\DTO;
 
-use RarusBonus\Exceptions\ApiClientException;
-use RarusBonus\Util\DateTimeParser;
+use Rarus\LMS\SDK\Exceptions\ApiClientException;
+use Rarus\LMS\SDK\Utils\DateTimeParser;
 
 final readonly class AuthToken
 {

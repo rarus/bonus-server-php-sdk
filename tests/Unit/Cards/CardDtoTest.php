@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace RarusBonus\Tests\Unit\Cards;
+namespace Rarus\LMS\SDK\Tests\Unit\Cards;
 
 use PHPUnit\Framework\TestCase;
-use RarusBonus\Cards\DTO\CardDto;
-use RarusBonus\Cards\DTO\CardLevelDto;
-use RarusBonus\Cards\DTO\SalesDto;
-use RarusBonus\Cards\DTO\TransactionDto;
-use RarusBonus\Exceptions\ApiClientException;
-use RarusBonus\Users\DTO\UserDto;
+use Rarus\LMS\SDK\Cards\DTO\CardDto;
+use Rarus\LMS\SDK\Cards\DTO\CardLevelDto;
+use Rarus\LMS\SDK\Cards\DTO\SalesDto;
+use Rarus\LMS\SDK\Cards\DTO\TransactionDto;
+use Rarus\LMS\SDK\Exceptions\ApiClientException;
+use Rarus\LMS\SDK\Users\DTO\UserDto;
 use TestEnvironmentManager;
 
 final class CardDtoTest extends TestCase

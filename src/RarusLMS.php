@@ -2,17 +2,16 @@
 
 declare(strict_types=1);
 
-namespace RarusBonus;
+namespace Rarus\LMS\SDK;
 
-final class RarusBonus
+final class RarusLMS
 {
     public const SDK_VERSION = '2.0.0';
 
-    public static function client(string $apiUrl, string $organization, string $apiKey): Client
+    public static function client(string $apiUrl, string $apiKey): Client
     {
         return self::factory()
             ->setApiUrl($apiUrl)
-            ->setOrganization($organization)
             ->setApiKey($apiKey)
             ->create();
     }

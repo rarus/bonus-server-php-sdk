@@ -1,6 +1,6 @@
 <?php
 
-namespace RarusBonus\Users\DTO\UserProperty;
+namespace Rarus\LMS\SDK\Users\DTO\UserProperty;
 
 enum UserPropertyType: string
 {

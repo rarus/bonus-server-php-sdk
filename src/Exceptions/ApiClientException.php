@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace RarusBonus\Exceptions;
+namespace Rarus\LMS\SDK\Exceptions;
 
-use RarusBonus\Transport\DTO\ErrorResponse;
+use Rarus\LMS\SDK\Transport\DTO\ErrorResponse;
 use Throwable;
 
 /**

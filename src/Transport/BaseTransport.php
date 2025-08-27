@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace RarusBonus\Transport;
+namespace Rarus\LMS\SDK\Transport;
 
 use DateTimeZone;
 use Money\Currency;

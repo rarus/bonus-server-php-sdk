@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace RarusBonus\Util;
+namespace Rarus\LMS\SDK\Utils;
 
 use DateTime;
 use DateTimeZone;
-use RarusBonus\Exceptions\ApiClientException;
+use Rarus\LMS\SDK\Exceptions\ApiClientException;
 
 /**
  * Class DateTimeParser

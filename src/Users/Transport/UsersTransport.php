@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace RarusBonus\Users\Transport;
+namespace Rarus\LMS\SDK\Users\Transport;
 
 use Fig\Http\Message\RequestMethodInterface;
-use RarusBonus\Exceptions\ApiClientException;
-use RarusBonus\Exceptions\InvalidArgumentException;
-use RarusBonus\Exceptions\NetworkException;
-use RarusBonus\Exceptions\UnknownException;
-use RarusBonus\Transport\BaseTransport;
-use RarusBonus\Users\DTO\UserDto;
+use Rarus\LMS\SDK\Exceptions\ApiClientException;
+use Rarus\LMS\SDK\Exceptions\InvalidArgumentException;
+use Rarus\LMS\SDK\Exceptions\NetworkException;
+use Rarus\LMS\SDK\Exceptions\UnknownException;
+use Rarus\LMS\SDK\Transport\BaseTransport;
+use Rarus\LMS\SDK\Users\DTO\UserDto;
 
 class UsersTransport extends BaseTransport
 {
@@ -24,7 +24,7 @@ class UsersTransport extends BaseTransport
     {
         $result = $this->transport->request(
             RequestMethodInterface::METHOD_POST,
-            '/web-flow/client',
+            'web-flow/client',
             $userDto->toArray()
         );
 
@@ -45,7 +45,7 @@ class UsersTransport extends BaseTransport
 
         $result = $this->transport->request(
             RequestMethodInterface::METHOD_PUT,
-            sprintf('/web-flow/client/%s', $userDto->id),
+            sprintf('web-flow/client/%s', $userDto->id),
             $userDto->toArray()
         );
 
@@ -61,7 +61,7 @@ class UsersTransport extends BaseTransport
     {
         $result = $this->transport->request(
             RequestMethodInterface::METHOD_GET,
-            sprintf('/web-flow/client/%s?with_properties=%s', $id, (bool) $withProperties ? 'true' : 'false'),
+            sprintf('web-flow/client/%s?with_properties=%s', $id, (bool) $withProperties ? 'true' : 'false'),
         );
 
         return UserDto::createFromArray($result, $this->getDefaultCurrency(), $this->getDateTimeZone());
@@ -76,7 +76,7 @@ class UsersTransport extends BaseTransport
     {
         $result = $this->transport->request(
             RequestMethodInterface::METHOD_GET,
-            sprintf('/web-flow/client/by-phone/%s', $phone),
+            sprintf('web-flow/client/by-phone/%s', $phone),
         );
 
         return UserDto::createFromArray($result, $this->getDefaultCurrency(), $this->getDateTimeZone());

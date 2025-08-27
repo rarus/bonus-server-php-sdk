@@ -1,6 +1,6 @@
 <?php
 
-namespace RarusBonus\Users\DTO;
+namespace Rarus\LMS\SDK\Users\DTO;
 
 enum Gender: string
 {

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace RarusBonus;
+namespace Rarus\LMS\SDK;
 
 use Money\Currency;
 use Psr\Log\LoggerInterface;
-use RarusBonus\Auth\AuthTransport;
-use RarusBonus\Cards\Transport\CardsTransport;
-use RarusBonus\Transport\HttpTransport;
-use RarusBonus\Users\Transport\UsersTransport;
+use Rarus\LMS\SDK\Auth\AuthTransport;
+use Rarus\LMS\SDK\Cards\Transport\CardsTransport;
+use Rarus\LMS\SDK\Transport\HttpTransport;
+use Rarus\LMS\SDK\Users\Transport\UsersTransport;
 
 final readonly class Client
 {

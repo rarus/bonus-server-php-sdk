@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RarusBonus\Transport\DTO;
+namespace Rarus\LMS\SDK\Transport\DTO;
 
 final readonly class ErrorResponse
 {

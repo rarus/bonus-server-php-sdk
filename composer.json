@@ -30,22 +30,21 @@
     "php-http/discovery": "^1.20"
   },
   "require-dev": {
-    "php-parallel-lint/php-parallel-lint": "^1.0",
-    "php-parallel-lint/php-console-highlighter": "^1.0",
     "phpunit/phpunit": "*",
     "symfony/dotenv": "7.*",
     "laravel/pint": "^1.24.0",
     "phpstan/phpstan": "2.*",
-    "rector/rector": "^2.1"
+    "rector/rector": "^2.1",
+    "ext-intl": "*"
   },
   "autoload": {
     "psr-4": {
-      "RarusBonus\\": "src"
+      "Rarus\\LMS\\SDK\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "RarusBonus\\Tests\\": "tests"
+      "Rarus\\LMS\\SDK\\Tests\\": "tests"
     }
   },
   "scripts": {

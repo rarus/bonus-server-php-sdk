@@ -2,6 +2,6 @@
 
 declare(strict_types=1);
 
-namespace RarusBonus\Exceptions;
+namespace Rarus\LMS\SDK\Exceptions;
 
 class InvalidArgumentException extends BaseException {}

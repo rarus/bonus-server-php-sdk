@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\MessageFormatter;
+use GuzzleHttp\Middleware;
 use Money\Currency;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -10,8 +13,8 @@ use Monolog\Processor\MemoryPeakUsageProcessor;
 use Monolog\Processor\MemoryUsageProcessor;
 use Monolog\Processor\UidProcessor;
 use Psr\Log\LoggerInterface;
-use RarusBonus\Client;
-use RarusBonus\RarusBonus;
+use Rarus\LMS\SDK\Client;
+use Rarus\LMS\SDK\RarusLMS;
 
 /**
  * Фабрика, создающая подключение к БС для прохождения интеграционных тестов
@@ -27,41 +30,38 @@ class TestEnvironmentManager
      */
     public static function getInstance(): Client
     {
-        return RarusBonus::client(
-            $_ENV['RARUS_BONUS_API_URL'],
-            $_ENV['RARUS_BONUS_ORGANIZATION'],
-            $_ENV['RARUS_BONUS_REGISTER_TOKEN']
+        //        return RarusLMS::client(
+        //            $_ENV['RARUS_BONUS_API_URL'],
+        //            $_ENV['RARUS_BONUS_REGISTER_TOKEN']
+        //        );
+
+        $logger = self::getMonologInstance();
+
+        $guzzleHandlerStack = HandlerStack::create();
+        $guzzleHandlerStack->push(
+            Middleware::log(
+                $logger,
+                new MessageFormatter(MessageFormatter::DEBUG)
+            )
         );
 
-        //        $logger = self::getMonologInstance();
-        //
-        //        $guzzleHandlerStack = HandlerStack::create();
-        //        $guzzleHandlerStack->push(
-        //            Middleware::log(
-        //                $logger,
-        //                new MessageFormatter(MessageFormatter::DEBUG)
-        //            )
-        //        );
-        //
-        //        $httpClient = new \GuzzleHttp\Client([
-        //            'base_uri' => $_ENV['RARUS_BONUS_API_URL'],
-        //            'headers' => [
-        //                'Cache-Control' => 'no-cache',
-        //                'Content-type' => 'application/json; charset=utf-8',
-        //            ],
-        //            'handler' => $guzzleHandlerStack
-        //        ]);
-        //
-        //
-        //        return RarusBonus::factory()
-        //            ->setApiUrl($_ENV['RARUS_BONUS_API_URL'])
-        //            ->setOrganization($_ENV['RARUS_BONUS_ORGANIZATION'])
-        //            ->setApiKey($_ENV['RARUS_BONUS_REGISTER_TOKEN'])
-        //            ->setHttpClient($httpClient)
-        //            ->setLogger($logger)
-        //            ->setCurrency(self::getDefaultCurrency())
-        //            ->setDateTimeZone(self::getDefaultTimezone())
-        //            ->create();
+        $httpClient = new \GuzzleHttp\Client([
+            'base_uri' => $_ENV['RARUS_BONUS_API_URL'],
+            'headers' => [
+                'Cache-Control' => 'no-cache',
+                'Content-type' => 'application/json; charset=utf-8',
+            ],
+            'handler' => $guzzleHandlerStack,
+        ]);
+
+        return RarusLMS::factory()
+            ->setApiUrl($_ENV['RARUS_BONUS_API_URL'])
+            ->setApiKey($_ENV['RARUS_BONUS_REGISTER_TOKEN'])
+            ->setHttpClient($httpClient)
+            ->setLogger($logger)
+            ->setCurrency(self::getDefaultCurrency())
+            ->setDateTimeZone(self::getDefaultTimezone())
+            ->create();
     }
 
     /**

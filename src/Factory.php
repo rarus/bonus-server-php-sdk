@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RarusBonus;
+namespace Rarus\LMS\SDK;
 
 use DateTimeZone;
 use Money\Currency;
@@ -11,13 +11,11 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
-use RarusBonus\Transport\HttpTransport;
+use Rarus\LMS\SDK\Transport\HttpTransport;
 
 final class Factory
 {
     private ?string $apiUrl = null;
-
-    private ?string $organization = null;
 
     private ?string $apiKey = null;
 
@@ -34,13 +32,6 @@ final class Factory
     public function setApiUrl(string $apiUrl): Factory
     {
         $this->apiUrl = $apiUrl;
-
-        return $this;
-    }
-
-    public function setOrganization(string $organization): Factory
-    {
-        $this->organization = $organization;
 
         return $this;
     }
@@ -103,10 +94,6 @@ final class Factory
             throw new \InvalidArgumentException('API Key должен быть указан');
         }
 
-        if ($this->organization === null) {
-            throw new \InvalidArgumentException('Organization должен быть указан');
-        }
-
         $currency = $this->currency ?? new Currency('RUB');
         $dateTimeZone = $this->dateTimeZone ?? new DateTimeZone('UTC');
         $logger = $this->logger ?? new NullLogger;
@@ -123,7 +110,6 @@ final class Factory
 
         $transport = new HttpTransport(
             $this->httpClient,
-            $this->organization,
             $this->apiKey,
             $logger,
         );

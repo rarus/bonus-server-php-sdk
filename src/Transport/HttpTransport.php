@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RarusBonus\Transport;
+namespace Rarus\LMS\SDK\Transport;
 
 use Fig\Http\Message\RequestMethodInterface;
 use GuzzleHttp\Exception\BadResponseException;
@@ -13,11 +13,11 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Log\LoggerInterface;
-use RarusBonus\Auth\DTO\AuthToken;
-use RarusBonus\Exceptions\ApiClientException;
-use RarusBonus\Exceptions\NetworkException;
-use RarusBonus\Exceptions\UnknownException;
-use RarusBonus\Transport;
+use Rarus\LMS\SDK\Auth\DTO\AuthToken;
+use Rarus\LMS\SDK\Exceptions\ApiClientException;
+use Rarus\LMS\SDK\Exceptions\NetworkException;
+use Rarus\LMS\SDK\Exceptions\UnknownException;
+use Rarus\LMS\SDK\Transport;
 use Throwable;
 
 final class HttpTransport
@@ -26,7 +26,6 @@ final class HttpTransport
 
     public function __construct(
         private readonly ClientInterface $httpClient,
-        private readonly string $organization,
         private readonly string $apiKey,
         private readonly LoggerInterface $logger,
     ) {}
@@ -61,7 +60,7 @@ final class HttpTransport
         // выполняем http-запрос
         $obResponse = $this->executeRequest(
             $requestType,
-            $this->organization.'/'.ltrim($apiMethod, '/'),
+            $apiMethod,
             $defaultHttpRequestOptions
         );
         // получаем тело ответа от сервера
@@ -87,7 +86,7 @@ final class HttpTransport
      */
     public function ping(): void
     {
-        $this->request(RequestMethodInterface::METHOD_GET, '/web-flow/ping');
+        $this->request(RequestMethodInterface::METHOD_GET, 'web-flow/ping');
     }
 
     public function setAuthToken(AuthToken $authToken): HttpTransport

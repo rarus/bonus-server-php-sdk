@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace RarusBonus\Users\DTO\UserProperty;
+namespace Rarus\LMS\SDK\Users\DTO\UserProperty;
 
 use DateTimeInterface;
-use RarusBonus\Exceptions\ApiClientException;
+use Rarus\LMS\SDK\Exceptions\ApiClientException;
 
 final class UserProperty
 {

@@ -1,14 +1,14 @@
 <?php
 
-namespace RarusBonus\Tests\Integration\Cards;
+namespace Rarus\LMS\SDK\Tests\Integration\Cards;
 
 use PHPUnit\Framework\TestCase;
 use Psr\SimpleCache\InvalidArgumentException;
-use RarusBonus\Cards\DTO\CardDto;
-use RarusBonus\Client;
-use RarusBonus\Exceptions\ApiClientException;
-use RarusBonus\Exceptions\NetworkException;
-use RarusBonus\Exceptions\UnknownException;
+use Rarus\LMS\SDK\Cards\DTO\CardDto;
+use Rarus\LMS\SDK\Client;
+use Rarus\LMS\SDK\Exceptions\ApiClientException;
+use Rarus\LMS\SDK\Exceptions\NetworkException;
+use Rarus\LMS\SDK\Exceptions\UnknownException;
 use TestEnvironmentManager;
 
 class CardsTransportTest extends TestCase

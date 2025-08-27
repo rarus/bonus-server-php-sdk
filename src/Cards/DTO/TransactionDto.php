@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace RarusBonus\Cards\DTO;
+namespace Rarus\LMS\SDK\Cards\DTO;
 
-use RarusBonus\Exceptions\ApiClientException;
-use RarusBonus\Util\DateTimeParser;
+use Rarus\LMS\SDK\Exceptions\ApiClientException;
+use Rarus\LMS\SDK\Utils\DateTimeParser;
 
 final readonly class TransactionDto
 {
