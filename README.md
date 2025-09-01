@@ -10,15 +10,12 @@ composer require rarus/bonus-server-php-sdk^2.0
 
 - PHP \>= [8.2+](https://www.php.net/releases/)
 - ext-json
+- ext-curl
 
 ## Быстрый старт
 
 ```php
-$client = RarusLMS::client(
-    'API_URL',
-    'ORGANIZATION',
-    'API_TOKEN'
-);
+$client = RarusLMS::client('API_URL','API_TOKEN');
 
 $card = $client->cards()->getById(1); // Возвращает Cards\DTO\CardDto
 $user = $client->users()->getById(1); // Возвращает Users\DTO\UserDto
