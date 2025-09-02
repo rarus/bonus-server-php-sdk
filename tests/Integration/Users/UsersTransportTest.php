@@ -8,8 +8,9 @@ use Rarus\LMS\SDK\Client;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
 use Rarus\LMS\SDK\Exceptions\InvalidArgumentException;
 use Rarus\LMS\SDK\Exceptions\NetworkException;
+use Rarus\LMS\SDK\Exceptions\RuntimeException;
 use Rarus\LMS\SDK\Exceptions\UnknownException;
-use Rarus\LMS\SDK\Users\DTO\Fabric;
+use Rarus\LMS\SDK\Users\DTO\Factory;
 use Rarus\LMS\SDK\Users\DTO\UserDto;
 use TestEnvironmentManager;
 
@@ -22,17 +23,29 @@ class UsersTransportTest extends TestCase
      * @throws NetworkException
      * @throws UnknownException
      * @throws RandomException
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException|RuntimeException
      */
     public function test_add_new_user(): void
     {
-        $newUser = Fabric::createNewInstance(
-            name: 'integration_test',
-            phone: '+79'.random_int(100000000, 999999999),
-            shopId: 1
-        );
+        $newUser = Factory::create()
+            ->withName('integration_test')
+            ->withPhone('+79' . random_int(100000000, 999999999))
+            ->withShopId(1)
+            ->build();
+
         $newUser = $this->client->users()->addNewUser($newUser);
         $this->assertInstanceOf(UserDto::class, $newUser);
+    }
+
+    public function test_update_user(): void
+    {
+        $userId = 1;
+        $user = $this->client->users()->getUserById($userId);
+
+        $updateUser = Factory::create()->fromDto($user)->withName('integration_test2')->build();
+        $this->client->users()->updateUser($updateUser);
+
+        $this->assertEquals($user->name, $updateUser->name);
     }
 
     /**

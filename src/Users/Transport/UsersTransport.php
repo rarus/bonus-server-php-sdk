@@ -16,7 +16,6 @@ class UsersTransport extends BaseTransport
 {
     /**
      * @throws ApiClientException
-     * @throws InvalidArgumentException
      * @throws NetworkException
      * @throws UnknownException
      */
@@ -37,19 +36,22 @@ class UsersTransport extends BaseTransport
      * @throws NetworkException
      * @throws InvalidArgumentException
      */
-    public function updateUser(UserDto $userDto): UserDto
+    public function updateUser(UserDto $userDto): void
     {
-        if (! $userDto->id) {
+        if (!$userDto->id) {
             throw new InvalidArgumentException('User id cannot be null');
+        }
+
+        $body = $userDto->toArray();
+        if (!empty($body['cards'])) {
+            unset($body['cards']);
         }
 
         $result = $this->transport->request(
             RequestMethodInterface::METHOD_PUT,
             sprintf('web-flow/client/%s', $userDto->id),
-            $userDto->toArray()
+            $body
         );
-
-        return UserDto::createFromArray($result, $this->getDefaultCurrency(), $this->getDateTimeZone());
     }
 
     /**
@@ -61,7 +63,7 @@ class UsersTransport extends BaseTransport
     {
         $result = $this->transport->request(
             RequestMethodInterface::METHOD_GET,
-            sprintf('web-flow/client/%s?with_properties=%s', $id, (bool) $withProperties ? 'true' : 'false'),
+            sprintf('web-flow/client/%s?with_properties=%s', $id, (bool)$withProperties ? 'true' : 'false'),
         );
 
         return UserDto::createFromArray($result, $this->getDefaultCurrency(), $this->getDateTimeZone());

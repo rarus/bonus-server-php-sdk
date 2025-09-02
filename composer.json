@@ -50,7 +50,7 @@
   "scripts": {
     "lint": "pint -v --parallel",
     "test:lint": "pint --test -v --parallel",
-    "test:types": "phpstan analyse --ansi",
+    "test:types": "phpstan analyse --ansi --memory-limit=1G",
     "test:integration": "phpunit --testsuite Integration --colors=always",
     "test:unit": "phpunit --testsuite Unit --colors=always"
   },

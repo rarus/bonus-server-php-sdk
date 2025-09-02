@@ -35,7 +35,7 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Rarus\LMS\SDK\RarusLMS;
 use Rarus\LMS\SDK\Users\DTO\Fabric;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Rarus\LMS\SDK\Users\DTO\Factory;use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Psr16Cache;
 
 $logger = new Logger('rarus-bonus-service');
@@ -75,12 +75,13 @@ $client = RarusLMS::factory()
     ->setCache($psr16Cache)
     ->build();
 
-$userDto = Fabric::createNewInstance(
-    name: 'Иванов Иван',
-    phone: '+7(900)000-00-00',
-    shopId: 1,
-    email: 'test@example.com',
-);
+$userDto = Factory::create()
+    ->withName('Иванов Иван')
+    ->withPhone('+7(900)000-00-00')
+    ->withShopId(1)
+    ->withEmail('test@example.com')
+    ->build();
+    
 $newUser = $client->users()->createUser($userDto); // Возвращает Users\DTO\UserDto
 
 $user = $client->users()->getUserById(1);

@@ -13,8 +13,8 @@ use Rarus\LMS\SDK\Utils\DateTimeParser;
 final readonly class UserDto
 {
     /**
-     * @param  array<CardDto>|null  $cards
-     * @param  array<UserProperty>|null  $properties
+     * @param array<CardDto>|null $cards
+     * @param array<UserProperty>|null $properties
      */
     public function __construct(
         public string $name,
@@ -41,13 +41,14 @@ final readonly class UserDto
         public ?string $password = null,
         public ?array $properties = null,
         public ?int $defaultCardId = null,
-    ) {}
+    ) {
+    }
 
     /**
      * Creates an instance of the class from an array of data.
      *
-     * @param  array<string, mixed>  $data  The array containing data to initialize the instance.
-     * @param  \DateTimeZone  $dateTimeZone  The timezone to be used when parsing date and time fields.
+     * @param array<string, mixed> $data The array containing data to initialize the instance.
+     * @param \DateTimeZone $dateTimeZone The timezone to be used when parsing date and time fields.
      * @return self Returns a new instance of the class.
      *
      * @throws ApiClientException
@@ -57,8 +58,8 @@ final readonly class UserDto
         return new self(
             name: $data['name'],
             phone: $data['phone'],
-            shopId: isset($data['shop']['id']) ? (int) $data['shop']['id'] : null,
-            id: isset($data['id']) ? (int) $data['id'] : null,
+            shopId: isset($data['shop']['id']) ? (int)$data['shop']['id'] : null,
+            id: isset($data['id']) ? (int)$data['id'] : null,
             birthday: isset($data['birthday']) ? DateTimeParser::fromTimestamp(
                 $data['birthday'],
                 $dateTimeZone
@@ -66,12 +67,12 @@ final readonly class UserDto
             gender: isset($data['gender']) ? Gender::from($data['gender']) : null,
             email: $data['email'] ?? null,
             channel: $data['channel'] ?? null,
-            personalDataAccepted: (bool) ($data['personal_data_accepted'] ?? false),
+            personalDataAccepted: (bool)($data['personal_data_accepted'] ?? false),
             personalDataAcceptedDate: isset($data['personal_data_accepted_date']) ? DateTimeParser::fromTimestamp(
                 $data['personal_data_accepted_date'],
                 $dateTimeZone
             ) : null,
-            receiveNewslettersAccepted: (bool) ($data['receive_newsletters_accepted'] ?? false),
+            receiveNewslettersAccepted: (bool)($data['receive_newsletters_accepted'] ?? false),
             referrer: $data['referrer'] ?? null,
             timezone: DateTimeParser::timeZoneFromString($data['timezone'] ?? null),
             state: isset($data['state']) ? UserStatus::from($data['state']) : null,
@@ -79,13 +80,13 @@ final readonly class UserDto
                 $data['date_confirmed'],
                 $dateTimeZone
             ) : null,
-            blocked: (bool) ($data['blocked'] ?? false),
+            blocked: (bool)($data['blocked'] ?? false),
             dateBlocked: isset($data['date_blocked']) ? DateTimeParser::fromTimestamp(
                 $data['date_blocked'],
                 $dateTimeZone
             ) : null,
-            cards: ! empty($data['cards']) ? array_map(
-                fn (array $row): CardDto => CardDto::createFromArray($row, $currency, $dateTimeZone),
+            cards: !empty($data['cards']) ? array_map(
+                fn(array $row): CardDto => CardDto::createFromArray($row, $currency, $dateTimeZone),
                 $data['cards']
             ) : null,
             dateState: isset($data['date_state']) ? DateTimeParser::fromTimestamp(
@@ -95,8 +96,8 @@ final readonly class UserDto
             externalId: $data['external_id'] ?? null,
             login: $data['login'] ?? null,
             password: $data['password'] ?? null,
-            properties: ! empty($data['properties']) ? array_map(
-                fn (array $row): UserProperty => UserProperty::createFromArray($row),
+            properties: !empty($data['properties']) ? array_map(
+                fn(array $row): UserProperty => UserProperty::createFromArray($row),
                 $data['properties']
             ) : null,
             defaultCardId: $data['default_card_id'] ?? null
@@ -130,12 +131,14 @@ final readonly class UserDto
             'date_confirmed' => $this->dateConfirmed ? DateTimeParser::toTimestamp($this->dateConfirmed) : null,
             'blocked' => $this->blocked,
             'date_blocked' => $this->dateBlocked ? DateTimeParser::toTimestamp($this->dateBlocked) : null,
-            'cards' => $this->cards ? fn (CardDto $row) => $row->toArray() : null,
+            'cards' => $this->cards ? array_map(fn(CardDto $row) => $row->toArray(), $this->cards)
+                : null,
             'date_state' => $this->dateState ? DateTimeParser::toTimestamp($this->dateState) : null,
             'external_id' => $this->externalId,
             'login' => $this->login,
             'password' => $this->password,
-            'properties' => $this->properties ? fn (UserProperty $row) => $row->toArray() : null,
+            'properties' => $this->properties ? array_map(fn(UserProperty $row) => $row->toArray(),
+                $this->properties) : null,
             'default_card_id' => $this->defaultCardId,
         ];
     }
