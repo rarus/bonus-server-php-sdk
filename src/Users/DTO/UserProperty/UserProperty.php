@@ -28,7 +28,7 @@ final class UserProperty
      *
      * @throws ApiClientException If required keys are missing in the array or if the data contains invalid values.
      */
-    public static function createFromArray(array $data): self
+    public static function fromArray(array $data): self
     {
         if (! isset($data['id'], $data['name'], $data['type'], $data['value'])) {
             throw new ApiClientException('Invalid addition field data');

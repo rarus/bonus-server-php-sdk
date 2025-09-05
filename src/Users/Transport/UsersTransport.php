@@ -27,7 +27,7 @@ class UsersTransport extends BaseTransport
             $userDto->toArray()
         );
 
-        return UserDto::createFromArray($result, $this->getDefaultCurrency(), $this->getDateTimeZone());
+        return UserDto::fromArray($result, $this->getDefaultCurrency(), $this->getDateTimeZone());
     }
 
     /**
@@ -38,12 +38,12 @@ class UsersTransport extends BaseTransport
      */
     public function updateUser(UserDto $userDto): void
     {
-        if (!$userDto->id) {
+        if (! $userDto->id) {
             throw new InvalidArgumentException('User id cannot be null');
         }
 
         $body = $userDto->toArray();
-        if (!empty($body['cards'])) {
+        if (! empty($body['cards'])) {
             unset($body['cards']);
         }
 
@@ -63,10 +63,10 @@ class UsersTransport extends BaseTransport
     {
         $result = $this->transport->request(
             RequestMethodInterface::METHOD_GET,
-            sprintf('web-flow/client/%s?with_properties=%s', $id, (bool)$withProperties ? 'true' : 'false'),
+            sprintf('web-flow/client/%s?with_properties=%s', $id, (bool) $withProperties ? 'true' : 'false'),
         );
 
-        return UserDto::createFromArray($result, $this->getDefaultCurrency(), $this->getDateTimeZone());
+        return UserDto::fromArray($result, $this->getDefaultCurrency(), $this->getDateTimeZone());
     }
 
     /**
@@ -81,6 +81,6 @@ class UsersTransport extends BaseTransport
             sprintf('web-flow/client/by-phone/%s', $phone),
         );
 
-        return UserDto::createFromArray($result, $this->getDefaultCurrency(), $this->getDateTimeZone());
+        return UserDto::fromArray($result, $this->getDefaultCurrency(), $this->getDateTimeZone());
     }
 }

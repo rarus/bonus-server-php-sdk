@@ -102,7 +102,7 @@ $payload = $card->toArray();
 use Money\Money;
 use Money\Currency;
 
-// В createFromArray:
+// В fromArray:
 $balance = MoneyParser::parse($data['balance'] ?? 0.0, $currency);
 
 // В toArray (для JSON):
@@ -124,7 +124,7 @@ echo MoneyParser::convertMoneyToString($balanceMoney, new Currency('RUB')); // 5
 
 ```php
 $cached = $card->toArray();
-$again = Cards\DTO\CardDto::createFromArray($cached);
+$again = Cards\DTO\CardDto::fromArray($cached);
 ```
 
 ## Ошибки

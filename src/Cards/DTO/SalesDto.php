@@ -30,7 +30,7 @@ final readonly class SalesDto
      *
      * @throws ApiClientException
      */
-    public static function createFromArray(array $data, \DateTimeZone $dateTimeZone): self
+    public static function fromArray(array $data, \DateTimeZone $dateTimeZone): self
     {
         return new self(
             DateTimeParser::fromTimestamp($data['first'], $dateTimeZone),

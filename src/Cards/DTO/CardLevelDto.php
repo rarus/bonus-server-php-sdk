@@ -25,7 +25,7 @@ final readonly class CardLevelDto
     /**
      * @param  array<string, mixed>  $data
      */
-    public static function createFromArray(array $data): self
+    public static function fromArray(array $data): self
     {
         return new self(
             (int) $data['id'],

@@ -25,7 +25,7 @@ class CardsTransport extends BaseTransport
             sprintf('web-flow/card/by-id/%s', $id),
         );
 
-        return CardDto::createFromArray($result, $this->getDefaultCurrency(), $this->getDateTimeZone());
+        return CardDto::fromArray($result, $this->getDefaultCurrency(), $this->getDateTimeZone());
     }
 
     /**
@@ -40,6 +40,6 @@ class CardsTransport extends BaseTransport
             sprintf('web-flow/card/by-barcode/%s', $barcode),
         );
 
-        return CardDto::createFromArray($result, $this->getDefaultCurrency(), $this->getDateTimeZone());
+        return CardDto::fromArray($result, $this->getDefaultCurrency(), $this->getDateTimeZone());
     }
 }

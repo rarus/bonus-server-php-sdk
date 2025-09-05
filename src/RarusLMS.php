@@ -13,9 +13,7 @@ final class RarusLMS
 {
     public const SDK_VERSION = '2.0.0';
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * @throws ApiClientException

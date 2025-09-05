@@ -58,23 +58,23 @@ final class Factory
             $name = $property->getName();
             $factory->properties[$name] = $property->getValue($dto);
         }
+
         return $factory;
     }
 
     public static function create(): self
     {
-        return new self();
+        return new self;
     }
 
     /**
-     * @param string $name
-     * @param array<mixed> $arguments
-     * @return self
+     * @param  array<mixed>  $arguments
+     *
      * @throws InvalidArgumentException
      */
     public function __call(string $name, array $arguments): self
     {
-        if (!str_starts_with($name, 'with')) {
+        if (! str_starts_with($name, 'with')) {
             throw new InvalidArgumentException("Method $name does not exist");
         }
 
@@ -88,14 +88,13 @@ final class Factory
     }
 
     /**
-     * @return UserDto
      * @throws RuntimeException
      */
     public function build(): UserDto
     {
         $reflection = new \ReflectionClass(UserDto::class);
         $constructor = $reflection->getConstructor();
-        if (!$constructor) {
+        if (! $constructor) {
             throw new RuntimeException('UserDto has no constructor');
         }
 
@@ -103,7 +102,7 @@ final class Factory
         foreach ($constructor->getParameters() as $param) {
             $name = $param->getName();
 
-            if (!array_key_exists($name, $this->properties)) {
+            if (! array_key_exists($name, $this->properties)) {
                 if ($param->isDefaultValueAvailable()) {
                     $args[$name] = $param->getDefaultValue();
                 } else {
@@ -112,7 +111,7 @@ final class Factory
             } else {
                 $value = $this->properties[$name];
                 $type = $param->getType();
-                if ($type && !$this->validateType($value, $type)) {
+                if ($type && ! $this->validateType($value, $type)) {
                     throw new \TypeError("Invalid type for property '$name'");
                 }
                 $args[$name] = $value;
@@ -129,6 +128,7 @@ final class Factory
             if ($value === null && $type->allowsNull()) {
                 return true;
             }
+
             return match ($typeName) {
                 'int' => is_int($value),
                 'float' => is_float($value),
@@ -138,6 +138,7 @@ final class Factory
                 default => $value instanceof $typeName
             };
         }
+
         return true;
     }
 }

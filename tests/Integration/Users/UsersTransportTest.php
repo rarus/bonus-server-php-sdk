@@ -45,7 +45,10 @@ class UsersTransportTest extends TestCase
         $updateUser = Factory::create()->fromDto($user)->withName('integration_test2')->build();
         $this->client->users()->updateUser($updateUser);
 
-        $this->assertEquals($user->name, $updateUser->name);
+        $updatedUser = $this->client->users()->getUserById($userId);
+
+
+        $this->assertEquals($updatedUser->name, $updateUser->name);
     }
 
     /**

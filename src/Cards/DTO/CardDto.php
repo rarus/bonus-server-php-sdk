@@ -13,9 +13,9 @@ use Rarus\LMS\SDK\Utils\MoneyParser;
 final readonly class CardDto
 {
     /**
-     * @param array<string> $permissions
-     * @param array<string> $typeCards
-     * @param array<CardDto> $otherCardsOnAccount
+     * @param  array<string>  $permissions
+     * @param  array<string>  $typeCards
+     * @param  array<CardDto>  $otherCardsOnAccount
      */
     public function __construct(
         public int $id,
@@ -41,8 +41,7 @@ final readonly class CardDto
         public ?SalesDto $sales,
         /** @var CardDto[] */
         public array $otherCardsOnAccount,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array<string, mixed>
@@ -71,40 +70,40 @@ final readonly class CardDto
             'balance_date' => $this->balanceDate,
             'turnover' => MoneyParser::toString($this->turnover),
             'sales' => $this->sales?->toArray(),
-            'other_cards_on_account' => array_map(fn(CardDto $c) => $c->toArray(), $this->otherCardsOnAccount),
+            'other_cards_on_account' => array_map(fn (CardDto $c) => $c->toArray(), $this->otherCardsOnAccount),
         ];
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      *
      * @throws ApiClientException
      */
-    public static function createFromArray(array $data, Currency $currency, \DateTimeZone $dateTimeZone): self
+    public static function fromArray(array $data, Currency $currency, \DateTimeZone $dateTimeZone): self
     {
         return new self(
-            (int)$data['id'],
-            (string)$data['external_id'],
-            (string)$data['account'],
-            isset($data['card_level']) ? CardLevelDto::createFromArray($data['card_level']) : null,
+            (int) $data['id'],
+            (string) $data['external_id'],
+            (string) $data['account'],
+            isset($data['card_level']) ? CardLevelDto::fromArray($data['card_level']) : null,
             $data['permissions'] ?? [],
-            isset($data['client']) ? UserDto::createFromArray($data['client'], $currency, $dateTimeZone) : null,
-            isset($data['transactions']) ? TransactionDto::createFromArray($data['transactions'], $dateTimeZone) : null,
+            isset($data['client']) ? UserDto::fromArray($data['client'], $currency, $dateTimeZone) : null,
+            isset($data['transactions']) ? TransactionDto::fromArray($data['transactions'], $dateTimeZone) : null,
             $data['type_cards'] ?? [],
-            (string)$data['name'],
-            (string)$data['barcode'],
+            (string) $data['name'],
+            (string) $data['barcode'],
             $data['magnetic_code'] ?? null,
-            (bool)$data['is_physical'],
-            (bool)$data['blocked'],
+            (bool) $data['is_physical'],
+            (bool) $data['blocked'],
             $data['date_blocked'] ?? null,
-            (string)$data['state'],
+            (string) $data['state'],
             $data['date_state'] ?? null,
             $data['date_activated'] ?? null,
             MoneyParser::parse($data['balance'] ?? 0.0, $currency),
             $data['balance_date'] ?? null,
             MoneyParser::parse($data['turnover'] ?? 0.0, $currency),
-            isset($data['sales']) ? SalesDto::createFromArray($data['sales'], $dateTimeZone) : null,
-            array_map(fn(array $c) => CardDto::createFromArray($c, $currency, $dateTimeZone),
+            isset($data['sales']) ? SalesDto::fromArray($data['sales'], $dateTimeZone) : null,
+            array_map(fn (array $c) => CardDto::fromArray($c, $currency, $dateTimeZone),
                 $data['other_cards_on_account'] ?? []),
         );
     }

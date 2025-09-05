@@ -91,7 +91,7 @@ final class CardDtoTest extends TestCase
 
         $dateTimeZone = new \DateTimeZone(\TestEnvironmentManager::DEFAULT_TIMEZONE);
         $currency = TestEnvironmentManager::getDefaultCurrency();
-        $dto = CardDto::createFromArray($data, $currency, $dateTimeZone);
+        $dto = CardDto::fromArray($data, $currency, $dateTimeZone);
 
         $this->assertSame(1, $dto->id);
         $this->assertSame('e42b7a41-7515-a9d3-42eb-7f066a94cc0c', $dto->externalId);
@@ -142,7 +142,7 @@ final class CardDtoTest extends TestCase
         $dateTimeZone = new \DateTimeZone(\TestEnvironmentManager::DEFAULT_TIMEZONE);
         $currency = TestEnvironmentManager::getDefaultCurrency();
 
-        $dto = CardDto::createFromArray($data, $currency, $dateTimeZone);
+        $dto = CardDto::fromArray($data, $currency, $dateTimeZone);
 
         $this->assertSame(10, $dto->id);
         $this->assertSame('Test Card', $dto->name);

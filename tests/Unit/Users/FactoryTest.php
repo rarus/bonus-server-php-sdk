@@ -21,7 +21,7 @@ class FactoryTest extends TestCase
     /**
      * Test that __call sets properties correctly using a valid dynamic method call.
      */
-    public function testCallWithValidMethod(): void
+    public function test_call_with_valid_method(): void
     {
         $factory = Factory::create();
         $updatedFactory = $factory->withName('John Doe');
@@ -34,7 +34,7 @@ class FactoryTest extends TestCase
         $this->assertSame('John Doe', $properties->getValue($updatedFactory)['name']);
     }
 
-    public function testCallCreateObject()
+    public function test_call_create_object(): void
     {
         $userDto1 = Factory::create()
             ->withName('John Doe')
@@ -43,14 +43,14 @@ class FactoryTest extends TestCase
         $userDto2 = Factory::fromDto($userDto1)
             ->withName('John Doe2')
             ->build();
-        
+
         $this->assertNotSame($userDto1, $userDto2);
     }
 
     /**
      * Test that __call correctly handles multiple dynamic method calls.
      */
-    public function testCallWithMultipleValidMethods(): void
+    public function test_call_with_multiple_valid_methods(): void
     {
         $factory = Factory::create();
         $updatedFactory = $factory->withName('John Doe')->withEmail('john.doe@example.com')->withPhone('1234567890');
@@ -73,7 +73,7 @@ class FactoryTest extends TestCase
     /**
      * Test that __call throws an InvalidArgumentException when an invalid method is called.
      */
-    public function testCallWithInvalidMethod(): void
+    public function test_call_with_invalid_method(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Method invalidMethod does not exist');
@@ -86,7 +86,7 @@ class FactoryTest extends TestCase
     /**
      * Test that __call handles a method call with no arguments, setting the value to null.
      */
-    public function testCallWithNoArguments(): void
+    public function test_call_with_no_arguments(): void
     {
         $factory = Factory::create();
 
@@ -104,7 +104,7 @@ class FactoryTest extends TestCase
     /**
      * Test that __call handles a chain of valid method calls that override previous values.
      */
-    public function testCallOverwritingValues(): void
+    public function test_call_overwriting_values(): void
     {
         $factory = Factory::create();
         $updatedFactory = $factory->withName('Jane Doe')->withName('John Doe');

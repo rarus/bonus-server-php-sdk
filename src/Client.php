@@ -8,6 +8,7 @@ use Money\Currency;
 use Psr\Log\LoggerInterface;
 use Rarus\LMS\SDK\Auth\AuthTransport;
 use Rarus\LMS\SDK\Cards\Transport\CardsTransport;
+use Rarus\LMS\SDK\Discounts\Transport\DiscountTransport;
 use Rarus\LMS\SDK\Transport\HttpTransport;
 use Rarus\LMS\SDK\Users\Transport\UsersTransport;
 
@@ -38,5 +39,10 @@ final readonly class Client
     public function cards(): CardsTransport
     {
         return new CardsTransport($this->transport, $this->logger, $this->currency, $this->timeZone);
+    }
+
+    public function discounts(): DiscountTransport
+    {
+        return new DiscountTransport($this->transport, $this->logger, $this->currency, $this->timeZone);
     }
 }
