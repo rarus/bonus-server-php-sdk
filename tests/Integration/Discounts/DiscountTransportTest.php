@@ -13,7 +13,7 @@ use Rarus\LMS\SDK\Discounts\DTO\SaleItemDto;
 use Rarus\LMS\SDK\Utils\MoneyParser;
 use TestEnvironmentManager;
 
-final class DiscountsTransportTest extends TestCase
+final class DiscountTransportTest extends TestCase
 {
     private Client $client;
 

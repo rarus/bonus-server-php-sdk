@@ -28,17 +28,18 @@ final class HttpTransport
         private readonly ClientInterface $httpClient,
         private readonly string $apiKey,
         private readonly LoggerInterface $logger,
-    ) {}
+    ) {
+    }
 
     /**
-     * @param  array<string, mixed>  $arHttpRequestOptions
+     * @param array<string, mixed> $arHttpRequestOptions
      * @return array<string, mixed>
      *
      * @throws ApiClientException
      * @throws NetworkException
      * @throws UnknownException
      */
-    public function request(string $requestType, string $apiMethod, array $arHttpRequestOptions = []): array
+    public function request(string $requestType, string $apiMethod, array $arHttpRequestOptions = []): mixed
     {
         $defaultHttpRequestOptions = [];
         if ($arHttpRequestOptions !== []) {
@@ -97,7 +98,7 @@ final class HttpTransport
     }
 
     /**
-     * @param  array<string, mixed>  $requestOptions
+     * @param array<string, mixed> $requestOptions
      *
      * @throws \JsonException
      */
@@ -118,7 +119,7 @@ final class HttpTransport
             $request = $request->withBody($body);
         }
 
-        if (! empty($requestOptions['headers'])) {
+        if (!empty($requestOptions['headers'])) {
             foreach ($requestOptions['headers'] as $name => $value) {
                 $request = $request->withHeader($name, $value);
             }
@@ -128,7 +129,7 @@ final class HttpTransport
     }
 
     /**
-     * @param  array<string, mixed>  $requestOptions
+     * @param array<string, mixed> $requestOptions
      *
      * @throws ApiClientException
      * @throws NetworkException
@@ -156,7 +157,7 @@ final class HttpTransport
             $result = $this->decodeApiJsonResponse($responseBodyAsString);
             $errorResponse = Transport\DTO\ErrorResponse::fromArray($result);
 
-            throw new ApiClientException($result['message'], (int) $result['code'], $exception, $errorResponse);
+            throw new ApiClientException($result['message'], (int)$result['code'], $exception, $errorResponse);
         } catch (GuzzleException $exception) {
             // произошла ошибка на уровне сетевой подсистемы
             $this->logger->error(
@@ -166,14 +167,14 @@ final class HttpTransport
                     'message' => $exception->getMessage(),
                 ]
             );
-            throw new NetworkException($exception->getMessage(), (int) $exception->getCode());
+            throw new NetworkException($exception->getMessage(), (int)$exception->getCode());
         } catch (Throwable $unhandledException) {
             // произошла неизвестная ошибка
             $this->logger->error(
                 'rarus.bonus.server.apiClient.unknown.error',
                 [
                     'type' => \get_class($unhandledException),
-                    'code' => (int) $unhandledException->getCode(),
+                    'code' => (int)$unhandledException->getCode(),
                     'message' => $unhandledException->getMessage(),
                     'trace' => $unhandledException->getTrace(),
                 ]
@@ -185,7 +186,7 @@ final class HttpTransport
                     get_class($unhandledException),
                     $unhandledException->getMessage()
                 ),
-                (int) $unhandledException->getCode(),
+                (int)$unhandledException->getCode(),
                 $unhandledException
             );
         }
@@ -233,8 +234,8 @@ final class HttpTransport
     /**
      * Handles and processes API-level errors based on the server response and status code.
      *
-     * @param  array<string, mixed>  $arBonusServerOperationResponse  The API response containing error details or operation results.
-     * @param  int  $serverStatusCode  The HTTP status code returned by the server.
+     * @param array<string, mixed> $arBonusServerOperationResponse The API response containing error details or operation results.
+     * @param int $serverStatusCode The HTTP status code returned by the server.
      *
      * @throws ApiClientException Thrown when an error occurs at the API level, based on response or status code.
      */
@@ -247,13 +248,13 @@ final class HttpTransport
 
         if ($serverStatusCode >= 400) {
             throw new ApiClientException(
-                (string) $arBonusServerOperationResponse['message'],
-                (int) $arBonusServerOperationResponse['code']
+                (string)$arBonusServerOperationResponse['message'],
+                (int)$arBonusServerOperationResponse['code']
             );
         }
 
         if (isset($arBonusServerOperationResponse['success'])) {
-            if ((bool) $arBonusServerOperationResponse['success'] === false) {
+            if ((bool)$arBonusServerOperationResponse['success'] === false) {
                 $errorResponse = Transport\DTO\ErrorResponse::fromArray($arBonusServerOperationResponse);
 
                 throw new ApiClientException(

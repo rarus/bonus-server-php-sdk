@@ -14,7 +14,7 @@ use Rarus\LMS\SDK\Users\DTO\Factory;
 use Rarus\LMS\SDK\Users\DTO\UserDto;
 use TestEnvironmentManager;
 
-class UsersTransportTest extends TestCase
+class UserTransportTest extends TestCase
 {
     private Client $client;
 

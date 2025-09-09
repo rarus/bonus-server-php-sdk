@@ -11,7 +11,7 @@ use Rarus\LMS\SDK\Exceptions\NetworkException;
 use Rarus\LMS\SDK\Exceptions\UnknownException;
 use TestEnvironmentManager;
 
-class CardsTransportTest extends TestCase
+class CardTransportTest extends TestCase
 {
     private Client $client;
 

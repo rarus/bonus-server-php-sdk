@@ -9,6 +9,7 @@ use Psr\Log\LoggerInterface;
 use Rarus\LMS\SDK\Auth\AuthTransport;
 use Rarus\LMS\SDK\Cards\Transport\CardsTransport;
 use Rarus\LMS\SDK\Discounts\Transport\DiscountTransport;
+use Rarus\LMS\SDK\Holds\Transport\HoldTransport;
 use Rarus\LMS\SDK\Transport\HttpTransport;
 use Rarus\LMS\SDK\Users\Transport\UsersTransport;
 
@@ -19,7 +20,8 @@ final readonly class Client
         private LoggerInterface $logger,
         private Currency $currency,
         private \DateTimeZone $timeZone,
-    ) {}
+    ) {
+    }
 
     public function auth(): AuthTransport
     {
@@ -44,5 +46,10 @@ final readonly class Client
     public function discounts(): DiscountTransport
     {
         return new DiscountTransport($this->transport, $this->logger, $this->currency, $this->timeZone);
+    }
+
+    public function holds(): HoldTransport
+    {
+        return new HoldTransport($this->transport, $this->logger, $this->currency, $this->timeZone);
     }
 }
