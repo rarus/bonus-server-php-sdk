@@ -74,7 +74,6 @@ class TestEnvironmentManager
         if ($log === null) {
             $log = new Logger('rarus-bonus-service');
             $log->pushProcessor(new MemoryUsageProcessor);
-            $log->pushProcessor(new MemoryUsageProcessor);
             $log->pushProcessor(new MemoryPeakUsageProcessor);
             $log->pushProcessor(new IntrospectionProcessor);
             $log->pushProcessor(new UidProcessor);

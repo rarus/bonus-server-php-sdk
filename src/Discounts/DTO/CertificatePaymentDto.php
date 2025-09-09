@@ -12,7 +12,7 @@ final class CertificatePaymentDto
 {
     public function __construct(
         public ?Money $amount = null,
-        public string $code,
+        public ?string $code = null,
     ) {
     }
 
@@ -25,7 +25,7 @@ final class CertificatePaymentDto
     {
         return new self(
             amount: isset($data['amount']) ? MoneyParser::parse($data['amount'], $currency) : null,
-            code: $data['code'],
+            code: $data['code'] ?? null,
         );
     }
 
@@ -36,7 +36,7 @@ final class CertificatePaymentDto
     {
         return [
             'amount' => $this->amount ? MoneyParser::toString($this->amount) : null,
-            'code' => $this->code,
+            'code' => $this->code ?? null,
         ];
     }
 }

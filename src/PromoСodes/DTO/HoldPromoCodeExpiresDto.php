@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Rarus\LMS\SDK\Holds\DTO;
+namespace Rarus\LMS\SDK\PromoСodes\DTO;
 
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
 use Rarus\LMS\SDK\Utils\DateTimeParser;
 
-final class HoldBonusExpiresDto
+final class HoldPromoCodeExpiresDto
 {
     public function __construct(
         public ?\DateTimeImmutable $date = null,
-        public ?HoldBonusPeriod $period = null,
+        public ?HoldPromoCodePeriod $period = null,
         public ?int $value = null,
     ) {
     }
@@ -26,7 +26,7 @@ final class HoldBonusExpiresDto
     {
         return new self(
             isset($data['date']) ? DateTimeParser::fromTimestamp($data['date'], $dateTimeZone) : null,
-            isset($data['period']) ? HoldBonusPeriod::from($data['period']) : null,
+            isset($data['period']) ? HoldPromoCodePeriod::from($data['period']) : null,
             $data['value'] ?? null,
         );
     }
