@@ -11,7 +11,7 @@ use Rarus\LMS\SDK\Utils\MoneyParser;
 final class CertificatePaymentDto
 {
     public function __construct(
-        public Money $amount,
+        public ?Money $amount = null,
         public string $code,
     ) {
     }
@@ -24,8 +24,8 @@ final class CertificatePaymentDto
     public static function fromArray(array $data, Currency $currency): CertificatePaymentDto
     {
         return new self(
-            amount: MoneyParser::parse($data['amount'], $currency),
-            code: (string)$data['code'],
+            amount: isset($data['amount']) ? MoneyParser::parse($data['amount'], $currency) : null,
+            code: $data['code'],
         );
     }
 
@@ -35,7 +35,7 @@ final class CertificatePaymentDto
     public function toArray(): array
     {
         return [
-            'amount' => MoneyParser::toString($this->amount),
+            'amount' => $this->amount ? MoneyParser::toString($this->amount) : null,
             'code' => $this->code,
         ];
     }
