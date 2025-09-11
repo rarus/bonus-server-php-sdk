@@ -36,7 +36,7 @@ final class HoldTransportTest extends TestCase
         $holdBonusId = $this->client->holds()->createHoldBonus($newHoldBonus);
         $holdBonus = $this->client->holds()->getHoldBonus($holdBonusId);
 
-        $this->assertEquals($holdBonus->description, $newHoldBonus->description);;
+        $this->assertEquals($holdBonus->description, $newHoldBonus->description);
     }
 
     public function test_delete_hold_bonus(): void

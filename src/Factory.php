@@ -81,7 +81,6 @@ final class Factory
     /**
      * @throws Exceptions\ApiClientException
      * @throws Exceptions\NetworkException
-     * @throws Exceptions\UnknownException
      * @throws InvalidArgumentException
      */
     public function create(): Client
@@ -95,8 +94,11 @@ final class Factory
         }
 
         $currency = $this->currency ?? new Currency('RUB');
+
         $dateTimeZone = $this->dateTimeZone ?? new DateTimeZone('UTC');
+
         $logger = $this->logger ?? new NullLogger;
+
         if ($this->httpClient === null) {
             $this->httpClient = new \GuzzleHttp\Client([
                 'base_uri' => $this->apiUrl,
@@ -114,18 +116,6 @@ final class Factory
             $logger,
         );
 
-        $client = new Client($transport, $logger, $currency, $dateTimeZone);
-
-        $cacheKey = 'rarus_bonus_auth_token_'.md5($this->apiKey);
-
-        if ($this->cache !== null && ($token = $this->cache->get($cacheKey))) {
-            $transport->setAuthToken($token);
-        } else {
-            $token = $client->auth()->getNewAuthToken();
-            $transport->setAuthToken($token);
-            $this->cache?->set($cacheKey, $token, $token->getTtl());
-        }
-
-        return $client;
+        return new Client($transport, $logger, $this->cache, $currency, $dateTimeZone);
     }
 }

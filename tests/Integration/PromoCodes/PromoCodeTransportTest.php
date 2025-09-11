@@ -20,7 +20,7 @@ final class PromoCodeTransportTest extends TestCase
     public function test_get_promo_code(): void
     {
         $code = '101';
-        $promoCodeDto = $this->client->promocodes()->getPromoCode($code);
+        $promoCodeDto = $this->client->promoCodes()->getPromoCode($code);
         $this->assertEquals($promoCodeDto->code, '101');
     }
 
@@ -37,10 +37,10 @@ final class PromoCodeTransportTest extends TestCase
             ),
         );
 
-        $holdPromoCodeId = $this->client->promocodes()->createHoldPromoCode($newHoldPromoCode);
-        $holdPromoCode = $this->client->promocodes()->getHoldPromoCode($holdPromoCodeId);
+        $holdPromoCodeId = $this->client->promoCodes()->createHoldPromoCode($newHoldPromoCode);
+        $holdPromoCode = $this->client->promoCodes()->getHoldPromoCode($holdPromoCodeId);
 
-        $this->assertEquals($holdPromoCode->description, $newHoldPromoCode->description);;
+        $this->assertEquals($holdPromoCode->description, $newHoldPromoCode->description);
     }
 
     public function test_delete_hold_bonus(): void
@@ -56,10 +56,10 @@ final class PromoCodeTransportTest extends TestCase
             ),
         );
 
-        $holdPromoCodeId = $this->client->promocodes()->createHoldPromoCode($newHoldPromoCode);
-        $this->client->promocodes()->deleteHoldPromoCode($holdPromoCodeId);
-        
-        $holdPromoCode = $this->client->promocodes()->getHoldPromoCode($holdPromoCodeId);
+        $holdPromoCodeId = $this->client->promoCodes()->createHoldPromoCode($newHoldPromoCode);
+        $this->client->promoCodes()->deleteHoldPromoCode($holdPromoCodeId);
+
+        $holdPromoCode = $this->client->promoCodes()->getHoldPromoCode($holdPromoCodeId);
         $this->assertEquals($holdPromoCode->state, HoldPromoCodeState::Cancelled);
     }
 

@@ -14,20 +14,17 @@ final class HoldBonusDto
         public Money $amount,
         public int $id,
         public ?bool $used = false,
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array<string> $data
-     * @param Currency $currency
-     * @return self
+     * @param  array<string>  $data
      */
     public static function fromArray(array $data, Currency $currency): self
     {
         return new self(
             amount: MoneyParser::parse($data['amount'], $currency),
-            id: (int)$data['id'],
-            used: (bool)($data['used'] ?? false),
+            id: (int) $data['id'],
+            used: (bool) ($data['used'] ?? false),
         );
     }
 

@@ -15,6 +15,8 @@ use Monolog\Processor\UidProcessor;
 use Psr\Log\LoggerInterface;
 use Rarus\LMS\SDK\Client;
 use Rarus\LMS\SDK\RarusLMS;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Cache\Psr16Cache;
 
 /**
  * Фабрика, создающая подключение к БС для прохождения интеграционных тестов
@@ -54,11 +56,15 @@ class TestEnvironmentManager
             'handler' => $guzzleHandlerStack,
         ]);
 
+        $psr6Cache = new FilesystemAdapter;
+        $psr16Cache = new Psr16Cache($psr6Cache);
+
         return RarusLMS::factory()
             ->setApiUrl($_ENV['RARUS_BONUS_API_URL'])
             ->setApiKey($_ENV['RARUS_BONUS_REGISTER_TOKEN'])
             ->setHttpClient($httpClient)
             ->setLogger($logger)
+            ->setCache($psr16Cache)
             ->setCurrency(self::getDefaultCurrency())
             ->setDateTimeZone(self::getDefaultTimezone())
             ->create();

@@ -12,13 +12,11 @@ final class PromoCodePeriodContainer
     public function __construct(
         public ?\DateTimeImmutable $start = null,
         public ?\DateTimeImmutable $end = null
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array<string, int> $data
-     * @param \DateTimeZone $dateTimeZone
-     * @return self
+     * @param  array<string, int>  $data
+     *
      * @throws ApiClientException
      */
     public static function fromArray(array $data, \DateTimeZone $dateTimeZone): self

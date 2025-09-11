@@ -11,13 +11,11 @@ final class PromoCodeGroupPeriodDto
     public function __construct(
         public ?PromoCodePeriodContainer $container = null,
         public ?PromoCodePeriodType $type = null,
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array<string, mixed> $data
-     * @param \DateTimeZone $dateTimeZone
-     * @return self
+     * @param  array<string, mixed>  $data
+     *
      * @throws ApiClientException
      */
     public static function fromArray(array $data, \DateTimeZone $dateTimeZone): self

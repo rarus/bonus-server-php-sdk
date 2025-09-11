@@ -22,14 +22,11 @@ final class DiscountDto
         public ?\DateTimeImmutable $to = null,
         public ?DiscountType $type = null,
         public ?Money $value = null,
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array<string, mixed> $data
-     * @param Currency $currency
-     * @param \DateTimeZone $dateTimeZone
-     * @return DiscountDto
+     * @param  array<string, mixed>  $data
+     *
      * @throws ApiClientException
      */
     public static function fromArray(array $data, Currency $currency, \DateTimeZone $dateTimeZone): self

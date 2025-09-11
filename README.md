@@ -20,7 +20,7 @@ $client = RarusLMS::client('API_URL','API_TOKEN');
 $card = $client->cards()->getById(1); // Возвращает Cards\DTO\CardDto
 $user = $client->users()->getById(1); // Возвращает Users\DTO\UserDto
 
-// Сериализация в массив (для логирования/кэша)
+// Сериализация в массив
 $payload = $card->toArray();
 ```
 
@@ -35,7 +35,8 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Rarus\LMS\SDK\RarusLMS;
 use Rarus\LMS\SDK\Users\DTO\Fabric;
-use Rarus\LMS\SDK\Users\DTO\Factory;use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Rarus\LMS\SDK\Users\DTO\Factory;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Psr16Cache;
 
 $logger = new Logger('rarus-bonus-service');
@@ -84,13 +85,13 @@ $userDto = Factory::create()
     
 $newUser = $client->users()->createUser($userDto); // Возвращает Users\DTO\UserDto
 
-$user = $client->users()->getUserById(1);
+$user = $client->users(300)->getUserById(1); // кеширует ответ на 5 мин
 $card = $client->cards()->getCardById(1);
 
 $card = $client->cards()->getById(1); // Возвращает Cards\DTO\CardDto
 $user = $client->users()->getById(1); // Возвращает Users\DTO\UserDto
 
-// Сериализация в массив (для логирования/кэша)
+// Сериализация в массив
 $payload = $card->toArray();
 ```
 

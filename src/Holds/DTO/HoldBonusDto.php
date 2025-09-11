@@ -27,21 +27,18 @@ final class HoldBonusDto
         public ?\DateTimeImmutable $updatedAt = null,
         public ?Money $used = null,
         public ?int $shopId = null,
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array<string, mixed> $data
-     * @param Currency $currency
-     * @param \DateTimeZone $dateTimeZone
-     * @return self
+     * @param  array<string, mixed>  $data
+     *
      * @throws ApiClientException
      */
     public static function fromArray(array $data, Currency $currency, \DateTimeZone $dateTimeZone): self
     {
         return new self(
             isset($data['amount']) ? MoneyParser::parse($data['amount'], $currency) : null,
-            isset($data['card_id']) ? (int)$data['card_id'] : null,
+            isset($data['card_id']) ? (int) $data['card_id'] : null,
             isset($data['created_at']) ? DateTimeParser::fromTimestamp($data['created_at'], $dateTimeZone) : null,
             $data['description'] ?? null,
             $data['document_id'] ?? null,

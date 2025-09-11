@@ -13,13 +13,11 @@ final class HoldPromoCodeExpiresDto
         public ?\DateTimeImmutable $date = null,
         public ?HoldPromoCodePeriod $period = null,
         public ?int $value = null,
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array<string, mixed> $data
-     * @param \DateTimeZone $dateTimeZone
-     * @return self
+     * @param  array<string, mixed>  $data
+     *
      * @throws ApiClientException
      */
     public static function fromArray(array $data, \DateTimeZone $dateTimeZone): self

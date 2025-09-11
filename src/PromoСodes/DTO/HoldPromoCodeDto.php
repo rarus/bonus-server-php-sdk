@@ -20,14 +20,11 @@ final class HoldPromoCodeDto
         public ?int $id = null,
         public ?HoldPromoCodeState $state = null,
         public ?\DateTimeImmutable $updatedAt = null,
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array<string, mixed> $data
-     * @param Currency $currency
-     * @param \DateTimeZone $dateTimeZone
-     * @return self
+     * @param  array<string, mixed>  $data
+     *
      * @throws ApiClientException
      */
     public static function fromArray(array $data, Currency $currency, \DateTimeZone $dateTimeZone): self

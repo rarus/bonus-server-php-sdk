@@ -13,13 +13,10 @@ final class CertificatePaymentDto
     public function __construct(
         public ?Money $amount = null,
         public ?string $code = null,
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array<string> $data
-     * @param Currency $currency
-     * @return CertificatePaymentDto
+     * @param  array<string>  $data
      */
     public static function fromArray(array $data, Currency $currency): CertificatePaymentDto
     {

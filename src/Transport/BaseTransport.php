@@ -12,11 +12,12 @@ namespace Rarus\LMS\SDK\Transport;
 use DateTimeZone;
 use Money\Currency;
 use Psr\Log\LoggerInterface;
+use Rarus\LMS\SDK\Contracts\TransportInterface;
 
 class BaseTransport
 {
     public function __construct(
-        protected HttpTransport $transport,
+        protected TransportInterface $transport,
         protected LoggerInterface $logger,
         protected Currency $defaultCurrency,
         protected DateTimeZone $dateTimeZone

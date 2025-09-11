@@ -16,8 +16,7 @@ class UsersTransport extends BaseTransport
 {
     /**
      * @throws ApiClientException
-     * @throws NetworkException
-     * @throws UnknownException
+     * @throws NetworkException|UnknownException
      */
     public function addNewUser(UserDto $userDto): UserDto
     {
@@ -32,9 +31,9 @@ class UsersTransport extends BaseTransport
 
     /**
      * @throws ApiClientException
-     * @throws UnknownException
-     * @throws NetworkException
      * @throws InvalidArgumentException
+     * @throws NetworkException
+     * @throws UnknownException
      */
     public function updateUser(UserDto $userDto): void
     {
@@ -47,7 +46,7 @@ class UsersTransport extends BaseTransport
             unset($body['cards']);
         }
 
-        $result = $this->transport->request(
+        $this->transport->request(
             RequestMethodInterface::METHOD_PUT,
             sprintf('web-flow/client/%s', $userDto->id),
             $body

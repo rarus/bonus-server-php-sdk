@@ -14,8 +14,6 @@ use Rarus\LMS\SDK\Transport\BaseTransport;
 final class HoldTransport extends BaseTransport
 {
     /**
-     * @param HoldBonusDto $holdBonusDto
-     * @return int
      * @throws ApiClientException
      * @throws NetworkException
      * @throws UnknownException
@@ -28,12 +26,10 @@ final class HoldTransport extends BaseTransport
             $holdBonusDto->toArray()
         );
 
-        return (int)$holdId;
+        return (int) $holdId;
     }
 
     /**
-     * @param int $holdId
-     * @return HoldBonusDto
      * @throws ApiClientException
      * @throws NetworkException
      * @throws UnknownException
@@ -49,7 +45,6 @@ final class HoldTransport extends BaseTransport
     }
 
     /**
-     * @param int $holdId
      * @throws ApiClientException
      * @throws NetworkException
      * @throws UnknownException

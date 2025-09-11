@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 use Random\RandomException;
 use Rarus\LMS\SDK\Client;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
-use Rarus\LMS\SDK\Exceptions\InvalidArgumentException;
 use Rarus\LMS\SDK\Exceptions\NetworkException;
 use Rarus\LMS\SDK\Exceptions\RuntimeException;
 use Rarus\LMS\SDK\Exceptions\UnknownException;
@@ -23,13 +22,13 @@ class UserTransportTest extends TestCase
      * @throws NetworkException
      * @throws UnknownException
      * @throws RandomException
-     * @throws InvalidArgumentException|RuntimeException
+     * @throws RuntimeException
      */
     public function test_add_new_user(): void
     {
         $newUser = Factory::create()
             ->withName('integration_test')
-            ->withPhone('+79' . random_int(100000000, 999999999))
+            ->withPhone('+79'.random_int(100000000, 999999999))
             ->withShopId(1)
             ->build();
 
@@ -47,7 +46,6 @@ class UserTransportTest extends TestCase
 
         $updatedUser = $this->client->users()->getUserById($userId);
 
-
         $this->assertEquals($updatedUser->name, $updateUser->name);
     }
 
@@ -59,7 +57,7 @@ class UserTransportTest extends TestCase
     public function test_get_user_by_id(): void
     {
         $userId = 1;
-        $user = $this->client->users()->getUserById($userId);
+        $user = $this->client->users(2)->getUserById($userId);
         $this->assertInstanceOf(UserDto::class, $user);
     }
 

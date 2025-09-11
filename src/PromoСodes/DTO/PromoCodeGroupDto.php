@@ -22,13 +22,11 @@ final class PromoCodeGroupDto
         public ?bool $requireCard = null,
         public ?\DateTimeImmutable $updatedAt = null,
         public ?PromoCodeUsage $usage = null,
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array<string, mixed> $data
-     * @param \DateTimeZone $dateTimeZone
-     * @return self
+     * @param  array<string, mixed>  $data
+     *
      * @throws ApiClientException
      */
     public static function fromArray(array $data, \DateTimeZone $dateTimeZone): self

@@ -14,7 +14,6 @@ use Rarus\LMS\SDK\Transport\BaseTransport;
 
 final class PromoCodeTransport extends BaseTransport
 {
-
     /**
      * @throws UnknownException
      * @throws ApiClientException
@@ -31,8 +30,6 @@ final class PromoCodeTransport extends BaseTransport
     }
 
     /**
-     * @param HoldPromoCodeDto $holdPromoCodeDto
-     * @return int
      * @throws ApiClientException
      * @throws NetworkException
      * @throws UnknownException
@@ -45,12 +42,10 @@ final class PromoCodeTransport extends BaseTransport
             $holdPromoCodeDto->toArray()
         );
 
-        return (int)$holdId;
+        return (int) $holdId;
     }
 
     /**
-     * @param int $holdId
-     * @return HoldPromoCodeDto
      * @throws ApiClientException
      * @throws NetworkException
      * @throws UnknownException
@@ -66,7 +61,6 @@ final class PromoCodeTransport extends BaseTransport
     }
 
     /**
-     * @param int $holdId
      * @throws ApiClientException
      * @throws NetworkException
      * @throws UnknownException
@@ -78,5 +72,4 @@ final class PromoCodeTransport extends BaseTransport
             sprintf('web-flow/hold-promo-code/%s', $holdId),
         );
     }
-
 }

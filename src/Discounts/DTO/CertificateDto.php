@@ -13,19 +13,16 @@ final class CertificateDto
     public function __construct(
         public Money $balance,
         public string $code,
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array<string> $data
-     * @param Currency $currency
-     * @return self
+     * @param  array<string>  $data
      */
     public static function fromArray(array $data, Currency $currency): self
     {
         return new self(
             balance: MoneyParser::parse($data['balance'], $currency),
-            code: (string)$data['code'],
+            code: (string) $data['code'],
         );
     }
 

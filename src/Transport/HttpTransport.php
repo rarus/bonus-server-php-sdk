@@ -14,13 +14,14 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Log\LoggerInterface;
 use Rarus\LMS\SDK\Auth\DTO\AuthToken;
+use Rarus\LMS\SDK\Contracts\TransportInterface;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
 use Rarus\LMS\SDK\Exceptions\NetworkException;
 use Rarus\LMS\SDK\Exceptions\UnknownException;
 use Rarus\LMS\SDK\Transport;
 use Throwable;
 
-final class HttpTransport
+final class HttpTransport implements TransportInterface
 {
     private ?AuthToken $authToken = null;
 
@@ -28,41 +29,37 @@ final class HttpTransport
         private readonly ClientInterface $httpClient,
         private readonly string $apiKey,
         private readonly LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array<string, mixed> $arHttpRequestOptions
+     * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      *
      * @throws ApiClientException
      * @throws NetworkException
      * @throws UnknownException
      */
-    public function request(string $requestType, string $apiMethod, array $arHttpRequestOptions = []): mixed
+    public function request(string $method, string $uri, array $data = []): mixed
     {
-        $defaultHttpRequestOptions = [];
-        if ($arHttpRequestOptions !== []) {
-            $defaultHttpRequestOptions = \array_merge(['json' => $arHttpRequestOptions], $defaultHttpRequestOptions);
+        $options = [];
+
+        if ($data !== []) {
+            $options['json'] = $data;
         }
 
-        if ($this->authToken) {
-            $defaultHttpRequestOptions['headers']['Authorization'] = $this->authToken->token;
-        } else {
-            $defaultHttpRequestOptions['headers']['Authorization'] = $this->apiKey;
-        }
+        $auth = $uri === 'integration-module/auth'
+            ? $this->apiKey
+            : $this->authToken?->token;
 
-        $this->logger->debug('rarus.bonus.server.apiClient.executeApiRequest.start', [
-            'method' => $apiMethod,
-            'request_type' => $requestType,
-            'options' => $defaultHttpRequestOptions,
-        ]);
+        if ($auth !== null) {
+            $options['headers']['Authorization'] = $auth;
+        }
 
         // выполняем http-запрос
         $obResponse = $this->executeRequest(
-            $requestType,
-            $apiMethod,
-            $defaultHttpRequestOptions
+            $method,
+            $uri,
+            $options
         );
         // получаем тело ответа от сервера
         $stream = $obResponse->getBody();
@@ -72,10 +69,6 @@ final class HttpTransport
         $result = $this->decodeApiJsonResponse($stream->getContents());
 
         $this->handleApiLevelErrors($result, $obResponse->getStatusCode());
-
-        $this->logger->debug('rarus.bonus.server.apiClient.executeApiRequest.finish', [
-            'result' => $result,
-        ]);
 
         return $result['data'] ?? [];
     }
@@ -98,7 +91,7 @@ final class HttpTransport
     }
 
     /**
-     * @param array<string, mixed> $requestOptions
+     * @param  array<string, mixed>  $requestOptions
      *
      * @throws \JsonException
      */
@@ -119,7 +112,7 @@ final class HttpTransport
             $request = $request->withBody($body);
         }
 
-        if (!empty($requestOptions['headers'])) {
+        if (! empty($requestOptions['headers'])) {
             foreach ($requestOptions['headers'] as $name => $value) {
                 $request = $request->withHeader($name, $value);
             }
@@ -129,7 +122,7 @@ final class HttpTransport
     }
 
     /**
-     * @param array<string, mixed> $requestOptions
+     * @param  array<string, mixed>  $requestOptions
      *
      * @throws ApiClientException
      * @throws NetworkException
@@ -157,7 +150,7 @@ final class HttpTransport
             $result = $this->decodeApiJsonResponse($responseBodyAsString);
             $errorResponse = Transport\DTO\ErrorResponse::fromArray($result);
 
-            throw new ApiClientException($result['message'], (int)$result['code'], $exception, $errorResponse);
+            throw new ApiClientException($result['message'], (int) $result['code'], $exception, $errorResponse);
         } catch (GuzzleException $exception) {
             // произошла ошибка на уровне сетевой подсистемы
             $this->logger->error(
@@ -167,14 +160,14 @@ final class HttpTransport
                     'message' => $exception->getMessage(),
                 ]
             );
-            throw new NetworkException($exception->getMessage(), (int)$exception->getCode());
+            throw new NetworkException($exception->getMessage(), (int) $exception->getCode());
         } catch (Throwable $unhandledException) {
             // произошла неизвестная ошибка
             $this->logger->error(
                 'rarus.bonus.server.apiClient.unknown.error',
                 [
                     'type' => \get_class($unhandledException),
-                    'code' => (int)$unhandledException->getCode(),
+                    'code' => (int) $unhandledException->getCode(),
                     'message' => $unhandledException->getMessage(),
                     'trace' => $unhandledException->getTrace(),
                 ]
@@ -186,7 +179,7 @@ final class HttpTransport
                     get_class($unhandledException),
                     $unhandledException->getMessage()
                 ),
-                (int)$unhandledException->getCode(),
+                (int) $unhandledException->getCode(),
                 $unhandledException
             );
         }
@@ -195,7 +188,6 @@ final class HttpTransport
             'request_type' => $requestType,
             'url' => $url,
             'request_options' => $requestOptions,
-            'http_status' => $obResponse->getStatusCode(),
             'result' => $result,
         ]);
 
@@ -234,8 +226,8 @@ final class HttpTransport
     /**
      * Handles and processes API-level errors based on the server response and status code.
      *
-     * @param array<string, mixed> $arBonusServerOperationResponse The API response containing error details or operation results.
-     * @param int $serverStatusCode The HTTP status code returned by the server.
+     * @param  array<string, mixed>  $arBonusServerOperationResponse  The API response containing error details or operation results.
+     * @param  int  $serverStatusCode  The HTTP status code returned by the server.
      *
      * @throws ApiClientException Thrown when an error occurs at the API level, based on response or status code.
      */
@@ -248,13 +240,13 @@ final class HttpTransport
 
         if ($serverStatusCode >= 400) {
             throw new ApiClientException(
-                (string)$arBonusServerOperationResponse['message'],
-                (int)$arBonusServerOperationResponse['code']
+                (string) $arBonusServerOperationResponse['message'],
+                (int) $arBonusServerOperationResponse['code']
             );
         }
 
         if (isset($arBonusServerOperationResponse['success'])) {
-            if ((bool)$arBonusServerOperationResponse['success'] === false) {
+            if ((bool) $arBonusServerOperationResponse['success'] === false) {
                 $errorResponse = Transport\DTO\ErrorResponse::fromArray($arBonusServerOperationResponse);
 
                 throw new ApiClientException(
