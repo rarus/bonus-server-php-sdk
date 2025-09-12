@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rarus\LMS\SDK\Discounts\DTO;
+namespace Rarus\LMS\SDK\Documents\DTO;
 
 use Money\Currency;
 use Money\Money;

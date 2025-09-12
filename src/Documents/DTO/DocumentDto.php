@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rarus\LMS\SDK\Discounts\DTO;
+namespace Rarus\LMS\SDK\Documents\DTO;
 
 use Money\Currency;
 use Money\Money;
@@ -10,7 +10,7 @@ use Rarus\LMS\SDK\Exceptions\ApiClientException;
 use Rarus\LMS\SDK\Utils\DateTimeParser;
 use Rarus\LMS\SDK\Utils\MoneyParser;
 
-final readonly class DiscountCalculationDto
+final readonly class DocumentDto
 {
     /**
      * @param  array<CertificatePaymentDto>|null  $certificatePayment

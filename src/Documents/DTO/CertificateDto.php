@@ -2,18 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Rarus\LMS\SDK\Discounts\DTO;
+namespace Rarus\LMS\SDK\Documents\DTO;
 
 use Money\Currency;
 use Money\Money;
 use Rarus\LMS\SDK\Utils\MoneyParser;
 
-final class HoldBonusDto
+final class CertificateDto
 {
     public function __construct(
-        public Money $amount,
-        public int $id,
-        public ?bool $used = false,
+        public Money $balance,
+        public string $code,
     ) {}
 
     /**
@@ -22,9 +21,8 @@ final class HoldBonusDto
     public static function fromArray(array $data, Currency $currency): self
     {
         return new self(
-            amount: MoneyParser::parse($data['amount'], $currency),
-            id: (int) $data['id'],
-            used: (bool) ($data['used'] ?? false),
+            balance: MoneyParser::parse($data['balance'], $currency),
+            code: (string) $data['code'],
         );
     }
 
@@ -34,9 +32,8 @@ final class HoldBonusDto
     public function toArray(): array
     {
         return [
-            'amount' => MoneyParser::toString($this->amount),
-            'id' => $this->id,
-            'used' => $this->used,
+            'balance' => MoneyParser::toString($this->balance),
+            'code' => $this->code,
         ];
     }
 }

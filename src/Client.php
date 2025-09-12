@@ -11,7 +11,7 @@ use Psr\SimpleCache\InvalidArgumentException;
 use Rarus\LMS\SDK\Auth\AuthTransport;
 use Rarus\LMS\SDK\Cards\Transport\CardsTransport;
 use Rarus\LMS\SDK\Contracts\TransportInterface;
-use Rarus\LMS\SDK\Discounts\Transport\DiscountTransport;
+use Rarus\LMS\SDK\Documents\Transport\DocumentTransport;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
 use Rarus\LMS\SDK\Exceptions\NetworkException;
 use Rarus\LMS\SDK\Holds\Transport\HoldTransport;
@@ -87,9 +87,9 @@ final readonly class Client
         return new CardsTransport($this->wrapTransport($ttl), $this->logger, $this->currency, $this->timeZone);
     }
 
-    public function discounts(?int $ttl = null): DiscountTransport
+    public function documents(?int $ttl = null): DocumentTransport
     {
-        return new DiscountTransport($this->wrapTransport($ttl), $this->logger, $this->currency, $this->timeZone);
+        return new DocumentTransport($this->wrapTransport($ttl), $this->logger, $this->currency, $this->timeZone);
     }
 
     public function holds(?int $ttl = null): HoldTransport
