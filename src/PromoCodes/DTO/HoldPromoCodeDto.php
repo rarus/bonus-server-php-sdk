@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rarus\LMS\SDK\PromoСodes\DTO;
+namespace Rarus\LMS\SDK\PromoCodes\DTO;
 
 use Money\Currency;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
@@ -20,10 +20,11 @@ final class HoldPromoCodeDto
         public ?int $id = null,
         public ?HoldPromoCodeState $state = null,
         public ?\DateTimeImmutable $updatedAt = null,
-    ) {}
+    ) {
+    }
 
     /**
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      *
      * @throws ApiClientException
      */

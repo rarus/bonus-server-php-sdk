@@ -15,7 +15,7 @@ use Rarus\LMS\SDK\Documents\Transport\DocumentTransport;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
 use Rarus\LMS\SDK\Exceptions\NetworkException;
 use Rarus\LMS\SDK\Holds\Transport\HoldTransport;
-use Rarus\LMS\SDK\PromoСodes\Transport\PromoCodeTransport;
+use Rarus\LMS\SDK\PromoCodes\Transport\PromoCodeTransport;
 use Rarus\LMS\SDK\Transport\CachedTransport;
 use Rarus\LMS\SDK\Transport\HttpTransport;
 use Rarus\LMS\SDK\Users\Transport\UsersTransport;

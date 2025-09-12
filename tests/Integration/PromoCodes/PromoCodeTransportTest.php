@@ -7,10 +7,10 @@ namespace Integration\PromoCodes;
 use PHPUnit\Framework\TestCase;
 use Psr\SimpleCache\InvalidArgumentException;
 use Rarus\LMS\SDK\Client;
-use Rarus\LMS\SDK\PromoСodes\DTO\HoldPromoCodeDto;
-use Rarus\LMS\SDK\PromoСodes\DTO\HoldPromoCodeExpiresDto;
-use Rarus\LMS\SDK\PromoСodes\DTO\HoldPromoCodePeriod;
-use Rarus\LMS\SDK\PromoСodes\DTO\HoldPromoCodeState;
+use Rarus\LMS\SDK\PromoCodes\DTO\HoldPromoCodeDto;
+use Rarus\LMS\SDK\PromoCodes\DTO\HoldPromoCodeExpiresDto;
+use Rarus\LMS\SDK\PromoCodes\DTO\HoldPromoCodePeriod;
+use Rarus\LMS\SDK\PromoCodes\DTO\HoldPromoCodeState;
 use TestEnvironmentManager;
 
 final class PromoCodeTransportTest extends TestCase

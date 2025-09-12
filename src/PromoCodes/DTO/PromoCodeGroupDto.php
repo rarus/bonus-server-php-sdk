@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rarus\LMS\SDK\PromoСodes\DTO;
+namespace Rarus\LMS\SDK\PromoCodes\DTO;
 
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
 use Rarus\LMS\SDK\Utils\DateTimeParser;
@@ -22,10 +22,11 @@ final class PromoCodeGroupDto
         public ?bool $requireCard = null,
         public ?\DateTimeImmutable $updatedAt = null,
         public ?PromoCodeUsage $usage = null,
-    ) {}
+    ) {
+    }
 
     /**
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      *
      * @throws ApiClientException
      */

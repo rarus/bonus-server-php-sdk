@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Rarus\LMS\SDK\PromoСodes\Transport;
+namespace Rarus\LMS\SDK\PromoCodes\Transport;
 
 use Fig\Http\Message\RequestMethodInterface;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
 use Rarus\LMS\SDK\Exceptions\NetworkException;
 use Rarus\LMS\SDK\Exceptions\UnknownException;
-use Rarus\LMS\SDK\PromoСodes\DTO\HoldPromoCodeDto;
-use Rarus\LMS\SDK\PromoСodes\DTO\PromoCodeDto;
+use Rarus\LMS\SDK\PromoCodes\DTO\HoldPromoCodeDto;
+use Rarus\LMS\SDK\PromoCodes\DTO\PromoCodeDto;
 use Rarus\LMS\SDK\Transport\BaseTransport;
 
 final class PromoCodeTransport extends BaseTransport
@@ -42,7 +42,7 @@ final class PromoCodeTransport extends BaseTransport
             $holdPromoCodeDto->toArray()
         );
 
-        return (int) $holdId;
+        return (int)$holdId;
     }
 
     /**

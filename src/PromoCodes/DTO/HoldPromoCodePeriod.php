@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rarus\LMS\SDK\PromoСodes\DTO;
+namespace Rarus\LMS\SDK\PromoCodes\DTO;
 
 enum HoldPromoCodePeriod: string
 {

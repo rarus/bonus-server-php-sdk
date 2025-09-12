@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rarus\LMS\SDK\PromoСodes\DTO;
+namespace Rarus\LMS\SDK\PromoCodes\DTO;
 
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
 
@@ -11,10 +11,11 @@ final class PromoCodeGroupPeriodDto
     public function __construct(
         public ?PromoCodePeriodContainer $container = null,
         public ?PromoCodePeriodType $type = null,
-    ) {}
+    ) {
+    }
 
     /**
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      *
      * @throws ApiClientException
      */

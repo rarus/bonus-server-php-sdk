@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rarus\LMS\SDK\PromoСodes\DTO;
+namespace Rarus\LMS\SDK\PromoCodes\DTO;
 
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
 use Rarus\LMS\SDK\Utils\DateTimeParser;
@@ -12,10 +12,11 @@ final class PromoCodePeriodContainer
     public function __construct(
         public ?\DateTimeImmutable $start = null,
         public ?\DateTimeImmutable $end = null
-    ) {}
+    ) {
+    }
 
     /**
-     * @param  array<string, int>  $data
+     * @param array<string, int> $data
      *
      * @throws ApiClientException
      */
