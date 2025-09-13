@@ -17,7 +17,8 @@ use Rarus\LMS\SDK\Users\DTO\UserProperty\UserProperty;
  *
  * @method self withName(string $name)
  * @method self withPhone(string $phone)
- * @method self withShopId(?int $shopId)
+ * @method self withShopId(?string $shopId)
+ * @method self withCity(?UserCityDto $userCityDto)
  * @method self withId(?int $id)
  * @method self withBirthday(?\DateTimeImmutable $birthday)
  * @method self withGender(?Gender $gender)
@@ -68,13 +69,13 @@ final class Factory
     }
 
     /**
-     * @param  array<mixed>  $arguments
+     * @param array<mixed> $arguments
      *
      * @throws InvalidArgumentException
      */
     public function __call(string $name, array $arguments): self
     {
-        if (! str_starts_with($name, 'with')) {
+        if (!str_starts_with($name, 'with')) {
             throw new InvalidArgumentException("Method $name does not exist");
         }
 
@@ -94,7 +95,7 @@ final class Factory
     {
         $reflection = new \ReflectionClass(UserDto::class);
         $constructor = $reflection->getConstructor();
-        if (! $constructor) {
+        if (!$constructor) {
             throw new RuntimeException('UserDto has no constructor');
         }
 
@@ -102,7 +103,7 @@ final class Factory
         foreach ($constructor->getParameters() as $param) {
             $name = $param->getName();
 
-            if (! array_key_exists($name, $this->properties)) {
+            if (!array_key_exists($name, $this->properties)) {
                 if ($param->isDefaultValueAvailable()) {
                     $args[$name] = $param->getDefaultValue();
                 } else {
@@ -111,7 +112,7 @@ final class Factory
             } else {
                 $value = $this->properties[$name];
                 $type = $param->getType();
-                if ($type && ! $this->validateType($value, $type)) {
+                if ($type && !$this->validateType($value, $type)) {
                     throw new \TypeError("Invalid type for property '$name'");
                 }
                 $args[$name] = $value;

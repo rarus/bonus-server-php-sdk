@@ -37,12 +37,12 @@ class UsersTransport extends BaseTransport
      */
     public function updateUser(UserDto $userDto): void
     {
-        if (! $userDto->id) {
+        if (!$userDto->id) {
             throw new InvalidArgumentException('User id cannot be null');
         }
 
         $body = $userDto->toArray();
-        if (! empty($body['cards'])) {
+        if (!empty($body['cards'])) {
             unset($body['cards']);
         }
 
@@ -62,7 +62,7 @@ class UsersTransport extends BaseTransport
     {
         $result = $this->transport->request(
             RequestMethodInterface::METHOD_GET,
-            sprintf('web-flow/client/%s?with_properties=%s', $id, (bool) $withProperties ? 'true' : 'false'),
+            sprintf('web-flow/client/%s?with_properties=%s', $id, (bool)$withProperties ? 'true' : 'false'),
         );
 
         return UserDto::fromArray($result, $this->getDefaultCurrency(), $this->getDateTimeZone());
