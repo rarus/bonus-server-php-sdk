@@ -89,7 +89,10 @@ final readonly class CardDto
             isset($data['card_level']) ? CardLevelDto::fromArray($data['card_level']) : null,
             $data['permissions'] ?? [],
             isset($data['client']) ? UserDto::fromArray($data['client'], $currency, $dateTimeZone) : null,
-            isset($data['transactions']) ? TransactionDto::fromArray($data['transactions'], $dateTimeZone) : null,
+            !empty($data['transactions']['first']) && !empty($data['transactions']['last']) ? TransactionDto::fromArray(
+                $data['transactions'],
+                $dateTimeZone
+            ) : null,
             $data['type_cards'] ?? [],
             (string)$data['name'],
             (string)$data['barcode'],
@@ -103,7 +106,10 @@ final readonly class CardDto
             MoneyParser::parse($data['balance'] ?? 0.0, $currency),
             $data['balance_date'] ?? null,
             MoneyParser::parse($data['turnover'] ?? 0.0, $currency),
-            isset($data['sales']) ? SalesDto::fromArray($data['sales'], $dateTimeZone) : null,
+            !empty($data['sales']['first']) && !empty($data['sales']['last']) ? SalesDto::fromArray(
+                $data['sales'],
+                $dateTimeZone
+            ) : null,
             array_map(fn(array $c) => CardDto::fromArray($c, $currency, $dateTimeZone),
                 $data['other_cards_on_account'] ?? []),
         );
