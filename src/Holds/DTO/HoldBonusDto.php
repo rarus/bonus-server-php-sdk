@@ -26,7 +26,6 @@ final class HoldBonusDto
         public ?Money $unholded = null,
         public ?\DateTimeImmutable $updatedAt = null,
         public ?Money $used = null,
-        public ?string $shopId = null,
     ) {
     }
 
@@ -51,7 +50,6 @@ final class HoldBonusDto
             isset($data['unholded']) ? MoneyParser::parse($data['unholded'], $currency) : null,
             isset($data['updated_at']) ? DateTimeParser::fromTimestamp($data['updated_at'], $dateTimeZone) : null,
             isset($data['used']) ? MoneyParser::parse($data['used'], $currency) : null,
-            isset($data['shop_id']) ? (string)$data['shop_id'] : null,
         );
     }
 
@@ -74,7 +72,6 @@ final class HoldBonusDto
             'unholded' => $this->unholded ? MoneyParser::toString($this->unholded) : null,
             'updated_at' => $this->updatedAt?->format(DATE_ATOM),
             'used' => $this->used ? MoneyParser::toString($this->used) : null,
-            'shop_id' => $this->shopId,
         ];
     }
 }

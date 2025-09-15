@@ -30,7 +30,6 @@ final class HoldTransportTest extends TestCase
                 period: HoldBonusPeriod::Date,
                 value: null
             ),
-            shopId: 1
         );
 
         $holdBonusId = $this->client->holds()->createHoldBonus($newHoldBonus);
@@ -50,7 +49,6 @@ final class HoldTransportTest extends TestCase
                 period: HoldBonusPeriod::Date,
                 value: null
             ),
-            shopId: 1
         );
 
         $holdBonusId = $this->client->holds()->createHoldBonus($newHoldBonus);
