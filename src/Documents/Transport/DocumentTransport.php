@@ -16,7 +16,7 @@ final class DocumentTransport extends BaseTransport
     /**
      * Выполняет расчет скидок для документа
      *
-     * @param  DocumentDto  $documentDto  Document request
+     * @param DocumentDto $documentDto Document request
      * @return array<string, mixed>
      *
      * @throws UnknownException
@@ -70,7 +70,7 @@ final class DocumentTransport extends BaseTransport
     ): array {
         return $this->transport->request(
             RequestMethodInterface::METHOD_POST,
-            sprintf('web-flow/document/purchase?no-commit=%s', $noCommit),
+            sprintf('web-flow/document/refund?no-commit=%s', $noCommit),
             $documentDto->toArray()
         );
     }
