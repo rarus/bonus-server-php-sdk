@@ -31,8 +31,8 @@ final readonly class Client
         private HttpTransport $transport,
         private LoggerInterface $logger,
         private ?CacheInterface $cache = null,
-        private Currency $currency = new Currency('RUB'),
-        private \DateTimeZone $timeZone = new \DateTimeZone('UTC'),
+        public Currency $currency = new Currency('RUB'),
+        public \DateTimeZone $timeZone = new \DateTimeZone('UTC'),
     ) {
         $this->authorize();
     }
