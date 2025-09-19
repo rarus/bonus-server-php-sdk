@@ -98,7 +98,7 @@ final readonly class UserDto
                 $data['date_state'],
                 $dateTimeZone
             ) : null,
-            externalId: $data['external_id'] ?? null,
+            externalId: !empty($data['external_id']['id']) ? (string)$data['external_id']['id'] : null,
             login: $data['login'] ?? null,
             password: $data['password'] ?? null,
             properties: !empty($data['properties']) ? array_map(
