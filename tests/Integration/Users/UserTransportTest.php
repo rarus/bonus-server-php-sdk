@@ -47,7 +47,10 @@ class UserTransportTest extends TestCase
         $userId = 1;
         $user = $this->client->users()->getUserById($userId);
 
-        $updateUser = Factory::create()->fromDto($user)->withName('integration_test2')->build();
+        $updateUser = Factory::create()->fromDto($user)
+            ->withName('integration_test2')
+            ->withShopId('ext_1')
+            ->build();
         $this->client->users()->updateUser($updateUser);
 
         $updatedUser = $this->client->users()->getUserById($userId);
@@ -62,8 +65,19 @@ class UserTransportTest extends TestCase
      */
     public function test_get_user_by_id(): void
     {
-        $userId = 1;
-        $user = $this->client->users(2)->getUserById($userId);
+        $userId = 2;
+        $user = $this->client->users(0)->getUserById($userId, true);
+        $this->assertInstanceOf(UserDto::class, $user);
+    }
+
+    /**
+     * @throws ApiClientException
+     * @throws NetworkException
+     * @throws UnknownException
+     */
+    public function test_get_user_by_phone(): void
+    {
+        $user = $this->client->users(0)->getUserByPhone('79100000002');
         $this->assertInstanceOf(UserDto::class, $user);
     }
 

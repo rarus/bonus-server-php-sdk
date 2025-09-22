@@ -102,7 +102,7 @@ final readonly class UserDto
             login: $data['login'] ?? null,
             password: $data['password'] ?? null,
             properties: !empty($data['properties']) ? array_map(
-                fn(array $row): UserProperty => UserProperty::fromArray($row),
+                fn(array $row): UserProperty => UserProperty::fromArray($row, $dateTimeZone),
                 $data['properties']
             ) : null,
             defaultCardId: $data['default_card_id'] ?? null
