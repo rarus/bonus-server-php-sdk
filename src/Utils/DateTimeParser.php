@@ -7,17 +7,13 @@ namespace Rarus\LMS\SDK\Utils;
 use DateTime;
 use DateTimeZone;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
+use Rarus\LMS\SDK\Exceptions\RuntimeException;
 
 /**
  * Class DateTimeParser
  */
 class DateTimeParser
 {
-    /**
-     * @var int
-     */
-    private const MIN_TIMESTAMP_LENGTH = 11;
-
     /**
      * Парсим время в виде timestamp + milliseconds
      *
@@ -26,28 +22,26 @@ class DateTimeParser
      */
     public static function fromTimestamp(string|int $timestampStr, DateTimeZone $dateTimeZone): \DateTimeImmutable
     {
-        if (\strlen((string) $timestampStr) < self::MIN_TIMESTAMP_LENGTH) {
+        $timestampStr = (string)$timestampStr;
+
+        if (!is_numeric($timestampStr)) {
             throw new ApiClientException(
-                sprintf(
-                    'неизвестный формат времени в ответе сервера [%s], ожидали %s или больше символов, получили %s',
-                    $timestampStr,
-                    self::MIN_TIMESTAMP_LENGTH,
-                    \strlen((string) $timestampStr)
-                ),
-                0,
-                null
+                sprintf('некорректный формат времени в ответе сервера [%s]', $timestampStr)
             );
         }
 
-        $seconds = (int) substr((string) $timestampStr, 0, -3);
-        $milliseconds = (int) substr((string) $timestampStr, -3);
+        $milliseconds = (int)$timestampStr;
+        $seconds = intdiv($milliseconds, 1000);
+        $microseconds = ($milliseconds % 1000) * 1000;
 
-        $timestampFloat = $seconds + $milliseconds / 1000;
+        $formatted = sprintf('%d.%06d', $seconds, $microseconds);
 
         try {
-            $dateTime = (new \DateTimeImmutable('@'.$timestampFloat))
-                ->setTimezone($dateTimeZone);
-        } catch (\Exception $e) {
+            $dateTime = \DateTimeImmutable::createFromFormat('U.u', $formatted)->setTimezone($dateTimeZone);
+            if ($dateTime === false) {
+                throw new RuntimeException('createFromFormat вернул false');
+            }
+        } catch (\Throwable $e) {
             throw new ApiClientException(
                 sprintf('ошибка при разборе поля время в ответе сервера [%s]', $timestampStr),
                 0,

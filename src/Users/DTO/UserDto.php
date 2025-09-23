@@ -78,7 +78,7 @@ final readonly class UserDto
             ) : null,
             receiveNewslettersAccepted: isset($data['receive_newsletters_accepted']) ?
                 (bool)($data['receive_newsletters_accepted']) : null,
-            referrer: $data['referrer'] ?? null,
+            referrer: isset($data['referrer']['phone']) ? (string)$data['referrer']['phone'] : null,
             timezone: DateTimeParser::timeZoneFromString($data['timezone'] ?? null),
             state: isset($data['state']) ? UserStatus::from($data['state']) : null,
             dateConfirmed: isset($data['date_confirmed']) ? DateTimeParser::fromTimestamp(

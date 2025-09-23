@@ -49,7 +49,7 @@ class UserTransportTest extends TestCase
 
         $updateUser = Factory::create()->fromDto($user)
             ->withName('integration_test2')
-            ->withShopId('ext_1')
+            ->withShopId(null)
             ->build();
         $this->client->users()->updateUser($updateUser);
 
