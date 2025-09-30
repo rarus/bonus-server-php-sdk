@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Integration\Documents;
 
+use Exception;
 use Money\Currency;
 use PHPUnit\Framework\TestCase;
 use Psr\SimpleCache\InvalidArgumentException;
@@ -20,13 +21,13 @@ final class DocumentTransportTest extends TestCase
     public function test_calculate(): void
     {
         date_default_timezone_set('Europe/Moscow');
-        $product = new SaleItemDto(
+        $saleItemDto = new SaleItemDto(
             productId: 'id-1',
             productName: 'name-1',
             price: MoneyParser::parse('1000', new Currency('RUB')),
             quantity: 1,
         );
-        $products = [$product];
+        $products = [$saleItemDto];
         $documentDto = new DocumentDto(
             docNumber: '1234567890',
             registerId: '1234567890',
@@ -40,13 +41,13 @@ final class DocumentTransportTest extends TestCase
     public function test_purchase(): void
     {
         date_default_timezone_set('Europe/Moscow');
-        $product = new SaleItemDto(
+        $saleItemDto = new SaleItemDto(
             productId: 'id-1',
             productName: 'name-1',
             price: MoneyParser::parse('1000', new Currency('RUB')),
             quantity: 1,
         );
-        $products = [$product];
+        $products = [$saleItemDto];
         $documentDto = new DocumentDto(
             docNumber: '1234567890',
             registerId: '1234567890',
@@ -60,13 +61,13 @@ final class DocumentTransportTest extends TestCase
     public function test_refund(): void
     {
         date_default_timezone_set('Europe/Moscow');
-        $product = new SaleItemDto(
+        $saleItemDto = new SaleItemDto(
             productId: 'id-1',
             productName: 'name-1',
             price: MoneyParser::parse('1000', new Currency('RUB')),
             quantity: 1,
         );
-        $products = [$product];
+        $products = [$saleItemDto];
         $documentDto = new DocumentDto(
             docNumber: '1234567890',
             registerId: '1234567890',
@@ -78,7 +79,7 @@ final class DocumentTransportTest extends TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      * @throws InvalidArgumentException
      */
     protected function setUp(): void

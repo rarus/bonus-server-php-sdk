@@ -8,6 +8,7 @@ use Fig\Http\Message\RequestMethodInterface;
 use Rarus\LMS\SDK\Auth\DTO\AuthToken;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
 use Rarus\LMS\SDK\Exceptions\NetworkException;
+use Rarus\LMS\SDK\Exceptions\UnknownException;
 use Rarus\LMS\SDK\RarusLMS;
 use Rarus\LMS\SDK\Transport\BaseTransport;
 
@@ -15,7 +16,7 @@ final class AuthTransport extends BaseTransport
 {
     /**
      * @throws ApiClientException
-     * @throws NetworkException
+     * @throws NetworkException|UnknownException
      */
     public function getNewAuthToken(): AuthToken
     {

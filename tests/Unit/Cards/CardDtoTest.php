@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rarus\LMS\SDK\Tests\Unit\Cards;
 
+use DateTimeZone;
 use PHPUnit\Framework\TestCase;
 use Rarus\LMS\SDK\Cards\DTO\CardDto;
 use Rarus\LMS\SDK\Cards\DTO\CardLevelDto;
@@ -89,23 +90,23 @@ final class CardDtoTest extends TestCase
             ],
         ];
 
-        $dateTimeZone = new \DateTimeZone(\TestEnvironmentManager::DEFAULT_TIMEZONE);
+        $dateTimeZone = new DateTimeZone(TestEnvironmentManager::DEFAULT_TIMEZONE);
         $currency = TestEnvironmentManager::getDefaultCurrency();
-        $dto = CardDto::fromArray($data, $currency, $dateTimeZone);
+        $cardDto = CardDto::fromArray($data, $currency, $dateTimeZone);
 
-        $this->assertSame(1, $dto->id);
-        $this->assertSame('e42b7a41-7515-a9d3-42eb-7f066a94cc0c', $dto->externalId);
-        $this->assertInstanceOf(CardLevelDto::class, $dto->cardLevel);
-        $this->assertSame('Уровень карты №1 Базовый', $dto->cardLevel->name);
-        $this->assertInstanceOf(UserDto::class, $dto->client);
-        $this->assertSame('Александр', $dto->client->name);
-        $this->assertInstanceOf(TransactionDto::class, $dto->transactions);
-        $this->assertInstanceOf(SalesDto::class, $dto->sales);
-        $this->assertCount(1, $dto->otherCardsOnAccount);
-        $this->assertInstanceOf(CardDto::class, $dto->otherCardsOnAccount[0]);
+        $this->assertSame(1, $cardDto->id);
+        $this->assertSame('e42b7a41-7515-a9d3-42eb-7f066a94cc0c', $cardDto->externalId);
+        $this->assertInstanceOf(CardLevelDto::class, $cardDto->cardLevel);
+        $this->assertSame('Уровень карты №1 Базовый', $cardDto->cardLevel->name);
+        $this->assertInstanceOf(UserDto::class, $cardDto->client);
+        $this->assertSame('Александр', $cardDto->client->name);
+        $this->assertInstanceOf(TransactionDto::class, $cardDto->transactions);
+        $this->assertInstanceOf(SalesDto::class, $cardDto->sales);
+        $this->assertCount(1, $cardDto->otherCardsOnAccount);
+        $this->assertInstanceOf(CardDto::class, $cardDto->otherCardsOnAccount[0]);
 
         // Проверка обратного преобразования
-        $arrayBack = $dto->toArray();
+        $arrayBack = $cardDto->toArray();
         $this->assertSame($data['id'], $arrayBack['id']);
         $this->assertSame($data['external_id'], $arrayBack['external_id']);
         $this->assertSame($data['client']['name'], $arrayBack['client']['name']);
@@ -139,18 +140,18 @@ final class CardDtoTest extends TestCase
             'other_cards_on_account' => [],
         ];
 
-        $dateTimeZone = new \DateTimeZone(\TestEnvironmentManager::DEFAULT_TIMEZONE);
+        $dateTimeZone = new DateTimeZone(TestEnvironmentManager::DEFAULT_TIMEZONE);
         $currency = TestEnvironmentManager::getDefaultCurrency();
 
-        $dto = CardDto::fromArray($data, $currency, $dateTimeZone);
+        $cardDto = CardDto::fromArray($data, $currency, $dateTimeZone);
 
-        $this->assertSame(10, $dto->id);
-        $this->assertSame('Test Card', $dto->name);
-        $this->assertSame([], $dto->otherCardsOnAccount);
-        $this->assertNull($dto->cardLevel);
-        $this->assertNull($dto->client);
+        $this->assertSame(10, $cardDto->id);
+        $this->assertSame('Test Card', $cardDto->name);
+        $this->assertSame([], $cardDto->otherCardsOnAccount);
+        $this->assertNull($cardDto->cardLevel);
+        $this->assertNull($cardDto->client);
 
-        $arrayBack = $dto->toArray();
+        $arrayBack = $cardDto->toArray();
         $this->assertSame('Test Card', $arrayBack['name']);
         $this->assertSame([], $arrayBack['other_cards_on_account']);
     }

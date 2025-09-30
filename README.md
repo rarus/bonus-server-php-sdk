@@ -11,6 +11,7 @@ composer require rarus/bonus-server-php-sdk^2.0
 - PHP \>= [8.2+](https://www.php.net/releases/)
 - ext-json
 - ext-curl
+- ext-intl
 
 ## Быстрый старт
 

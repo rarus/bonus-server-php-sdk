@@ -34,7 +34,7 @@ final readonly class CachedTransport implements TransportInterface
         $key = $this->makeKey($method, $uri, $data);
 
         if ($this->cache->has($key)) {
-            $this->logger->debug("Using cached response $method $uri $key");
+            $this->logger->debug(sprintf('Using cached response %s %s %s', $method, $uri, $key));
 
             return $this->cache->get($key);
         }

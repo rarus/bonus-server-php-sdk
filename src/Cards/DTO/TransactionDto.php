@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Rarus\LMS\SDK\Cards\DTO;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
 use Rarus\LMS\SDK\Utils\DateTimeParser;
 
 final readonly class TransactionDto
 {
     public function __construct(
-        public \DateTimeImmutable $first,
-        public \DateTimeImmutable $last,
+        public DateTimeImmutable $first,
+        public DateTimeImmutable $last,
     ) {}
 
     /**
@@ -30,7 +32,7 @@ final readonly class TransactionDto
      *
      * @throws ApiClientException
      */
-    public static function fromArray(array $data, \DateTimeZone $dateTimeZone): self
+    public static function fromArray(array $data, DateTimeZone $dateTimeZone): self
     {
         return new self(
             DateTimeParser::fromTimestamp($data['first'], $dateTimeZone),

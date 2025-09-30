@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Rarus\LMS\SDK\PromoCodes\DTO;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use Money\Currency;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
 use Rarus\LMS\SDK\Utils\DateTimeParser;
@@ -13,22 +15,21 @@ final class HoldPromoCodeDto
     public function __construct(
         public ?int $cardId = null,
         public ?string $code = null,
-        public ?\DateTimeImmutable $createdAt = null,
+        public ?DateTimeImmutable $createdAt = null,
         public ?string $description = null,
         public ?HoldPromoCodeExpiresDto $expires = null,
-        public ?\DateTimeImmutable $expiresAt = null,
+        public ?DateTimeImmutable $expiresAt = null,
         public ?int $id = null,
         public ?HoldPromoCodeState $state = null,
-        public ?\DateTimeImmutable $updatedAt = null,
-    ) {
-    }
+        public ?DateTimeImmutable $updatedAt = null,
+    ) {}
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      *
      * @throws ApiClientException
      */
-    public static function fromArray(array $data, Currency $currency, \DateTimeZone $dateTimeZone): self
+    public static function fromArray(array $data, Currency $currency, DateTimeZone $dateTimeZone): self
     {
         return new self(
             $data['card_id'] ?? null,

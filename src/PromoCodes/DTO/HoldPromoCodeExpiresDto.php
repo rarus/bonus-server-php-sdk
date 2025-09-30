@@ -4,24 +4,25 @@ declare(strict_types=1);
 
 namespace Rarus\LMS\SDK\PromoCodes\DTO;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
 use Rarus\LMS\SDK\Utils\DateTimeParser;
 
 final class HoldPromoCodeExpiresDto
 {
     public function __construct(
-        public ?\DateTimeImmutable $date = null,
+        public ?DateTimeImmutable $date = null,
         public ?HoldPromoCodePeriod $period = null,
         public ?int $value = null,
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      *
      * @throws ApiClientException
      */
-    public static function fromArray(array $data, \DateTimeZone $dateTimeZone): self
+    public static function fromArray(array $data, DateTimeZone $dateTimeZone): self
     {
         return new self(
             isset($data['date']) ? DateTimeParser::fromTimestamp($data['date'], $dateTimeZone) : null,

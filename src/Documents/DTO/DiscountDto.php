@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Rarus\LMS\SDK\Documents\DTO;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use Money\Currency;
 use Money\Money;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
@@ -14,12 +16,12 @@ final class DiscountDto
 {
     public function __construct(
         public ?bool $excludeTurnoverAccumulation = false,
-        public ?\DateTimeImmutable $from = null,
+        public ?DateTimeImmutable $from = null,
         public ?int $id = null,
         public ?string $name = null,
         public ?bool $once = false,
         public ?float $percent = null,
-        public ?\DateTimeImmutable $to = null,
+        public ?DateTimeImmutable $to = null,
         public ?DiscountType $type = null,
         public ?Money $value = null,
     ) {}
@@ -29,7 +31,7 @@ final class DiscountDto
      *
      * @throws ApiClientException
      */
-    public static function fromArray(array $data, Currency $currency, \DateTimeZone $dateTimeZone): self
+    public static function fromArray(array $data, Currency $currency, DateTimeZone $dateTimeZone): self
     {
         return new self(
             excludeTurnoverAccumulation: $data['exclude_turnover_accumulation'] ?? false,
@@ -51,14 +53,14 @@ final class DiscountDto
     {
         return [
             'exclude_turnover_accumulation' => $this->excludeTurnoverAccumulation ?? false,
-            'from' => $this->from ? DateTimeParser::toTimestamp($this->from) : null,
+            'from' => $this->from instanceof DateTimeImmutable ? DateTimeParser::toTimestamp($this->from) : null,
             'id' => $this->id ?? null,
             'name' => $this->name ?? null,
             'once' => $this->once ?? false,
             'percent' => $this->percent ?? null,
-            'to' => $this->to ? DateTimeParser::toTimestamp($this->to) : null,
+            'to' => $this->to instanceof DateTimeImmutable ? DateTimeParser::toTimestamp($this->to) : null,
             'type' => $this->type?->value,
-            'value' => $this->value ? MoneyParser::toString($this->value) : null,
+            'value' => $this->value instanceof Money ? MoneyParser::toString($this->value) : null,
         ];
     }
 }

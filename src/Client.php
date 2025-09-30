@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rarus\LMS\SDK;
 
+use DateTimeZone;
 use Money\Currency;
 use Psr\Log\LoggerInterface;
 use Psr\SimpleCache\CacheInterface;
@@ -32,7 +33,7 @@ final readonly class Client
         private LoggerInterface $logger,
         private ?CacheInterface $cache = null,
         public Currency $currency = new Currency('RUB'),
-        public \DateTimeZone $timeZone = new \DateTimeZone('UTC'),
+        public DateTimeZone $timeZone = new DateTimeZone('UTC'),
     ) {
         $this->authorize();
     }
@@ -47,7 +48,7 @@ final readonly class Client
         $authTransport = new AuthTransport($this->transport, $this->logger, $this->currency, $this->timeZone);
         $cacheKey = 'rarus_lms_auth_token';
 
-        if ($this->cache !== null && ($token = $this->cache->get($cacheKey))) {
+        if ($this->cache instanceof CacheInterface && ($token = $this->cache->get($cacheKey))) {
             $this->transport->setAuthToken($token);
             $this->logger->debug('Using cached auth token');
         } else {
@@ -65,7 +66,7 @@ final readonly class Client
 
     private function wrapTransport(?int $ttl = null): TransportInterface
     {
-        if ($this->cache && $ttl) {
+        if ($this->cache instanceof CacheInterface && $ttl) {
             return new CachedTransport($this->transport, $this->cache, $this->logger, $ttl);
         }
 

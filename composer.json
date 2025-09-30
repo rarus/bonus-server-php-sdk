@@ -53,7 +53,8 @@
     "test:lint": "pint --test -v --parallel",
     "test:types": "phpstan analyse --ansi --memory-limit=1G",
     "test:integration": "phpunit --testsuite Integration --colors=always",
-    "test:unit": "phpunit --testsuite Unit --colors=always"
+    "test:unit": "phpunit --testsuite Unit --colors=always",
+    "rector": "rector"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,

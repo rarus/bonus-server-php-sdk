@@ -11,6 +11,7 @@ use Rarus\LMS\SDK\Exceptions\NetworkException;
 use Rarus\LMS\SDK\Exceptions\UnknownException;
 use Rarus\LMS\SDK\Transport\BaseTransport;
 use Rarus\LMS\SDK\Users\DTO\UserDto;
+use Rarus\LMS\SDK\Users\DTO\UserProperty\Property;
 
 class UsersTransport extends BaseTransport
 {
@@ -37,12 +38,12 @@ class UsersTransport extends BaseTransport
      */
     public function updateUser(UserDto $userDto): void
     {
-        if (!$userDto->id) {
+        if ($userDto->id === null || $userDto->id === 0) {
             throw new InvalidArgumentException('User id cannot be null');
         }
 
         $body = $userDto->toArray();
-        if (!empty($body['cards'])) {
+        if (! empty($body['cards'])) {
             unset($body['cards']);
         }
 
@@ -62,7 +63,7 @@ class UsersTransport extends BaseTransport
     {
         $result = $this->transport->request(
             RequestMethodInterface::METHOD_GET,
-            sprintf('web-flow/client/%s?with_properties=%s', $id, (bool)$withProperties ? 'true' : 'false'),
+            sprintf('web-flow/client/%s?with_properties=%s', $id, $withProperties ? 'true' : 'false'),
         );
 
         return UserDto::fromArray($result, $this->getDefaultCurrency(), $this->getDateTimeZone());
@@ -81,5 +82,22 @@ class UsersTransport extends BaseTransport
         );
 
         return UserDto::fromArray($result, $this->getDefaultCurrency(), $this->getDateTimeZone());
+    }
+
+    /**
+     * @return array<Property>
+     *
+     * @throws UnknownException
+     * @throws ApiClientException
+     * @throws NetworkException
+     */
+    public function getUserProperties(): array
+    {
+        $result = $this->transport->request(
+            RequestMethodInterface::METHOD_GET,
+            'web-flow/client/property'
+        );
+
+        return array_map(fn (array $property): Property => Property::fromArray($property, $this->getDateTimeZone()), $result);
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Integration\Holds;
 
+use DateTimeImmutable;
+use Exception;
 use Money\Currency;
 use PHPUnit\Framework\TestCase;
 use Psr\SimpleCache\InvalidArgumentException;
@@ -21,37 +23,37 @@ final class HoldTransportTest extends TestCase
 
     public function test_get_hold_bonus(): void
     {
-        $newHoldBonus = new HoldBonusDto(
+        $holdBonusDto = new HoldBonusDto(
             amount: MoneyParser::parse('1000', new Currency('RUB')),
             cardId: 1,
             description: 'test',
             expires: new HoldBonusExpiresDto(
-                date: new \DateTimeImmutable('+20 day'),
+                date: new DateTimeImmutable('+20 day'),
                 period: HoldBonusPeriod::Date,
                 value: null
             ),
         );
 
-        $holdBonusId = $this->client->holds()->createHoldBonus($newHoldBonus);
+        $holdBonusId = $this->client->holds()->createHoldBonus($holdBonusDto);
         $holdBonus = $this->client->holds()->getHoldBonus($holdBonusId);
 
-        $this->assertEquals($holdBonus->description, $newHoldBonus->description);
+        $this->assertEquals($holdBonus->description, $holdBonusDto->description);
     }
 
     public function test_delete_hold_bonus(): void
     {
-        $newHoldBonus = new HoldBonusDto(
+        $holdBonusDto = new HoldBonusDto(
             amount: MoneyParser::parse('1000', new Currency('RUB')),
             cardId: 1,
             description: 'test',
             expires: new HoldBonusExpiresDto(
-                date: new \DateTimeImmutable('+20 day'),
+                date: new DateTimeImmutable('+20 day'),
                 period: HoldBonusPeriod::Date,
                 value: null
             ),
         );
 
-        $holdBonusId = $this->client->holds()->createHoldBonus($newHoldBonus);
+        $holdBonusId = $this->client->holds()->createHoldBonus($holdBonusDto);
         $this->client->holds()->deleteHoldBonus($holdBonusId);
 
         $holdBonus = $this->client->holds()->getHoldBonus($holdBonusId);
@@ -59,7 +61,7 @@ final class HoldTransportTest extends TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      * @throws InvalidArgumentException
      */
     protected function setUp(): void

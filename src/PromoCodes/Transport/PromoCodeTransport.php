@@ -42,7 +42,7 @@ final class PromoCodeTransport extends BaseTransport
             $holdPromoCodeDto->toArray()
         );
 
-        return (int)$holdId;
+        return (int) $holdId;
     }
 
     /**

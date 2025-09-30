@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Rarus\LMS\SDK\Auth\DTO;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
 use Rarus\LMS\SDK\Utils\DateTimeParser;
 
@@ -11,7 +13,7 @@ final readonly class AuthToken
 {
     public function __construct(
         public string $token,
-        public \DateTimeImmutable $expires
+        public DateTimeImmutable $expires
     ) {}
 
     /**
@@ -19,7 +21,7 @@ final readonly class AuthToken
      *
      * @throws ApiClientException
      */
-    public static function fromArray(array $data, \DateTimeZone $dateTimeZone): self
+    public static function fromArray(array $data, DateTimeZone $dateTimeZone): self
     {
         return new self(
             (string) $data['content'],
@@ -29,7 +31,7 @@ final readonly class AuthToken
 
     public function isExpired(): bool
     {
-        return $this->expires < new \DateTimeImmutable;
+        return $this->expires < new DateTimeImmutable;
     }
 
     public function getTtl(): int

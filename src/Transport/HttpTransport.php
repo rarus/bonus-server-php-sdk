@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Rarus\LMS\SDK\Transport;
 
+use Rarus\LMS\SDK\Transport\DTO\ErrorResponse;
+use JsonException;
 use Fig\Http\Message\RequestMethodInterface;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
@@ -18,7 +20,6 @@ use Rarus\LMS\SDK\Contracts\TransportInterface;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
 use Rarus\LMS\SDK\Exceptions\NetworkException;
 use Rarus\LMS\SDK\Exceptions\UnknownException;
-use Rarus\LMS\SDK\Transport;
 use Throwable;
 
 final class HttpTransport implements TransportInterface
@@ -93,7 +94,7 @@ final class HttpTransport implements TransportInterface
     /**
      * @param  array<string, mixed>  $requestOptions
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     private function createRequest(string $requestType, string $uri, array $requestOptions): RequestInterface
     {
@@ -148,7 +149,7 @@ final class HttpTransport implements TransportInterface
             $responseBodyAsString = $response->getBody()->getContents();
 
             $result = $this->decodeApiJsonResponse($responseBodyAsString);
-            $errorResponse = Transport\DTO\ErrorResponse::fromArray($result);
+            $errorResponse = ErrorResponse::fromArray($result);
 
             throw new ApiClientException($result['message'], (int) $result['code'], $exception, $errorResponse);
         } catch (GuzzleException $exception) {
@@ -247,7 +248,7 @@ final class HttpTransport implements TransportInterface
 
         if (isset($arBonusServerOperationResponse['success'])) {
             if ((bool) $arBonusServerOperationResponse['success'] === false) {
-                $errorResponse = Transport\DTO\ErrorResponse::fromArray($arBonusServerOperationResponse);
+                $errorResponse = ErrorResponse::fromArray($arBonusServerOperationResponse);
 
                 throw new ApiClientException(
                     trim($arBonusServerOperationResponse['message'] ?? 'Unknown error'),

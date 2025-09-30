@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Psr\SimpleCache\InvalidArgumentException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\MessageFormatter;
 use GuzzleHttp\Middleware;
@@ -28,7 +29,7 @@ class TestEnvironmentManager
     public const DEFAULT_TIMEZONE = 'Europe/Moscow';
 
     /**
-     * @throws Exception|\Psr\SimpleCache\InvalidArgumentException
+     * @throws Exception|InvalidArgumentException
      */
     public static function getInstance(): Client
     {
@@ -56,8 +57,8 @@ class TestEnvironmentManager
             'handler' => $guzzleHandlerStack,
         ]);
 
-        $psr6Cache = new FilesystemAdapter;
-        $psr16Cache = new Psr16Cache($psr6Cache);
+        $filesystemAdapter = new FilesystemAdapter;
+        $psr16Cache = new Psr16Cache($filesystemAdapter);
 
         return RarusLMS::factory()
             ->setApiUrl($_ENV['RARUS_BONUS_API_URL'])

@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace Rarus\LMS\SDK\Users\DTO;
 
+use ReflectionClass;
+use TypeError;
+use ReflectionType;
+use ReflectionNamedType;
+use DateTimeImmutable;
+use DateTimeZone;
 use Rarus\LMS\SDK\Cards\DTO\CardDto;
 use Rarus\LMS\SDK\Exceptions\InvalidArgumentException;
 use Rarus\LMS\SDK\Exceptions\RuntimeException;
@@ -20,21 +26,21 @@ use Rarus\LMS\SDK\Users\DTO\UserProperty\UserProperty;
  * @method self withShopId(?string $shopId)
  * @method self withCity(?UserCityDto $userCityDto)
  * @method self withId(?int $id)
- * @method self withBirthday(?\DateTimeImmutable $birthday)
+ * @method self withBirthday(?DateTimeImmutable $birthday)
  * @method self withGender(?Gender $gender)
  * @method self withEmail(?string $email)
  * @method self withChannel(?string $channel)
  * @method self withPersonalDataAccepted(?bool $personalDataAccepted)
- * @method self withPersonalDataAcceptedDate(?\DateTimeImmutable $personalDataAcceptedDate)
+ * @method self withPersonalDataAcceptedDate(?DateTimeImmutable $personalDataAcceptedDate)
  * @method self withReceiveNewslettersAccepted(?bool $receiveNewslettersAccepted)
  * @method self withReferrer(?string $referrer)
- * @method self withTimezone(?\DateTimeZone $timezone)
+ * @method self withTimezone(?DateTimeZone $timezone)
  * @method self withState(?UserStatus $state)
- * @method self withDateConfirmed(?\DateTimeImmutable $dateConfirmed)
+ * @method self withDateConfirmed(?DateTimeImmutable $dateConfirmed)
  * @method self withBlocked(?bool $blocked)
- * @method self withDateBlocked(?\DateTimeImmutable $dateBlocked)
+ * @method self withDateBlocked(?DateTimeImmutable $dateBlocked)
  * @method self withCards(?array<CardDto> $cards)
- * @method self withDateState(?\DateTimeImmutable $dateState)
+ * @method self withDateState(?DateTimeImmutable $dateState)
  * @method self withExternalId(?string $externalId)
  * @method self withLogin(?string $login)
  * @method self withPassword(?string $password)
@@ -51,13 +57,13 @@ final class Factory
     /**
      * Creates a Factory instance from an existing UserDto
      */
-    public static function fromDto(UserDto $dto): self
+    public static function fromDto(UserDto $userDto): self
     {
         $factory = self::create();
-        $reflection = new \ReflectionClass($dto);
-        foreach ($reflection->getProperties() as $property) {
+        $reflectionClass = new ReflectionClass($userDto);
+        foreach ($reflectionClass->getProperties() as $property) {
             $name = $property->getName();
-            $factory->properties[$name] = $property->getValue($dto);
+            $factory->properties[$name] = $property->getValue($userDto);
         }
 
         return $factory;
@@ -69,14 +75,14 @@ final class Factory
     }
 
     /**
-     * @param array<mixed> $arguments
+     * @param  array<mixed>  $arguments
      *
      * @throws InvalidArgumentException
      */
     public function __call(string $name, array $arguments): self
     {
-        if (!str_starts_with($name, 'with')) {
-            throw new InvalidArgumentException("Method $name does not exist");
+        if (! str_starts_with($name, 'with')) {
+            throw new InvalidArgumentException(sprintf('Method %s does not exist', $name));
         }
 
         $prop = lcfirst(substr($name, 4));
@@ -93,28 +99,29 @@ final class Factory
      */
     public function build(): UserDto
     {
-        $reflection = new \ReflectionClass(UserDto::class);
-        $constructor = $reflection->getConstructor();
-        if (!$constructor) {
+        $reflectionClass = new ReflectionClass(UserDto::class);
+        $constructor = $reflectionClass->getConstructor();
+        if (! $constructor) {
             throw new RuntimeException('UserDto has no constructor');
         }
 
         $args = [];
-        foreach ($constructor->getParameters() as $param) {
-            $name = $param->getName();
+        foreach ($constructor->getParameters() as $parameter) {
+            $name = $parameter->getName();
 
-            if (!array_key_exists($name, $this->properties)) {
-                if ($param->isDefaultValueAvailable()) {
-                    $args[$name] = $param->getDefaultValue();
+            if (! array_key_exists($name, $this->properties)) {
+                if ($parameter->isDefaultValueAvailable()) {
+                    $args[$name] = $parameter->getDefaultValue();
                 } else {
-                    throw new RuntimeException("Missing value for required property '$name'");
+                    throw new RuntimeException(sprintf("Missing value for required property '%s'", $name));
                 }
             } else {
                 $value = $this->properties[$name];
-                $type = $param->getType();
-                if ($type && !$this->validateType($value, $type)) {
-                    throw new \TypeError("Invalid type for property '$name'");
+                $type = $parameter->getType();
+                if ($type && ! $this->validateType($value, $type)) {
+                    throw new TypeError(sprintf("Invalid type for property '%s'", $name));
                 }
+
                 $args[$name] = $value;
             }
         }
@@ -122,11 +129,11 @@ final class Factory
         return new UserDto(...$args);
     }
 
-    private function validateType(mixed $value, \ReflectionType $type): bool
+    private function validateType(mixed $value, ReflectionType $reflectionType): bool
     {
-        if ($type instanceof \ReflectionNamedType) {
-            $typeName = $type->getName();
-            if ($value === null && $type->allowsNull()) {
+        if ($reflectionType instanceof ReflectionNamedType) {
+            $typeName = $reflectionType->getName();
+            if ($value === null && $reflectionType->allowsNull()) {
                 return true;
             }
 

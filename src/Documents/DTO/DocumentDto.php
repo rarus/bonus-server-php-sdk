@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Rarus\LMS\SDK\Documents\DTO;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use Money\Currency;
 use Money\Money;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
@@ -13,21 +15,21 @@ use Rarus\LMS\SDK\Utils\MoneyParser;
 final readonly class DocumentDto
 {
     /**
-     * @param array<CertificatePaymentDto>|null $certificatePayment
-     * @param array<HoldBonusDto>|null $holdBonuses
-     * @param array<SaleItemDto> $items
-     * @param array<PaymentDto>|null $payment
+     * @param  array<CertificatePaymentDto>|null  $certificatePayment
+     * @param  array<HoldBonusDto>|null  $holdBonuses
+     * @param  array<SaleItemDto>  $items
+     * @param  array<PaymentDto>|null  $payment
      */
     public function __construct(
         public string $docNumber,
         public string $registerId,
         public string $shopId,
         public array $items,
-        public ?\DateTimeImmutable $localDate = new \DateTimeImmutable,
+        public ?DateTimeImmutable $localDate = new DateTimeImmutable,
         public ?Money $bonusDiscount = null,
         public ?int $cardId = null,
         public ?array $certificatePayment = null,
-        public ?\DateTimeImmutable $date = null,
+        public ?DateTimeImmutable $date = null,
         public ?array $holdBonuses = null,
         public ?int $holdPromoId = null,
         public ?string $id = null,
@@ -35,22 +37,21 @@ final readonly class DocumentDto
         public ?string $promo = null,
         public ?string $saleChannelId = null,
         public ?string $purchaseId = null,
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      *
      * @throws ApiClientException
      */
-    public static function fromArray(array $data, Currency $currency, \DateTimeZone $dateTimeZone): self
+    public static function fromArray(array $data, Currency $currency, DateTimeZone $dateTimeZone): self
     {
         return new self(
             docNumber: $data['doc_number'],
             registerId: $data['register_id'],
             shopId: $data['shop_id'],
             items: array_map(
-                fn(array $item) => SaleItemDto::fromArray($item, $currency, $dateTimeZone),
+                fn (array $item): SaleItemDto => SaleItemDto::fromArray($item, $currency, $dateTimeZone),
                 $data['items']
             ),
             localDate: isset($data['local_date']) ? DateTimeParser::fromTimestamp(
@@ -63,18 +64,18 @@ final readonly class DocumentDto
             ) : null,
             cardId: $data['card_id'] ?? null,
             certificatePayment: isset($data['certificate_payment']) ? array_map(
-                fn(array $c) => CertificatePaymentDto::fromArray($c, $currency),
+                fn (array $c): CertificatePaymentDto => CertificatePaymentDto::fromArray($c, $currency),
                 $data['certificate_payment']
             ) : null,
             date: isset($data['date']) ? DateTimeParser::fromTimestamp($data['date'], $dateTimeZone) : null,
             holdBonuses: isset($data['hold_bonuses']) ? array_map(
-                fn(array $b) => HoldBonusDto::fromArray($b, $currency),
+                fn (array $b): HoldBonusDto => HoldBonusDto::fromArray($b, $currency),
                 $data['hold_bonuses']
             ) : null,
             holdPromoId: $data['hold_promo_id'] ?? null,
             id: $data['id'] ?? null,
             payment: isset($data['payment']) ? array_map(
-                fn(array $p) => PaymentDto::fromArray($p, $currency),
+                fn (array $p): PaymentDto => PaymentDto::fromArray($p, $currency),
                 $data['payment']
             ) : null,
             promo: $data['promo'] ?? null,
@@ -89,27 +90,27 @@ final readonly class DocumentDto
     public function toArray(): array
     {
         return [
-            'bonus_discount' => $this->bonusDiscount ? MoneyParser::toString($this->bonusDiscount) : 0,
+            'bonus_discount' => $this->bonusDiscount instanceof Money ? MoneyParser::toString($this->bonusDiscount) : 0,
             'card_id' => $this->cardId,
-            'certificate_payment' => $this->certificatePayment ? array_map(
-                fn(CertificatePaymentDto $c) => $c->toArray(),
+            'certificate_payment' => $this->certificatePayment !== null && $this->certificatePayment !== [] ? array_map(
+                fn (CertificatePaymentDto $certificatePaymentDto): array => $certificatePaymentDto->toArray(),
                 $this->certificatePayment
             ) : null,
-            'date' => $this->date ? DateTimeParser::toTimestamp($this->date) : null,
+            'date' => $this->date instanceof DateTimeImmutable ? DateTimeParser::toTimestamp($this->date) : null,
             'doc_number' => $this->docNumber,
-            'hold_bonuses' => $this->holdBonuses ? array_map(
-                fn(HoldBonusDto $b) => $b->toArray(),
+            'hold_bonuses' => $this->holdBonuses !== null && $this->holdBonuses !== [] ? array_map(
+                fn (HoldBonusDto $holdBonusDto): array => $holdBonusDto->toArray(),
                 $this->holdBonuses
             ) : null,
             'hold_promo_id' => $this->holdPromoId,
             'id' => $this->id,
             'items' => array_map(
-                fn(SaleItemDto $i) => $i->toArray(),
+                fn (SaleItemDto $saleItemDto): array => $saleItemDto->toArray(),
                 $this->items
             ),
             'local_date' => $this->localDate?->format(DATE_ATOM),
-            'payment' => $this->payment ? array_map(
-                fn(PaymentDto $p) => $p->toArray(),
+            'payment' => $this->payment !== null && $this->payment !== [] ? array_map(
+                fn (PaymentDto $paymentDto): array => $paymentDto->toArray(),
                 $this->payment
             ) : null,
             'promo' => $this->promo,

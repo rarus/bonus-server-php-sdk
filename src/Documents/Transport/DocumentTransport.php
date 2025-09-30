@@ -16,7 +16,7 @@ final class DocumentTransport extends BaseTransport
     /**
      * Выполняет расчет скидок для документа
      *
-     * @param DocumentDto $documentDto Document request
+     * @param  DocumentDto  $documentDto  Document request
      * @return array<string, mixed>
      *
      * @throws UnknownException

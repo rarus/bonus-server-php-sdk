@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Rarus\LMS\SDK\Holds\DTO;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use Money\Currency;
 use Money\Money;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
@@ -15,16 +17,16 @@ final class HoldBonusDto
     public function __construct(
         public ?Money $amount = null,
         public ?int $cardId = null,
-        public ?\DateTimeImmutable $createdAt = null,
+        public ?DateTimeImmutable $createdAt = null,
         public ?string $description = null,
         public ?string $documentId = null,
         public ?Money $erased = null,
         public ?HoldBonusExpiresDto $expires = null,
-        public ?\DateTimeImmutable $expiresAt = null,
+        public ?DateTimeImmutable $expiresAt = null,
         public ?int $id = null,
         public ?HoldBonusState $state = null,
         public ?Money $unholded = null,
-        public ?\DateTimeImmutable $updatedAt = null,
+        public ?DateTimeImmutable $updatedAt = null,
         public ?Money $used = null,
     ) {
     }
@@ -34,7 +36,7 @@ final class HoldBonusDto
      *
      * @throws ApiClientException
      */
-    public static function fromArray(array $data, Currency $currency, \DateTimeZone $dateTimeZone): self
+    public static function fromArray(array $data, Currency $currency, DateTimeZone $dateTimeZone): self
     {
         return new self(
             isset($data['amount']) ? MoneyParser::parse($data['amount'], $currency) : null,
@@ -59,19 +61,19 @@ final class HoldBonusDto
     public function toArray(): array
     {
         return [
-            'amount' => $this->amount ? MoneyParser::toString($this->amount) : null,
+            'amount' => $this->amount instanceof Money ? MoneyParser::toString($this->amount) : null,
             'card_id' => $this->cardId,
             'created_at' => $this->createdAt?->format(DATE_ATOM),
             'description' => $this->description,
             'document_id' => $this->documentId,
-            'erased' => $this->erased ? MoneyParser::toString($this->erased) : null,
+            'erased' => $this->erased instanceof Money ? MoneyParser::toString($this->erased) : null,
             'expires' => $this->expires?->toArray(),
             'expires_at' => $this->expiresAt?->format(DATE_ATOM),
             'id' => $this->id,
             'state' => $this->state?->value,
-            'unholded' => $this->unholded ? MoneyParser::toString($this->unholded) : null,
+            'unholded' => $this->unholded instanceof Money ? MoneyParser::toString($this->unholded) : null,
             'updated_at' => $this->updatedAt?->format(DATE_ATOM),
-            'used' => $this->used ? MoneyParser::toString($this->used) : null,
+            'used' => $this->used instanceof Money ? MoneyParser::toString($this->used) : null,
         ];
     }
 }

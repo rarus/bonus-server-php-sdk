@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Integration\PromoCodes;
 
+use DateTimeImmutable;
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Psr\SimpleCache\InvalidArgumentException;
 use Rarus\LMS\SDK\Client;
@@ -26,37 +28,37 @@ final class PromoCodeTransportTest extends TestCase
 
     public function test_get_hold_promo_code(): void
     {
-        $newHoldPromoCode = new HoldPromoCodeDto(
+        $holdPromoCodeDto = new HoldPromoCodeDto(
             cardId: 1,
             code: '1051',
             description: 'test',
             expires: new HoldPromoCodeExpiresDto(
-                date: new \DateTimeImmutable('+20 day'),
+                date: new DateTimeImmutable('+20 day'),
                 period: HoldPromoCodePeriod::Date,
                 value: null
             ),
         );
 
-        $holdPromoCodeId = $this->client->promoCodes()->createHoldPromoCode($newHoldPromoCode);
+        $holdPromoCodeId = $this->client->promoCodes()->createHoldPromoCode($holdPromoCodeDto);
         $holdPromoCode = $this->client->promoCodes()->getHoldPromoCode($holdPromoCodeId);
 
-        $this->assertEquals($holdPromoCode->description, $newHoldPromoCode->description);
+        $this->assertEquals($holdPromoCode->description, $holdPromoCodeDto->description);
     }
 
     public function test_delete_hold_bonus(): void
     {
-        $newHoldPromoCode = new HoldPromoCodeDto(
+        $holdPromoCodeDto = new HoldPromoCodeDto(
             cardId: 1,
             code: '1041',
             description: 'test',
             expires: new HoldPromoCodeExpiresDto(
-                date: new \DateTimeImmutable('+20 day'),
+                date: new DateTimeImmutable('+20 day'),
                 period: HoldPromoCodePeriod::Date,
                 value: null
             ),
         );
 
-        $holdPromoCodeId = $this->client->promoCodes()->createHoldPromoCode($newHoldPromoCode);
+        $holdPromoCodeId = $this->client->promoCodes()->createHoldPromoCode($holdPromoCodeDto);
         $this->client->promoCodes()->deleteHoldPromoCode($holdPromoCodeId);
 
         $holdPromoCode = $this->client->promoCodes()->getHoldPromoCode($holdPromoCodeId);
@@ -64,7 +66,7 @@ final class PromoCodeTransportTest extends TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      * @throws InvalidArgumentException
      */
     protected function setUp(): void

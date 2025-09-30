@@ -32,7 +32,7 @@ final class CertificatePaymentDto
     public function toArray(): array
     {
         return [
-            'amount' => $this->amount ? MoneyParser::toString($this->amount) : null,
+            'amount' => $this->amount instanceof Money ? MoneyParser::toString($this->amount) : null,
             'code' => $this->code ?? null,
         ];
     }

@@ -2,7 +2,9 @@
 
 namespace Rarus\LMS\SDK\Tests\Integration\Users;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
+use Psr\SimpleCache\InvalidArgumentException;
 use Random\RandomException;
 use Rarus\LMS\SDK\Client;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
@@ -45,9 +47,9 @@ class UserTransportTest extends TestCase
     public function test_update_user(): void
     {
         $userId = 1;
-        $user = $this->client->users()->getUserById($userId);
+        $userDto = $this->client->users()->getUserById($userId);
 
-        $updateUser = Factory::create()->fromDto($user)
+        $updateUser = Factory::create()->fromDto($userDto)
             ->withName('integration_test2')
             ->withShopId(null)
             ->build();
@@ -66,8 +68,8 @@ class UserTransportTest extends TestCase
     public function test_get_user_by_id(): void
     {
         $userId = 2;
-        $user = $this->client->users(0)->getUserById($userId, true);
-        $this->assertInstanceOf(UserDto::class, $user);
+        $userDto = $this->client->users(0)->getUserById($userId, true);
+        $this->assertInstanceOf(UserDto::class, $userDto);
     }
 
     /**
@@ -77,13 +79,24 @@ class UserTransportTest extends TestCase
      */
     public function test_get_user_by_phone(): void
     {
-        $user = $this->client->users(0)->getUserByPhone('79100000002');
-        $this->assertInstanceOf(UserDto::class, $user);
+        $userDto = $this->client->users(0)->getUserByPhone('79000000001');
+        $this->assertInstanceOf(UserDto::class, $userDto);
     }
 
     /**
-     * @throws \Exception
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws UnknownException
+     * @throws ApiClientException
+     * @throws NetworkException
+     */
+    public function test_get_properties(): void
+    {
+        $props = $this->client->users()->getUserProperties();
+        $this->assertGreaterThan(0, count($props));
+    }
+
+    /**
+     * @throws Exception
+     * @throws InvalidArgumentException
      */
     protected function setUp(): void
     {

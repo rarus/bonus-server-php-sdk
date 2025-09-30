@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rarus\LMS\SDK\Users\DTO;
 
+use DateTimeZone;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
 use Rarus\LMS\SDK\Utils\DateTimeParser;
 
@@ -12,13 +13,12 @@ final class UserCityDto
     public function __construct(
         public string $name,
         public ?int $id = null,
-        public ?\DateTimeZone $timezone = null,
-    ) {
-    }
+        public ?DateTimeZone $timezone = null,
+    ) {}
 
     /**
-     * @param array<string, mixed> $data
-     * @return self
+     * @param  array<string, mixed>  $data
+     *
      * @throws ApiClientException
      */
     public static function fromArray(array $data): self

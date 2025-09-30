@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rarus\LMS\SDK\Tests\Unit\Users;
 
+use ReflectionClass;
 use PHPUnit\Framework\TestCase;
 use Rarus\LMS\SDK\Exceptions\InvalidArgumentException;
 use Rarus\LMS\SDK\Users\DTO\Factory;
@@ -26,12 +27,12 @@ class FactoryTest extends TestCase
         $factory = Factory::create();
         $updatedFactory = $factory->withName('John Doe');
 
-        $reflection = new \ReflectionClass($updatedFactory);
-        $properties = $reflection->getProperty('properties');
-        $properties->setAccessible(true);
+        $reflectionClass = new ReflectionClass($updatedFactory);
+        $reflectionProperty = $reflectionClass->getProperty('properties');
+        $reflectionProperty->setAccessible(true);
 
-        $this->assertArrayHasKey('name', $properties->getValue($updatedFactory));
-        $this->assertSame('John Doe', $properties->getValue($updatedFactory)['name']);
+        $this->assertArrayHasKey('name', $reflectionProperty->getValue($updatedFactory));
+        $this->assertSame('John Doe', $reflectionProperty->getValue($updatedFactory)['name']);
     }
 
     public function test_call_create_object(): void
@@ -55,11 +56,11 @@ class FactoryTest extends TestCase
         $factory = Factory::create();
         $updatedFactory = $factory->withName('John Doe')->withEmail('john.doe@example.com')->withPhone('1234567890');
 
-        $reflection = new \ReflectionClass($updatedFactory);
-        $properties = $reflection->getProperty('properties');
-        $properties->setAccessible(true);
+        $reflectionClass = new ReflectionClass($updatedFactory);
+        $reflectionProperty = $reflectionClass->getProperty('properties');
+        $reflectionProperty->setAccessible(true);
 
-        $props = $properties->getValue($updatedFactory);
+        $props = $reflectionProperty->getValue($updatedFactory);
 
         $this->assertArrayHasKey('name', $props);
         $this->assertArrayHasKey('email', $props);
@@ -93,12 +94,12 @@ class FactoryTest extends TestCase
         // @phpstan-ignore-next-line
         $updatedFactory = $factory->withEmail();
 
-        $reflection = new \ReflectionClass($updatedFactory);
-        $properties = $reflection->getProperty('properties');
-        $properties->setAccessible(true);
+        $reflectionClass = new ReflectionClass($updatedFactory);
+        $reflectionProperty = $reflectionClass->getProperty('properties');
+        $reflectionProperty->setAccessible(true);
 
-        $this->assertArrayHasKey('email', $properties->getValue($updatedFactory));
-        $this->assertNull($properties->getValue($updatedFactory)['email']);
+        $this->assertArrayHasKey('email', $reflectionProperty->getValue($updatedFactory));
+        $this->assertNull($reflectionProperty->getValue($updatedFactory)['email']);
     }
 
     /**
@@ -109,11 +110,11 @@ class FactoryTest extends TestCase
         $factory = Factory::create();
         $updatedFactory = $factory->withName('Jane Doe')->withName('John Doe');
 
-        $reflection = new \ReflectionClass($updatedFactory);
-        $properties = $reflection->getProperty('properties');
-        $properties->setAccessible(true);
+        $reflectionClass = new ReflectionClass($updatedFactory);
+        $reflectionProperty = $reflectionClass->getProperty('properties');
+        $reflectionProperty->setAccessible(true);
 
-        $this->assertArrayHasKey('name', $properties->getValue($updatedFactory));
-        $this->assertSame('John Doe', $properties->getValue($updatedFactory)['name']);
+        $this->assertArrayHasKey('name', $reflectionProperty->getValue($updatedFactory));
+        $this->assertSame('John Doe', $reflectionProperty->getValue($updatedFactory)['name']);
     }
 }

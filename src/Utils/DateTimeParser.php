@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Rarus\LMS\SDK\Utils;
 
+use DateTimeImmutable;
+use Throwable;
+use Exception;
 use DateTime;
 use DateTimeZone;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
@@ -20,7 +23,7 @@ class DateTimeParser
      *
      * @throws ApiClientException
      */
-    public static function fromTimestamp(string|int $timestampStr, DateTimeZone $dateTimeZone): \DateTimeImmutable
+    public static function fromTimestamp(string|int $timestampStr, DateTimeZone $dateTimeZone): DateTimeImmutable
     {
         $timestampStr = (string)$timestampStr;
 
@@ -37,15 +40,17 @@ class DateTimeParser
         $formatted = sprintf('%d.%06d', $seconds, $microseconds);
 
         try {
-            $dateTime = \DateTimeImmutable::createFromFormat('U.u', $formatted)->setTimezone($dateTimeZone);
+            $dateTime = DateTimeImmutable::createFromFormat('U.u', $formatted);
             if ($dateTime === false) {
                 throw new RuntimeException('createFromFormat вернул false');
             }
-        } catch (\Throwable $e) {
+
+            $dateTime = $dateTime->setTimezone($dateTimeZone);
+        } catch (Throwable $throwable) {
             throw new ApiClientException(
                 sprintf('ошибка при разборе поля время в ответе сервера [%s]', $timestampStr),
                 0,
-                $e
+                $throwable
             );
         }
 
@@ -55,7 +60,7 @@ class DateTimeParser
     /**
      * Сервер принимает значения таймстемпа с учётом миллисекунд
      */
-    public static function toTimestamp(DateTime|\DateTimeImmutable $dateTime): int
+    public static function toTimestamp(DateTime|DateTimeImmutable $dateTime): int
     {
         return $dateTime->getTimestamp() * 1000;
     }
@@ -63,16 +68,16 @@ class DateTimeParser
     /**
      * @throws ApiClientException
      */
-    public static function timeZoneFromString(?string $tz): ?\DateTimeZone
+    public static function timeZoneFromString(?string $tz): ?DateTimeZone
     {
         if ($tz === null) {
             return null;
         }
 
         try {
-            return new \DateTimeZone($tz);
-        } catch (\Exception $e) {
-            throw new ApiClientException("Invalid timezone: {$tz}", 0, $e);
+            return new DateTimeZone($tz);
+        } catch (Exception $exception) {
+            throw new ApiClientException('Invalid timezone: ' . $tz, 0, $exception);
         }
     }
 }
