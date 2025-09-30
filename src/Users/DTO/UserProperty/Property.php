@@ -39,7 +39,7 @@ final readonly class Property
             name: (string)$data['name'],
             type: UserPropertyType::from($data['type']),
             usePredefinedValue: (bool)$data['use_predefined_value'],
-            values: $data['values'] ?? [],
+            values: $data['valid_values'] ?? [],
             deleted: (bool)$data['deleted'],
             createdAt: DateTimeParser::fromTimestamp($data['created_at'], $dateTimeZone),
             updatedAt: DateTimeParser::fromTimestamp($data['updated_at'], $dateTimeZone),
