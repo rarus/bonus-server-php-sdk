@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Rarus\LMS\SDK\Users\DTO\UserProperty;
 
 use DateTimeImmutable;
+use DateTimeInterface;
 use DateTimeZone;
 use Exception;
-use DateTimeInterface;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
 use Rarus\LMS\SDK\Utils\DateTimeParser;
 
@@ -18,12 +18,13 @@ final class UserProperty
         public int $id,
         public UserPropertyType $type,
         public string|int|bool|DateTimeImmutable $value,
-    ) {}
+    ) {
+    }
 
     /**
      * Creates an instance of the class from an associative array of data.
      *
-     * @param  array<string, mixed>  $data  The associative array containing the necessary keys ('id', 'name', 'type', 'value').
+     * @param array<string, mixed> $data The associative array containing the necessary keys ('id', 'name', 'type', 'value').
      *                                      - 'id': An integer representing the unique identifier.
      *                                      - 'name': A string representing the name.
      *                                      - 'type': A string representing the type, which must correspond to a valid UserPropertyType.
@@ -34,7 +35,7 @@ final class UserProperty
      */
     public static function fromArray(array $data, DateTimeZone $dateTimeZone): self
     {
-        if (! isset($data['prop_id'], $data['name'], $data['type'], $data['value'])) {
+        if (!isset($data['prop_id'], $data['name'], $data['type'], $data['value'])) {
             throw new ApiClientException('Invalid addition field data');
         }
 
@@ -43,34 +44,34 @@ final class UserProperty
 
         switch ($userPropertyType) {
             case UserPropertyType::Int:
-                $value = (int) $rawValue;
+                $value = (int)$rawValue;
                 break;
 
             case UserPropertyType::Bool:
                 $value = filter_var($rawValue, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
                 if ($value === null) {
-                    throw new ApiClientException('Invalid bool value: '.var_export($rawValue, true));
+                    throw new ApiClientException('Invalid bool value: ' . var_export($rawValue, true));
                 }
 
                 break;
 
             case UserPropertyType::DateTime:
                 try {
-                    $value = DateTimeParser::fromTimestamp((string) $rawValue, $dateTimeZone);
+                    $value = DateTimeParser::fromTimestamp((string)$rawValue, $dateTimeZone);
                 } catch (Exception $e) {
-                    throw new ApiClientException('Invalid datetime value: '.var_export($rawValue, true));
+                    throw new ApiClientException('Invalid datetime value: ' . var_export($rawValue, true));
                 }
 
                 break;
 
             default:
-                $value = (string) $rawValue;
+                $value = (string)$rawValue;
                 break;
         }
 
         return new self(
-            (string) $data['name'],
-            (int) $data['prop_id'],
+            (string)$data['name'],
+            (int)$data['prop_id'],
             $userPropertyType,
             $value
         );
@@ -93,26 +94,14 @@ final class UserProperty
     {
         $value = $this->value;
 
-        switch ($this->type) {
-            case UserPropertyType::Bool:
-                $value = $value ? 'true' : 'false';
-                break;
-
-            case UserPropertyType::DateTime:
-                $value = $value instanceof DateTimeInterface ? $value->format(DATE_ATOM) : (string) $value;
-
-                break;
-
-            case UserPropertyType::Int:
-                // @phpstan-ignore-next-line
-                $value = (int) $value;
-                break;
-
-            default:
-                // @phpstan-ignore-next-line
-                $value = (string) $value;
-                break;
-        }
+        $value = match ($this->type) {
+            UserPropertyType::Bool => $value ? 'true' : 'false',
+            UserPropertyType::DateTime => $value instanceof DateTimeInterface ? $value->format(
+                'Y-m-d'
+            ) : (string)$value,
+            UserPropertyType::Int => (int)$value,
+            default => (string)$value,
+        };
 
         return [
             'name' => $this->name,
