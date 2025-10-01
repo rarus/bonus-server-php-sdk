@@ -95,7 +95,7 @@ final class UserProperty
         $value = $this->value;
 
         $value = match ($this->type) {
-            UserPropertyType::Bool => $value ? 'true' : 'false',
+            UserPropertyType::Bool => is_bool($value) ? $value : $value === 'true',
             UserPropertyType::DateTime => $value instanceof DateTimeInterface ? $value->format(
                 'Y-m-d'
             ) : (string)$value,
