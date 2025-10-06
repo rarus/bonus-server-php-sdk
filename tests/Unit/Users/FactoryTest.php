@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Rarus\LMS\SDK\Tests\Unit\Users;
 
-use ReflectionClass;
 use PHPUnit\Framework\TestCase;
 use Rarus\LMS\SDK\Exceptions\InvalidArgumentException;
 use Rarus\LMS\SDK\Users\DTO\Factory;
+use ReflectionClass;
 
 /**
  * Class FactoryTest

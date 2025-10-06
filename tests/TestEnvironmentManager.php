@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Psr\SimpleCache\InvalidArgumentException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\MessageFormatter;
 use GuzzleHttp\Middleware;
@@ -14,6 +13,7 @@ use Monolog\Processor\MemoryPeakUsageProcessor;
 use Monolog\Processor\MemoryUsageProcessor;
 use Monolog\Processor\UidProcessor;
 use Psr\Log\LoggerInterface;
+use Psr\SimpleCache\InvalidArgumentException;
 use Rarus\LMS\SDK\Client;
 use Rarus\LMS\SDK\RarusLMS;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;

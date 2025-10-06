@@ -12,7 +12,7 @@ use Rarus\LMS\SDK\Utils\DateTimeParser;
 final readonly class Property
 {
     /**
-     * @param array<string>|array<int> $values
+     * @param  array<string>|array<int>  $values
      */
     public function __construct(
         public int $id,
@@ -24,23 +24,23 @@ final readonly class Property
         public bool $deleted,
         public DateTimeImmutable $createdAt,
         public DateTimeImmutable $updatedAt,
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
+     *
      * @throws ApiClientException
      */
     public static function fromArray(array $data, DateTimeZone $dateTimeZone): self
     {
         return new self(
-            id: (int)$data['id'],
-            externalId: (string)$data['external_id'],
-            name: (string)$data['name'],
+            id: (int) $data['id'],
+            externalId: (string) $data['external_id'],
+            name: (string) $data['name'],
             type: UserPropertyType::from($data['type']),
-            usePredefinedValue: (bool)$data['use_predefined_value'],
+            usePredefinedValue: (bool) $data['use_predefined_value'],
             values: $data['valid_values'] ?? [],
-            deleted: (bool)$data['deleted'],
+            deleted: (bool) $data['deleted'],
             createdAt: DateTimeParser::fromTimestamp($data['created_at'], $dateTimeZone),
             updatedAt: DateTimeParser::fromTimestamp($data['updated_at'], $dateTimeZone),
         );

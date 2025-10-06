@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Rarus\LMS\SDK\Utils;
 
-use DateTimeImmutable;
-use Throwable;
-use Exception;
 use DateTime;
+use DateTimeImmutable;
 use DateTimeZone;
+use Exception;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
 use Rarus\LMS\SDK\Exceptions\RuntimeException;
+use Throwable;
 
 /**
  * Class DateTimeParser
@@ -25,15 +25,15 @@ class DateTimeParser
      */
     public static function fromTimestamp(string|int $timestampStr, DateTimeZone $dateTimeZone): DateTimeImmutable
     {
-        $timestampStr = (string)$timestampStr;
+        $timestampStr = (string) $timestampStr;
 
-        if (!is_numeric($timestampStr)) {
+        if (! is_numeric($timestampStr)) {
             throw new ApiClientException(
                 sprintf('некорректный формат времени в ответе сервера [%s]', $timestampStr)
             );
         }
 
-        $milliseconds = (int)$timestampStr;
+        $milliseconds = (int) $timestampStr;
         $seconds = intdiv($milliseconds, 1000);
         $microseconds = ($milliseconds % 1000) * 1000;
 
@@ -77,7 +77,7 @@ class DateTimeParser
         try {
             return new DateTimeZone($tz);
         } catch (Exception $exception) {
-            throw new ApiClientException('Invalid timezone: ' . $tz, 0, $exception);
+            throw new ApiClientException('Invalid timezone: '.$tz, 0, $exception);
         }
     }
 }

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Rarus\LMS\SDK\Tests\Unit\Utils;
 
 use DateTimeZone;
-use TestEnvironmentManager;
 use PHPUnit\Framework\TestCase;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
 use Rarus\LMS\SDK\Utils\DateTimeParser;
+use TestEnvironmentManager;
 
 class DateTimeParserTest extends TestCase
 {

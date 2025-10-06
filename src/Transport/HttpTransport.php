@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Rarus\LMS\SDK\Transport;
 
-use Rarus\LMS\SDK\Transport\DTO\ErrorResponse;
-use JsonException;
 use Fig\Http\Message\RequestMethodInterface;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
 use Http\Discovery\Psr17Factory;
+use JsonException;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -20,6 +19,7 @@ use Rarus\LMS\SDK\Contracts\TransportInterface;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
 use Rarus\LMS\SDK\Exceptions\NetworkException;
 use Rarus\LMS\SDK\Exceptions\UnknownException;
+use Rarus\LMS\SDK\Transport\DTO\ErrorResponse;
 use Throwable;
 
 final class HttpTransport implements TransportInterface

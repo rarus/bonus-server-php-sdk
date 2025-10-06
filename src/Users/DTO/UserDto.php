@@ -50,7 +50,7 @@ final readonly class UserDto
      * Creates an instance of the class from an array of data.
      *
      * @param  array<string, mixed>  $data  The array containing data to initialize the instance.
-     * @param DateTimeZone $dateTimeZone The timezone to be used when parsing date and time fields.
+     * @param  DateTimeZone  $dateTimeZone  The timezone to be used when parsing date and time fields.
      * @return self Returns a new instance of the class.
      *
      * @throws ApiClientException

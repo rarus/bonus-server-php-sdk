@@ -99,7 +99,7 @@ final class Factory
 
         $logger = $this->logger ?? new NullLogger;
 
-        if (!$this->httpClient instanceof ClientInterface) {
+        if (! $this->httpClient instanceof ClientInterface) {
             $this->httpClient = new \GuzzleHttp\Client([
                 'base_uri' => $this->apiUrl,
                 'connect_timeout' => 2,

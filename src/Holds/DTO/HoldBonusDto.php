@@ -28,11 +28,10 @@ final class HoldBonusDto
         public ?Money $unholded = null,
         public ?DateTimeImmutable $updatedAt = null,
         public ?Money $used = null,
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      *
      * @throws ApiClientException
      */
@@ -40,7 +39,7 @@ final class HoldBonusDto
     {
         return new self(
             isset($data['amount']) ? MoneyParser::parse($data['amount'], $currency) : null,
-            isset($data['card_id']) ? (int)$data['card_id'] : null,
+            isset($data['card_id']) ? (int) $data['card_id'] : null,
             isset($data['created_at']) ? DateTimeParser::fromTimestamp($data['created_at'], $dateTimeZone) : null,
             $data['description'] ?? null,
             $data['document_id'] ?? null,

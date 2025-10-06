@@ -17,7 +17,7 @@ final class UserProperty
         public string $name,
         public int $id,
         public UserPropertyType $type,
-        public string|int|bool|DateTimeImmutable $value,
+        public string|float|bool|DateTimeImmutable $value,
     ) {
     }
 
@@ -43,8 +43,8 @@ final class UserProperty
         $rawValue = $data['value'];
 
         switch ($userPropertyType) {
-            case UserPropertyType::Int:
-                $value = (int)$rawValue;
+            case UserPropertyType::Float:
+                $value = (float)$rawValue;
                 break;
 
             case UserPropertyType::Bool:
@@ -99,7 +99,9 @@ final class UserProperty
             UserPropertyType::DateTime => $value instanceof DateTimeInterface ? $value->format(
                 'Y-m-d'
             ) : (string)$value,
-            UserPropertyType::Int => (int)$value,
+            // @phpstan-ignore-next-line
+            UserPropertyType::Float => (float)$value,
+            // @phpstan-ignore-next-line
             default => (string)$value,
         };
 

@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Rarus\LMS\SDK\Users\DTO;
 
-use ReflectionClass;
-use TypeError;
-use ReflectionType;
-use ReflectionNamedType;
 use DateTimeImmutable;
 use DateTimeZone;
 use Rarus\LMS\SDK\Cards\DTO\CardDto;
 use Rarus\LMS\SDK\Exceptions\InvalidArgumentException;
 use Rarus\LMS\SDK\Exceptions\RuntimeException;
 use Rarus\LMS\SDK\Users\DTO\UserProperty\UserProperty;
+use ReflectionClass;
+use ReflectionNamedType;
+use ReflectionType;
+use TypeError;
 
 /**
  * The Factory class provides an interface for creating and building objects
