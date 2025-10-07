@@ -16,6 +16,7 @@ use Rarus\LMS\SDK\Documents\Transport\DocumentTransport;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
 use Rarus\LMS\SDK\Exceptions\NetworkException;
 use Rarus\LMS\SDK\Holds\Transport\HoldTransport;
+use Rarus\LMS\SDK\Orders\Transport\OrderTransport;
 use Rarus\LMS\SDK\PromoCodes\Transport\PromoCodeTransport;
 use Rarus\LMS\SDK\Transport\CachedTransport;
 use Rarus\LMS\SDK\Transport\HttpTransport;
@@ -41,7 +42,7 @@ final readonly class Client
     /**
      * @throws ApiClientException
      * @throws NetworkException
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException|Exceptions\UnknownException
      */
     public function authorize(): void
     {
@@ -101,5 +102,10 @@ final readonly class Client
     public function promoCodes(?int $ttl = null): PromoCodeTransport
     {
         return new PromoCodeTransport($this->wrapTransport($ttl), $this->logger, $this->currency, $this->timeZone);
+    }
+
+    public function orders(?int $ttl = null): OrderTransport
+    {
+        return new OrderTransport($this->wrapTransport($ttl), $this->logger, $this->currency, $this->timeZone);
     }
 }
