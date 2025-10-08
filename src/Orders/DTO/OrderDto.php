@@ -43,7 +43,6 @@ final readonly class OrderDto
         public ?array $payment = null,
         public ?string $promo = null,
         public ?string $saleChannelId = null,
-        public ?string $purchaseId = null,
         public ?int $id = null, // только при получении
         public ?OrderStatus $orderStatus = null,
     ) {
@@ -94,7 +93,6 @@ final readonly class OrderDto
             ) : null,
             promo: $data['promo'] ?? null,
             saleChannelId: $data['sale_channel_id'] ?? null,
-            purchaseId: $data['purchase_id'] ?? null,
             id: $data['id'] ?? null,
             orderStatus: isset($data['status']) ? OrderStatus::from($data['status']) : null,
         );
@@ -137,7 +135,6 @@ final readonly class OrderDto
             'register_id' => $this->registerId,
             'sale_channel_id' => $this->saleChannelId,
             'shop_id' => $this->shopId,
-            'purchase_id' => $this->purchaseId,
             'id' => $this->id,
             'status' => $this->orderStatus?->value,
         ];

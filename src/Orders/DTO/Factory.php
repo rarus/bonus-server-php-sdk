@@ -35,7 +35,6 @@ use TypeError;
  * @method self withPayment(?array<PaymentDto> $payment)
  * @method self withPromo(?string $promo)
  * @method self withSaleChannelId(?string $saleChannelId)
- * @method self withPurchaseId(?string $purchaseId)
  * @method self withId(?int $id)
  * @method self withOrderStatus(?OrderStatus $orderStatus)
  *

@@ -25,7 +25,7 @@ final readonly class DocumentDto
         public string $docNumber,
         public string $registerId,
         public string $shopId,
-        public array $items,
+        public ?array $items = null,
         public ?DateTimeImmutable $localDate = new DateTimeImmutable,
         public ?Money $bonusDiscount = null,
         public ?int $cardId = null,
@@ -55,10 +55,10 @@ final readonly class DocumentDto
             docNumber: $data['doc_number'],
             registerId: $data['register_id'],
             shopId: $data['shop_id'],
-            items: array_map(
+            items: $data['items'] ? array_map(
                 fn(array $item): SaleItemDto => SaleItemDto::fromArray($item, $currency, $dateTimeZone),
                 $data['items']
-            ),
+            ) : null,
             localDate: isset($data['local_date']) ? DateTimeParser::fromTimestamp(
                 $data['local_date'],
                 $dateTimeZone
@@ -119,10 +119,10 @@ final readonly class DocumentDto
             ) : null,
             'hold_promo_id' => $this->holdPromoId,
             'id' => $this->id,
-            'items' => array_map(
+            'items' => $this->items ? array_map(
                 fn(SaleItemDto $saleItemDto): array => $saleItemDto->toArray(),
                 $this->items
-            ),
+            ) : null,
             'local_date' => $this->localDate?->format(DATE_ATOM),
             'payment' => $this->payment !== null && $this->payment !== [] ? array_map(
                 fn(PaymentDto $paymentDto): array => $paymentDto->toArray(),
