@@ -11,6 +11,7 @@ use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 use Rarus\LMS\SDK\Auth\AuthTransport;
 use Rarus\LMS\SDK\Cards\Transport\CardsTransport;
+use Rarus\LMS\SDK\Certificates\Transport\CertificateTransport;
 use Rarus\LMS\SDK\Contracts\TransportInterface;
 use Rarus\LMS\SDK\Documents\Transport\DocumentTransport;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
@@ -107,5 +108,10 @@ final readonly class Client
     public function orders(?int $ttl = null): OrderTransport
     {
         return new OrderTransport($this->wrapTransport($ttl), $this->logger, $this->currency, $this->timeZone);
+    }
+
+    public function certificates(?int $ttl = null): CertificateTransport
+    {
+        return new CertificateTransport($this->wrapTransport($ttl), $this->logger, $this->currency, $this->timeZone);
     }
 }
