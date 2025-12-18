@@ -14,18 +14,17 @@ final class HoldCertificateDto
         public int $id,
         public ?Money $amount = null,
         public ?bool $used = false,
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array<string> $data
+     * @param  array<string>  $data
      */
     public static function fromArray(array $data, Currency $currency): self
     {
         return new self(
-            id: (int)$data['id'],
+            id: (int) $data['id'],
             amount: isset($data['amount']) ? MoneyParser::parse($data['amount'], $currency) : null,
-            used: (bool)($data['used'] ?? false),
+            used: (bool) ($data['used'] ?? false),
         );
     }
 

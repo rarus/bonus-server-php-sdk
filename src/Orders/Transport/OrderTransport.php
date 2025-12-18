@@ -18,13 +18,13 @@ final class OrderTransport extends BaseTransport
     /**
      * Добавить заказ
      *
-     * @return int order_id
+     * @return string order_id
      *
      * @throws ApiClientException
      * @throws NetworkException
      * @throws UnknownException
      */
-    public function addOrder(OrderDto $orderDto): int
+    public function addOrder(OrderDto $orderDto): string
     {
         return $this->transport->request(
             RequestMethodInterface::METHOD_POST,
@@ -40,7 +40,7 @@ final class OrderTransport extends BaseTransport
      * @throws NetworkException
      * @throws UnknownException
      */
-    public function getOrderById(int $id): OrderDto
+    public function getOrderById(string $id): OrderDto
     {
         $result = $this->transport->request(
             RequestMethodInterface::METHOD_GET,
@@ -52,6 +52,7 @@ final class OrderTransport extends BaseTransport
 
     /**
      * Обновить заказ
+     *
      * @throws ApiClientException
      * @throws InvalidArgumentException
      * @throws NetworkException
@@ -77,7 +78,7 @@ final class OrderTransport extends BaseTransport
      * @throws NetworkException
      * @throws UnknownException
      */
-    public function updateStatus(int $id, OrderStatus $orderStatus): void
+    public function updateStatus(string $id, OrderStatus $orderStatus): void
     {
         $this->transport->request(
             RequestMethodInterface::METHOD_POST,
@@ -93,7 +94,7 @@ final class OrderTransport extends BaseTransport
      * @throws NetworkException
      * @throws UnknownException
      */
-    public function deleteOrder(int $id): void
+    public function deleteOrder(string $id): void
     {
         $this->transport->request(
             RequestMethodInterface::METHOD_DELETE,

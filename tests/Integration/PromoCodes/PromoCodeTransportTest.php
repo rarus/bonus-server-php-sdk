@@ -21,16 +21,16 @@ final class PromoCodeTransportTest extends TestCase
 
     public function test_get_promo_code(): void
     {
-        $code = '101';
+        $code = 'MULTY-001';
         $promoCodeDto = $this->client->promoCodes()->getPromoCode($code);
-        $this->assertEquals($promoCodeDto->code, '101');
+        $this->assertEquals($promoCodeDto->code, 'MULTY-001');
     }
 
     public function test_get_hold_promo_code(): void
     {
         $holdPromoCodeDto = new HoldPromoCodeDto(
             cardId: 1,
-            code: '1051',
+            code: 'MULTY-001',
             description: 'test',
             expires: new HoldPromoCodeExpiresDto(
                 date: new DateTimeImmutable('+20 day'),
@@ -49,7 +49,7 @@ final class PromoCodeTransportTest extends TestCase
     {
         $holdPromoCodeDto = new HoldPromoCodeDto(
             cardId: 1,
-            code: '1041',
+            code: 'MULTY-001',
             description: 'test',
             expires: new HoldPromoCodeExpiresDto(
                 date: new DateTimeImmutable('+20 day'),

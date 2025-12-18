@@ -23,7 +23,7 @@ class CertificateTransportTest extends TestCase
      */
     public function test_get_certificate_by_id(): void
     {
-        $code = "1";
+        $code = 'PROMO-103';
         $certificateDto = $this->client->certificates()->getCertificateById($code);
         $this->assertInstanceOf(CertificateDto::class, $certificateDto);
     }

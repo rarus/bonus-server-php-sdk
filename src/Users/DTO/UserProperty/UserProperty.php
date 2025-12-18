@@ -18,13 +18,12 @@ final class UserProperty
         public int $id,
         public UserPropertyType $type,
         public string|float|bool|DateTimeImmutable $value,
-    ) {
-    }
+    ) {}
 
     /**
      * Creates an instance of the class from an associative array of data.
      *
-     * @param array<string, mixed> $data The associative array containing the necessary keys ('id', 'name', 'type', 'value').
+     * @param  array<string, mixed>  $data  The associative array containing the necessary keys ('id', 'name', 'type', 'value').
      *                                      - 'id': An integer representing the unique identifier.
      *                                      - 'name': A string representing the name.
      *                                      - 'type': A string representing the type, which must correspond to a valid UserPropertyType.
@@ -35,7 +34,7 @@ final class UserProperty
      */
     public static function fromArray(array $data, DateTimeZone $dateTimeZone): self
     {
-        if (!isset($data['prop_id'], $data['name'], $data['type'], $data['value'])) {
+        if (! isset($data['prop_id'], $data['name'], $data['type'], $data['value'])) {
             throw new ApiClientException('Invalid addition field data');
         }
 
@@ -44,34 +43,34 @@ final class UserProperty
 
         switch ($userPropertyType) {
             case UserPropertyType::Float:
-                $value = (float)$rawValue;
+                $value = (float) $rawValue;
                 break;
 
             case UserPropertyType::Bool:
                 $value = filter_var($rawValue, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
                 if ($value === null) {
-                    throw new ApiClientException('Invalid bool value: ' . var_export($rawValue, true));
+                    throw new ApiClientException('Invalid bool value: '.var_export($rawValue, true));
                 }
 
                 break;
 
             case UserPropertyType::DateTime:
                 try {
-                    $value = DateTimeParser::fromTimestamp((string)$rawValue, $dateTimeZone);
+                    $value = DateTimeParser::fromTimestamp((string) $rawValue, $dateTimeZone);
                 } catch (Exception $e) {
-                    throw new ApiClientException('Invalid datetime value: ' . var_export($rawValue, true));
+                    throw new ApiClientException('Invalid datetime value: '.var_export($rawValue, true));
                 }
 
                 break;
 
             default:
-                $value = (string)$rawValue;
+                $value = (string) $rawValue;
                 break;
         }
 
         return new self(
-            (string)$data['name'],
-            (int)$data['prop_id'],
+            (string) $data['name'],
+            (int) $data['prop_id'],
             $userPropertyType,
             $value
         );
@@ -98,11 +97,11 @@ final class UserProperty
             UserPropertyType::Bool => is_bool($value) ? $value : $value === 'true',
             UserPropertyType::DateTime => $value instanceof DateTimeInterface ? $value->format(
                 'Y-m-d'
-            ) : (string)$value,
+            ) : (string) $value,
             // @phpstan-ignore-next-line
-            UserPropertyType::Float => (float)$value,
+            UserPropertyType::Float => (float) $value,
             // @phpstan-ignore-next-line
-            default => (string)$value,
+            default => (string) $value,
         };
 
         return [

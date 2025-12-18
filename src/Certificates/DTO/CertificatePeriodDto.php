@@ -9,12 +9,10 @@ final class CertificatePeriodDto
     public function __construct(
         public ?int $daysBeforeActivation = null,
         public ?int $daysBeforeInvalidation = null,
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array<string, mixed> $data
-     * @return self
+     * @param  array<string, mixed>  $data
      */
     public static function fromArray(array $data): self
     {

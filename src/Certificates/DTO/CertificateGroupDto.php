@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Rarus\LMS\SDK\Certificates\DTO;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use Money\Currency;
 use Money\Money;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
@@ -14,7 +16,7 @@ final class CertificateGroupDto
 {
     public function __construct(
         public ?int $certificateCount = null,
-        public ?\DateTimeImmutable $createdAt = null,
+        public ?DateTimeImmutable $createdAt = null,
         public ?bool $deleted = null,
         public ?string $description = null,
         /** @var CertificateShopDto[]|null */
@@ -26,28 +28,25 @@ final class CertificateGroupDto
         public ?int $parentId = null,
         public ?CertificatePeriodDto $period = null,
         public ?RefundStatus $refundStatus = RefundStatus::Default,
-        public ?\DateTimeImmutable $salePeriodEnd = null,
-        public ?\DateTimeImmutable $salePeriodStart = null,
+        public ?DateTimeImmutable $salePeriodEnd = null,
+        public ?DateTimeImmutable $salePeriodStart = null,
         /** @var int[]|null */
         public ?array $shopsExcluded = null,
         /** @var int[]|null */
         public ?array $shopsIncluded = null,
         public ?SpendingType $spendingType = SpendingType::Full,
-        public ?\DateTimeImmutable $updatedAt = null,
+        public ?DateTimeImmutable $updatedAt = null,
         public ?UsageType $usage = UsageType::Reusable,
         public ?Money $worth = null,
         public ?WorthType $worthType = WorthType::Fixed,
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array<string, mixed> $data
-     * @param Currency $currency
-     * @param \DateTimeZone $dateTimeZone
-     * @return self
+     * @param  array<string, mixed>  $data
+     *
      * @throws ApiClientException
      */
-    public static function fromArray(array $data, Currency $currency, \DateTimeZone $dateTimeZone): self
+    public static function fromArray(array $data, Currency $currency, DateTimeZone $dateTimeZone): self
     {
         return new self(
             $data['certificate_count'] ?? null,
@@ -55,12 +54,12 @@ final class CertificateGroupDto
             $data['deleted'] ?? null,
             $data['description'] ?? null,
             isset($data['exclude_shops']) ? array_map(
-                fn(array $s) => CertificateShopDto::fromArray($s),
+                fn (array $s): CertificateShopDto => CertificateShopDto::fromArray($s),
                 $data['exclude_shops']
             ) : null,
             $data['id'] ?? null,
             isset($data['include_shops']) ? array_map(
-                fn(array $s) => CertificateShopDto::fromArray($s),
+                fn (array $s): CertificateShopDto => CertificateShopDto::fromArray($s),
                 $data['include_shops']
             ) : null,
             $data['name'] ?? null,
@@ -95,13 +94,13 @@ final class CertificateGroupDto
             'created_at' => $this->createdAt?->format(DATE_ATOM),
             'deleted' => $this->deleted,
             'description' => $this->description,
-            'exclude_shops' => $this->excludeShops ? array_map(
-                fn(CertificateShopDto $s) => $s->toArray(),
+            'exclude_shops' => $this->excludeShops !== null && $this->excludeShops !== [] ? array_map(
+                fn (CertificateShopDto $certificateShopDto): array => $certificateShopDto->toArray(),
                 $this->excludeShops
             ) : null,
             'id' => $this->id,
-            'include_shops' => $this->includeShops ? array_map(
-                fn(CertificateShopDto $s) => $s->toArray(),
+            'include_shops' => $this->includeShops !== null && $this->includeShops !== [] ? array_map(
+                fn (CertificateShopDto $certificateShopDto): array => $certificateShopDto->toArray(),
                 $this->includeShops
             ) : null,
             'name' => $this->name,
@@ -115,7 +114,7 @@ final class CertificateGroupDto
             'spending_type' => $this->spendingType?->value,
             'updated_at' => $this->updatedAt?->format(DATE_ATOM),
             'usage' => $this->usage?->value,
-            'worth' => $this->worth ? MoneyParser::toString($this->worth) : null,
+            'worth' => $this->worth instanceof Money ? MoneyParser::toString($this->worth) : null,
             'worth_type' => $this->worthType?->value,
         ];
     }

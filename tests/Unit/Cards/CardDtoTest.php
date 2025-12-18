@@ -40,8 +40,8 @@ final class CardDtoTest extends TestCase
                 'properties' => [],
             ],
             'transactions' => [
-                'first' => '0001-01-01T00:00:00Z',
-                'last' => '0001-01-01T00:00:00Z',
+                'first' => 1755786311533,
+                'last' => 1755786311533,
             ],
             'type_cards' => [],
             'name' => 'Card 1000000001',

@@ -19,9 +19,7 @@ use ReflectionType;
 use TypeError;
 
 /**
- * @method self withOrderNumber(string $orderNumber)
  * @method self withDocNumber(string $docNumber)
- * @method self withRegisterId(string $registerId)
  * @method self withShopId(string $shopId)
  * @method self withItems(array<SaleItemDto> $items)
  * @method self withLocalDate(?DateTimeImmutable $localDate)
@@ -35,7 +33,8 @@ use TypeError;
  * @method self withPayment(?array<PaymentDto> $payment)
  * @method self withPromo(?string $promo)
  * @method self withSaleChannelId(?string $saleChannelId)
- * @method self withId(?int $id)
+ * @method self withId(?string $id)
+ * @method self withPaidInAccounting(?bool $paidInAccounting)
  * @method self withOrderStatus(?OrderStatus $orderStatus)
  *
  * @see OrderDto
@@ -66,13 +65,13 @@ final class Factory
     }
 
     /**
-     * @param array<mixed> $arguments
+     * @param  array<mixed>  $arguments
      *
      * @throws InvalidArgumentException
      */
     public function __call(string $name, array $arguments): self
     {
-        if (!str_starts_with($name, 'with')) {
+        if (! str_starts_with($name, 'with')) {
             throw new InvalidArgumentException(sprintf('Method %s does not exist', $name));
         }
 
@@ -92,7 +91,7 @@ final class Factory
     {
         $reflectionClass = new ReflectionClass(OrderDto::class);
         $constructor = $reflectionClass->getConstructor();
-        if (!$constructor) {
+        if (! $constructor) {
             throw new RuntimeException('OrderDto has no constructor');
         }
 
@@ -100,7 +99,7 @@ final class Factory
         foreach ($constructor->getParameters() as $parameter) {
             $name = $parameter->getName();
 
-            if (!array_key_exists($name, $this->properties)) {
+            if (! array_key_exists($name, $this->properties)) {
                 if ($parameter->isDefaultValueAvailable()) {
                     $args[$name] = $parameter->getDefaultValue();
                 } else {
@@ -109,7 +108,7 @@ final class Factory
             } else {
                 $value = $this->properties[$name];
                 $type = $parameter->getType();
-                if ($type && !$this->validateType($value, $type)) {
+                if ($type && ! $this->validateType($value, $type)) {
                     throw new TypeError(sprintf("Invalid type for property '%s'", $name));
                 }
 

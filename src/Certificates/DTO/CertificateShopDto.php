@@ -9,12 +9,10 @@ final class CertificateShopDto
     public function __construct(
         public ?int $id = null,
         public ?string $name = null,
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array<string, mixed> $data
-     * @return self
+     * @param  array<string, mixed>  $data
      */
     public static function fromArray(array $data): self
     {

@@ -25,7 +25,7 @@ final class HoldTransportTest extends TestCase
     {
         $holdBonusDto = new HoldBonusDto(
             amount: MoneyParser::parse('1000', new Currency('RUB')),
-            cardId: 1,
+            cardId: 2,
             description: 'test',
             expires: new HoldBonusExpiresDto(
                 date: new DateTimeImmutable('+20 day'),
@@ -44,7 +44,7 @@ final class HoldTransportTest extends TestCase
     {
         $holdBonusDto = new HoldBonusDto(
             amount: MoneyParser::parse('1000', new Currency('RUB')),
-            cardId: 1,
+            cardId: 2,
             description: 'test',
             expires: new HoldBonusExpiresDto(
                 date: new DateTimeImmutable('+20 day'),

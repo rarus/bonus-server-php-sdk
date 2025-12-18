@@ -31,13 +31,11 @@ final class OrderTransportTest extends TestCase
         );
         $products = [$saleItemDto];
         $orderDto = new OrderDto(
-            orderNumber: '1',
-            docNumber: '1234567890',
-            registerId: '1234567890',
+            docNumber: '1', // номер заказа
             shopId: '1',
             items: $products,
             bonusDiscount: MoneyParser::parse('100', new Currency('RUB')),
-            cardId: 1,
+            cardId: 2,
         );
         $orderId = $this->client->orders()->addOrder($orderDto);
 

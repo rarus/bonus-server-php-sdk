@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rarus\LMS\SDK\Certificates\DTO;
 
+use DateTimeImmutable;
 use DateTimeZone;
 use Money\Currency;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
@@ -13,20 +14,17 @@ final class CertificateDto
 {
     public function __construct(
         public ?string $code = null,
-        public ?\DateTimeImmutable $createdAt = null,
+        public ?DateTimeImmutable $createdAt = null,
         public ?bool $deleted = null,
         public ?CertificateGroupDto $group = null,
         public ?int $parentId = null,
         public ?CertificateStatusDto $status = null,
-        public ?\DateTimeImmutable $updatedAt = null,
-    ) {
-    }
+        public ?DateTimeImmutable $updatedAt = null,
+    ) {}
 
     /**
-     * @param array<string, mixed> $data
-     * @param Currency $currency
-     * @param DateTimeZone $dateTimeZone
-     * @return self
+     * @param  array<string, mixed>  $data
+     *
      * @throws ApiClientException
      */
     public static function fromArray(array $data, Currency $currency, DateTimeZone $dateTimeZone): self

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rarus\LMS\SDK\Certificates\DTO;
 
+use DateTimeImmutable;
 use DateTimeZone;
 use Money\Currency;
 use Money\Money;
@@ -15,17 +16,14 @@ final class CertificateStatusDto
 {
     public function __construct(
         public ?Money $balance = null,
-        public ?\DateTimeImmutable $date = null,
+        public ?DateTimeImmutable $date = null,
         public ?Money $holded = null,
         public ?CertificateStatusType $status = CertificateStatusType::Active,
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array<string, mixed> $data
-     * @param Currency $currency
-     * @param DateTimeZone $dateTimeZone
-     * @return self
+     * @param  array<string, mixed>  $data
+     *
      * @throws ApiClientException
      */
     public static function fromArray(array $data, Currency $currency, DateTimeZone $dateTimeZone): self
@@ -44,9 +42,9 @@ final class CertificateStatusDto
     public function toArray(): array
     {
         return [
-            'balance' => $this->balance ? MoneyParser::toString($this->balance) : null,
+            'balance' => $this->balance instanceof Money ? MoneyParser::toString($this->balance) : null,
             'date' => $this->date?->format(DATE_ATOM),
-            'holded' => $this->holded ? MoneyParser::toString($this->holded) : null,
+            'holded' => $this->holded instanceof Money ? MoneyParser::toString($this->holded) : null,
             'status' => $this->status?->value,
         ];
     }
