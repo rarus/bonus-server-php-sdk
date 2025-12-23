@@ -13,14 +13,13 @@
   "authors": [
     {
       "name": "Ivlev Andrey",
-      "email": "ivlean@rarus.ru",
-      "homepage": "https://rarus.ru"
+      "email": "aaivlev@gmail.com"
     }
   ],
   "require": {
-    "php": "^8.2",
-    "ext-json": "*",
+    "php": "~8.2.0 || ~8.3.0 || ~8.4.0",
     "ext-curl": "*",
+    "ext-json": "*",
     "psr/log": "^3.0.2",
     "fig/http-message-util": "1.*",
     "monolog/monolog": "3.9.0",

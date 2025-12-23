@@ -9,9 +9,9 @@ composer require rarus/bonus-server-php-sdk^2.0
 ### Зависимости
 
 - PHP \>= [8.2+](https://www.php.net/releases/)
-- ext-json
+- ext-bcmath
 - ext-curl
-- ext-intl
+- ext-json
 
 ## Быстрый старт
 
@@ -133,8 +133,11 @@ $again = Cards\DTO\CardDto::fromArray($cached);
 
 Все HTTP/протокольные ошибки приводятся к исключениям пространства имён `RarusBonus\Exceptions`:
 
+- `BaseException` — базовое исключение SDK, от которого наследуются все остальные типы ошибок.
 - `ApiException` — ошибка, возвращённая сервером API (статус 4xx/5xx).
 - `NetworkException` — ошибка сетевого уровня (таймаут, DNS, SSL и т. п.).
+- `InvalidArgumentException` — ошибка, возникающая при передаче некорректных аргументов в методы SDK.
+- `RuntimeException` — ошибка, возникающая во время выполнения программы (например, ошибки парсинга или логики).
 - `UnknownException` — непредусмотренная ошибка, не попавшая в другие категории.
 
 ```php
