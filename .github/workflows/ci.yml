@@ -1,34 +1,46 @@
-name: PHP Composer
+name: PHP CI/CD
 
-on:
-  push:
-  pull_request:
-
-permissions:
-  contents: read
+on: [ 'push', 'pull_request' ]
 
 jobs:
-  build:
+  ci:
+    runs-on: ${{ matrix.os }}
 
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ ubuntu-latest ]
+        php: [ 8.2 ]
+        dependency-version: [ prefer-lowest, prefer-stable ]
+
+    name: Formats P${{ matrix.php }} - ${{ matrix.os }} - ${{ matrix.dependency-version }}
 
     steps:
-    - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v5
 
-    - name: Validate composer.json and composer.lock
-      run: composer validate --strict
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache/files
+          key: dependencies-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
 
-    - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@v3
-      with:
-        path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-php-
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, intl, curl, gd, xml
+          coverage: xdebug
 
-    - name: Install dependencies
-      run: composer install --prefer-dist --no-progress
+      - name: Install Composer dependencies
+        run: composer update --${{ matrix.dependency-version }} --no-interaction --prefer-dist
 
-    - name: Run test suite
-      run: composer run-script test
+      - name: Coding Style Checks
+        run: composer test:lint
+
+      - name: Type Checks
+        run: composer test:types
+
+      - name: Run PHPUnit tests
+        run: vendor/bin/phpunit --testsuite Unit
+

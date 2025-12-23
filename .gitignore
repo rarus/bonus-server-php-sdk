@@ -4,3 +4,4 @@ tests/logs/*
 composer.phar
 phpunit.xml
 composer.lock
+.env.local
