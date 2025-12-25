@@ -14,41 +14,46 @@ use Rarus\BonusServer\Exceptions\ApiClientException;
 class DateTimeParser
 {
     /**
-     * @var int
-     */
-    private const MIN_TIMESTAMP_LENGTH = 12;
-
-    /**
      * парсим время в виде timestamp + milliseconds
      *
-     * @param string        $timestampStr
+     * @param string $timestampStr
      * @param \DateTimeZone $dateTimeZone
      *
      * @return \DateTime
      * @throws ApiClientException
      */
-    public static function parseTimestampFromServerResponse(string $timestampStr, \DateTimeZone $dateTimeZone): \DateTime
-    {
-        if (\strlen($timestampStr) < self::MIN_TIMESTAMP_LENGTH) {
-            throw new ApiClientException(sprintf(
-                'неизвестный формат времени в ответе сервера [%s], ожидали %s или больше символов, получили %s',
-                $timestampStr,
-                self::MIN_TIMESTAMP_LENGTH,
-                \strlen($timestampStr)
-            ));
-        }
-        // отделяем миллисекунды - 3 последних цифры
-        $microseconds = substr($timestampStr, \strlen($timestampStr) - 3);
-        $timestampStr = substr($timestampStr, 0, -3) . '.' . $microseconds;
-
-        $timestamp = \DateTime::createFromFormat('U.u', $timestampStr, new \DateTimeZone('UTC'));
-        $timestamp->setTimezone(new \DateTimeZone('UTC'));
-
-        if (false === $timestamp) {
-            throw new ApiClientException(sprintf('ошибка при разборе поля время в ответе сервера [%s]', $timestampStr));
+    public static function parseTimestampFromServerResponse(
+        string $timestampStr,
+        \DateTimeZone $dateTimeZone
+    ): \DateTime {
+        if (!is_numeric($timestampStr)) {
+            throw new ApiClientException(
+                sprintf('некорректный формат времени в ответе сервера [%s]', $timestampStr)
+            );
         }
 
-        return $timestamp;
+        $milliseconds = (int)$timestampStr;
+        $seconds = intdiv($milliseconds, 1000);
+        $microseconds = ($milliseconds % 1000) * 1000;
+
+        $formatted = sprintf('%d.%06d', $seconds, $microseconds);
+
+        try {
+            $dateTime = \DateTime::createFromFormat('U.u', $formatted);
+            if ($dateTime === false) {
+                throw new \RuntimeException('createFromFormat вернул false');
+            }
+
+            $dateTime = $dateTime->setTimezone($dateTimeZone);
+        } catch (\Throwable $throwable) {
+            throw new ApiClientException(
+                sprintf('ошибка при разборе поля время в ответе сервера [%s]', $timestampStr),
+                0,
+                $throwable
+            );
+        }
+
+        return $dateTime;
     }
 
     /**

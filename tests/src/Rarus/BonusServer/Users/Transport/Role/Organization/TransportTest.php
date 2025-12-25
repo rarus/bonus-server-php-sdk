@@ -65,7 +65,10 @@ class TransportTest extends TestCase
         // пробуем его добавить
         $user = $this->userTransport->addNewUser($newUser);
         $this->assertEquals($newUser->getEmail(), $user->getEmail());
-        $this->assertEquals($newUser->getBirthdate()->format('d.m.Y H:i:s'), $user->getBirthdate()->format('d.m.Y H:i:s'));
+        $this->assertEquals(
+            $newUser->getBirthdate()->format('d.m.Y H:i:s'),
+            $user->getBirthdate()->format('d.m.Y H:i:s')
+        );
     }
 
     /**
@@ -81,7 +84,10 @@ class TransportTest extends TestCase
         $user = $this->userTransport->addNewUser($newUser);
 
         $this->assertEquals($newUser->getEmail(), $user->getEmail());
-        $this->assertEquals($newUser->getBirthdate()->format('d.m.Y H:i:s'), $user->getBirthdate()->format('d.m.Y H:i:s'));
+        $this->assertEquals(
+            $newUser->getBirthdate()->format('d.m.Y H:i:s'),
+            $user->getBirthdate()->format('d.m.Y H:i:s')
+        );
     }
 
     /**
@@ -97,7 +103,10 @@ class TransportTest extends TestCase
         $user = $this->userTransport->addNewUser($newUser);
 
         $this->assertEquals($newUser->getEmail(), $user->getEmail());
-        $this->assertEquals($newUser->getBirthdate()->format('d.m.Y H:i:s'), $user->getBirthdate()->format('d.m.Y H:i:s'));
+        $this->assertEquals(
+            $newUser->getBirthdate()->format('d.m.Y H:i:s'),
+            $user->getBirthdate()->format('d.m.Y H:i:s')
+        );
     }
 
     /**
@@ -113,7 +122,10 @@ class TransportTest extends TestCase
         $user = $this->userTransport->addNewUser($newUser);
 
         $this->assertEquals($newUser->getEmail(), $user->getEmail());
-        $this->assertEquals($newUser->getBirthdate()->format('d.m.Y H:i:s'), $user->getBirthdate()->format('d.m.Y H:i:s'));
+        $this->assertEquals(
+            $newUser->getBirthdate()->format('d.m.Y H:i:s'),
+            $user->getBirthdate()->format('d.m.Y H:i:s')
+        );
     }
 
     /**
@@ -225,7 +237,9 @@ class TransportTest extends TestCase
             'ivlean-' . $userUUID,
             'Ивлев Андрей | ' . $userUUID,
             '+7 900 000 00 00',
-            sprintf('ivlean-%s@rarus.ru', $userUUID)
+            sprintf('ivlean-%s@rarus.ru', $userUUID),
+            \Rarus\BonusServer\Users\DTO\Gender\Fabric::getMale(),
+            \DateTime::createFromFormat('d.m.Y', '25.12.1971')
         );
         $this->userTransport->addNewUser($newUser);
 
