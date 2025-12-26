@@ -13,10 +13,11 @@ final class PaymentDto
     public function __construct(
         public Money $amount,
         public ?PaymentType $type = PaymentType::Cash,
-    ) {}
+    ) {
+    }
 
     /**
-     * @param  array<string>  $data
+     * @param array<string> $data
      */
     public static function fromArray(array $data, Currency $currency): self
     {
@@ -33,7 +34,7 @@ final class PaymentDto
     {
         return [
             'amount' => MoneyParser::toString($this->amount),
-            'code' => $this->type?->value,
+            'type' => $this->type?->value,
         ];
     }
 }
