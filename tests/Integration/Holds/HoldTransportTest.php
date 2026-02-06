@@ -29,8 +29,7 @@ final class HoldTransportTest extends TestCase
             description: 'test',
             expires: new HoldBonusExpiresDto(
                 date: new DateTimeImmutable('+20 day'),
-                period: HoldBonusPeriod::Date,
-                value: null
+                period: HoldBonusPeriod::Date
             ),
         );
 
@@ -48,8 +47,7 @@ final class HoldTransportTest extends TestCase
             description: 'test',
             expires: new HoldBonusExpiresDto(
                 date: new DateTimeImmutable('+20 day'),
-                period: HoldBonusPeriod::Date,
-                value: null
+                period: HoldBonusPeriod::Date
             ),
         );
 

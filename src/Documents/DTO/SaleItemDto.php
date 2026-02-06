@@ -54,21 +54,21 @@ final class SaleItemDto
                 $data['certificates']
             ) : null,
             cost: $data['cost'] ? MoneyParser::parse($data['cost'], $currency) : null,
-            discountBase: $data['discountBase'] ? MoneyParser::parse($data['discountBase'], $currency) : null,
+            discountBase: $data['discount_base'] ? MoneyParser::parse($data['discount_base'], $currency) : null,
             discounts: $data['discounts'] ? array_map(
                 /**
                  * @throws ApiClientException
                  */ fn (array $d): DiscountDto => DiscountDto::fromArray($d, $currency, $dateTimeZone),
                 $data['discounts']
             ) : null,
-            externalDiscount: $data['externalDiscount'] ? MoneyParser::parse(
-                $data['externalDiscount'],
+            externalDiscount: $data['external_discount'] ? MoneyParser::parse(
+                $data['external_discount'],
                 $currency
             ) : null,
-            featureId: $data['featureId'] ?? null,
-            featureName: $data['featureName'] ?? null,
+            featureId: $data['feature_id'] ?? null,
+            featureName: $data['feature_name'] ?? null,
             gift: $data['gift'] ?? false,
-            lineNumber: $data['lineNumber'] ?? null,
+            lineNumber: $data['line_number'] ?? null,
             specPrice: $data['spec_price'] ? MoneyParser::parse($data['spec_price'], $currency) : null,
         );
     }

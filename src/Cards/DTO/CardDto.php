@@ -110,7 +110,7 @@ final readonly class CardDto
                 $data['sales'],
                 $dateTimeZone
             ) : null,
-            array_map(fn (array $c): \Rarus\LMS\SDK\Cards\DTO\CardDto => CardDto::fromArray($c, $currency, $dateTimeZone),
+            array_map(fn (array $c): CardDto => CardDto::fromArray($c, $currency, $dateTimeZone),
                 $data['other_cards_on_account'] ?? []),
         );
     }

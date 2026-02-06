@@ -61,9 +61,9 @@ final class Factory
     {
         $factory = self::create();
         $reflectionClass = new ReflectionClass($userDto);
-        foreach ($reflectionClass->getProperties() as $property) {
-            $name = $property->getName();
-            $factory->properties[$name] = $property->getValue($userDto);
+        foreach ($reflectionClass->getProperties() as $reflectionProperty) {
+            $name = $reflectionProperty->getName();
+            $factory->properties[$name] = $reflectionProperty->getValue($userDto);
         }
 
         return $factory;
@@ -106,18 +106,18 @@ final class Factory
         }
 
         $args = [];
-        foreach ($constructor->getParameters() as $parameter) {
-            $name = $parameter->getName();
+        foreach ($constructor->getParameters() as $reflectionParameter) {
+            $name = $reflectionParameter->getName();
 
             if (! array_key_exists($name, $this->properties)) {
-                if ($parameter->isDefaultValueAvailable()) {
-                    $args[$name] = $parameter->getDefaultValue();
+                if ($reflectionParameter->isDefaultValueAvailable()) {
+                    $args[$name] = $reflectionParameter->getDefaultValue();
                 } else {
                     throw new RuntimeException(sprintf("Missing value for required property '%s'", $name));
                 }
             } else {
                 $value = $this->properties[$name];
-                $type = $parameter->getType();
+                $type = $reflectionParameter->getType();
                 if ($type && ! $this->validateType($value, $type)) {
                     throw new TypeError(sprintf("Invalid type for property '%s'", $name));
                 }
