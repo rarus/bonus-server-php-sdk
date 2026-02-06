@@ -13,8 +13,8 @@ use Rarus\LMS\SDK\Utils\MoneyParser;
 final class SaleItemDto
 {
     /**
-     * @param array<CertificateDocumentDto>|null $certificates
-     * @param array<DiscountDto>|null $discounts
+     * @param  array<CertificateDocumentDto>|null  $certificates
+     * @param  array<DiscountDto>|null  $discounts
      */
     public function __construct(
         public string $productId,
@@ -33,11 +33,10 @@ final class SaleItemDto
         public ?bool $gift = false,
         public ?int $lineNumber = null,
         public ?Money $specPrice = null,
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      *
      * @throws ApiClientException
      */
@@ -47,19 +46,19 @@ final class SaleItemDto
             productId: $data['product_id'],
             productName: $data['product_name'],
             price: MoneyParser::parse($data['price'], $currency),
-            quantity: (int)$data['quantity'],
+            quantity: (int) $data['quantity'],
             barcode: $data['barcode'] ?? null,
             bonusDiscount: $data['bonus_discount'] ? MoneyParser::parse($data['bonus_discount'], $currency) : null,
             certificates: $data['certificates'] ? array_map(
-                fn(array $c): CertificateDocumentDto => CertificateDocumentDto::fromArray($c, $currency),
+                fn (array $c): CertificateDocumentDto => CertificateDocumentDto::fromArray($c, $currency),
                 $data['certificates']
             ) : null,
             cost: $data['cost'] ? MoneyParser::parse($data['cost'], $currency) : null,
             discountBase: $data['discount_base'] ? MoneyParser::parse($data['discount_base'], $currency) : null,
             discounts: $data['discounts'] ? array_map(
-            /**
-             * @throws ApiClientException
-             */ fn(array $d): DiscountDto => DiscountDto::fromArray($d, $currency, $dateTimeZone),
+                /**
+                 * @throws ApiClientException
+                 */ fn (array $d): DiscountDto => DiscountDto::fromArray($d, $currency, $dateTimeZone),
                 $data['discounts']
             ) : null,
             externalDiscount: $data['external_discount'] ? MoneyParser::parse(
@@ -89,13 +88,13 @@ final class SaleItemDto
                 $this->bonusDiscount
             ) : null,
             'certificates' => $this->certificates !== null && $this->certificates !== [] ? array_map(
-                fn(CertificateDocumentDto $certificateDocumentDto): array => $certificateDocumentDto->toArray(),
+                fn (CertificateDocumentDto $certificateDocumentDto): array => $certificateDocumentDto->toArray(),
                 $this->certificates
             ) : null,
             'cost' => $this->cost instanceof Money ? MoneyParser::toString($this->cost) : null,
             'discount_base' => $this->discountBase instanceof Money ? MoneyParser::toString($this->discountBase) : null,
             'discounts' => $this->discounts !== null && $this->discounts !== [] ? array_map(
-                fn(DiscountDto $discountDto): array => $discountDto->toArray(),
+                fn (DiscountDto $discountDto): array => $discountDto->toArray(),
                 $this->discounts
             ) : null,
             'external_discount' => $this->externalDiscount instanceof Money ? MoneyParser::toString(

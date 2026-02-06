@@ -13,11 +13,10 @@ final class PaymentDto
     public function __construct(
         public Money $amount,
         public ?PaymentType $type = PaymentType::Cash,
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array<string> $data
+     * @param  array<string>  $data
      */
     public static function fromArray(array $data, Currency $currency): self
     {

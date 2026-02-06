@@ -34,8 +34,7 @@ final class PromoCodeTransportTest extends TestCase
             description: 'test',
             expires: new HoldPromoCodeExpiresDto(
                 date: new DateTimeImmutable('+20 day'),
-                period: HoldPromoCodePeriod::Date,
-                value: null
+                period: HoldPromoCodePeriod::Date
             ),
         );
 
@@ -53,8 +52,7 @@ final class PromoCodeTransportTest extends TestCase
             description: 'test',
             expires: new HoldPromoCodeExpiresDto(
                 date: new DateTimeImmutable('+20 day'),
-                period: HoldPromoCodePeriod::Date,
-                value: null
+                period: HoldPromoCodePeriod::Date
             ),
         );
 
