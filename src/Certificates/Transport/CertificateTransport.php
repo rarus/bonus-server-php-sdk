@@ -27,4 +27,24 @@ final class CertificateTransport extends BaseTransport
 
         return CertificateDto::fromArray($result, $this->getDefaultCurrency(), $this->getDateTimeZone());
     }
+
+    /**
+     * @throws UnknownException
+     * @throws ApiClientException
+     * @throws NetworkException
+     */
+    public function createCertificate(string $code, int $parentId, ?bool $deleted = false): string
+    {
+        $result = $this->transport->request(
+            RequestMethodInterface::METHOD_POST,
+            'web-flow/certificate',
+            [
+                'code' => $code,
+                'parent_id' => $parentId,
+                'deleted' => $deleted,
+            ],
+        );
+
+        return (string)$result;
+    }
 }
