@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rarus\LMS\SDK\Tests\Unit\Utils;
 
+use DateTimeImmutable;
 use DateTimeZone;
 use PHPUnit\Framework\TestCase;
 use Rarus\LMS\SDK\Exceptions\ApiClientException;
@@ -57,6 +58,36 @@ class DateTimeParserTest extends TestCase
     {
         $dt = DateTimeParser::fromTimestamp(1758607419378, $this->tz);
         $this->assertSame('2025-09-23 09:03:39.378000', $dt->format('Y-m-d H:i:s.u'));
+    }
+
+    /**
+     * @throws ApiClientException
+     */
+    public function test_to_local_timestamp_with_positive_offset(): void
+    {
+        $dateTime = new DateTimeImmutable('2025-08-01 12:00:00', new DateTimeZone('Europe/Moscow'));
+        $timestamp = DateTimeParser::toLocalTimestamp($dateTime);
+        $this->assertSame(1754049600000, $timestamp);
+    }
+
+    /**
+     * @throws ApiClientException
+     */
+    public function test_to_local_timestamp_with_negative_offset(): void
+    {
+        $dateTime = new DateTimeImmutable('2025-08-01 12:00:00', new DateTimeZone('America/New_York'));
+        $timestamp = DateTimeParser::toLocalTimestamp($dateTime);
+        $this->assertSame(1754049600000, $timestamp);
+    }
+
+    /**
+     * @throws ApiClientException
+     */
+    public function test_to_local_timestamp_with_utc(): void
+    {
+        $dateTime = new DateTimeImmutable('2025-08-01 12:00:00', new DateTimeZone('UTC'));
+        $timestamp = DateTimeParser::toLocalTimestamp($dateTime);
+        $this->assertSame(1754049600000, $timestamp);
     }
 
     protected function setUp(): void

@@ -25,15 +25,15 @@ class DateTimeParser
      */
     public static function fromTimestamp(string|int $timestampStr, DateTimeZone $dateTimeZone): DateTimeImmutable
     {
-        $timestampStr = (string) $timestampStr;
+        $timestampStr = (string)$timestampStr;
 
-        if (! is_numeric($timestampStr)) {
+        if (!is_numeric($timestampStr)) {
             throw new ApiClientException(
                 sprintf('некорректный формат времени в ответе сервера [%s]', $timestampStr)
             );
         }
 
-        $milliseconds = (int) $timestampStr;
+        $milliseconds = (int)$timestampStr;
         $seconds = intdiv($milliseconds, 1000);
         $microseconds = ($milliseconds % 1000) * 1000;
 
@@ -65,6 +65,14 @@ class DateTimeParser
         return $dateTime->getTimestamp() * 1000;
     }
 
+    public static function toLocalTimestamp(DateTime|DateTimeImmutable $dateTime): int
+    {
+        $offset = $dateTime->getOffset();
+        $timestamp = $dateTime->getTimestamp() + $offset;
+
+        return $timestamp * 1000;
+    }
+
     /**
      * @throws ApiClientException
      */
@@ -77,7 +85,7 @@ class DateTimeParser
         try {
             return new DateTimeZone($tz);
         } catch (Exception $exception) {
-            throw new ApiClientException('Invalid timezone: '.$tz, 0, $exception);
+            throw new ApiClientException('Invalid timezone: ' . $tz, 0, $exception);
         }
     }
 }
