@@ -47,4 +47,19 @@ final class CertificateTransport extends BaseTransport
 
         return (string)$result;
     }
+
+    /**
+     * @param string $id
+     * @return void
+     * @throws ApiClientException
+     * @throws NetworkException
+     * @throws UnknownException
+     */
+    public function deleteCertificate(string $id): void
+    {
+        $result = $this->transport->request(
+            RequestMethodInterface::METHOD_DELETE,
+            sprintf('web-flow/certificate/%s', $id),
+        );
+    }
 }
