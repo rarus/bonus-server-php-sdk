@@ -7,6 +7,7 @@ use Money\Currency;
 use PHPUnit\Framework\TestCase;
 use Psr\SimpleCache\InvalidArgumentException;
 use Rarus\LMS\SDK\Certificates\DTO\CertificateDto;
+use Rarus\LMS\SDK\Certificates\DTO\CertificateStatusType;
 use Rarus\LMS\SDK\Client;
 use Rarus\LMS\SDK\Documents\DTO\CertificateDocumentDto;
 use Rarus\LMS\SDK\Documents\DTO\DocumentDto;
@@ -63,6 +64,17 @@ class CertificateTransportTest extends TestCase
         );
         $result = $this->client->documents()->purchase($documentDto);
         $this->assertNotEmpty($result['items']);
+    }
+
+    public function test_delete_certificate(): void
+    {
+        $code = 'TEST_' . random_int(100000000, 999999999);
+        $parentId = '1';
+        $this->client->certificates()->createCertificate($code, $parentId);
+
+        $this->client->certificates()->deleteCertificate($code);
+        $certificateInactive = $this->client->certificates()->getCertificateById($code);
+        $this->assertEquals($certificateInactive->status?->status, CertificateStatusType::Inactive);
     }
 
     /**
